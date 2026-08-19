@@ -108,6 +108,23 @@
     color:var(--ink-soft);
     margin:0;
   }
+  .compare-pill-wrap{
+    text-align:center;
+    margin:0 0 18px 0;
+  }
+  a.compare-pill{
+    display:inline-block;
+    background:transparent;
+    color:var(--sage-deep);
+    border:1.5px solid var(--sage-deep);
+    border-radius:999px;
+    padding:8px 16px;
+    font-family:'Karla', sans-serif;
+    font-size:14px;
+    font-weight:600;
+    text-decoration:none;
+    cursor:pointer;
+  }
   .group-label{
     font-size:12.5px;
     letter-spacing:0.12em;
@@ -167,20 +184,6 @@
     align-items:center;
     gap:4px;
   }
-  .whoami{
-    text-align:right;
-  }
-  .whoami .name{
-    font-family:'Fraunces', serif;
-    font-size:22px;
-    font-weight:600;
-    color:var(--sage-deep);
-  }
-  .whoami .role{
-    font-size:12.5px;
-    color:var(--ink-soft);
-  }
-
   .banner{
     background:#FBF6E9;
     border:1px solid #EAD9A8;
@@ -240,6 +243,7 @@
     border:1.5px solid var(--sage);
     cursor:pointer;
     margin-top:1px;
+    margin-left:auto;
     display:flex;align-items:center;justify-content:center;
     transition:background .15s ease;
     background:#fff;
@@ -300,18 +304,25 @@
   /* ---------- compare view ---------- */
   .compare-shell{
     max-width:100%;
-    min-height:100vh;
+    min-height:100dvh;
+    height:100dvh;
+    max-height:100dvh;
     background:var(--cream);
     padding-bottom:76px;
+    display:flex;
+    flex-direction:column;
+    box-sizing:border-box;
+  }
+  .compare-shell > :not(.compare-scroll){
+    flex-shrink:0;
   }
   .compare-topbar{
     display:flex;
     align-items:center;
-    gap:14px;
+    justify-content:space-between;
+    gap:12px;
     padding:16px 16px 10px 16px;
     background:var(--cream);
-    position:sticky;
-    top:0;
     z-index:5;
     border-bottom:1px solid var(--line);
   }
@@ -319,16 +330,25 @@
     font-size:22px;
     font-weight:600;
     color:var(--sage-deep);
+    min-width:0;
   }
   .compare-scroll{
-    overflow-x:auto;
+    overflow:auto;
     -webkit-overflow-scrolling:touch;
-    padding:2px 0 12px 0;
+    padding:0 0 12px 0;
+    flex:1;
+    min-height:0;
   }
   table.compare-table{
-    border-collapse:separate;
-    border-spacing:0;
+    display:grid;
+    grid-template-columns:74px repeat(var(--cols, 1), minmax(120px, 1fr));
+    width:max-content;
     min-width:100%;
+  }
+  .compare-table thead,
+  .compare-table tbody,
+  .compare-table tr{
+    display:contents;
   }
   .compare-table th, .compare-table td{
     border-bottom:1px solid var(--line-soft);
@@ -340,12 +360,13 @@
   }
   .compare-table thead th{
     position:sticky;
-    top:var(--sticky-offset, 52px);
+    top:0;
     background:var(--sage-deep);
     color:#fff;
     z-index:3;
     text-align:left;
     padding:10px 8px;
+    box-shadow:0 1px 0 rgba(46,44,38,0.12);
   }
   .compare-table thead th .col-name{
     font-family:'Fraunces', serif;
@@ -371,12 +392,17 @@
   }
   .compare-table thead th.time-col{
     z-index:4;
+    top:0;
     background:var(--sage-deep);
     color:#fff;
   }
   .compare-table thead th.hdr-bridesmaids{ background:#C9707F; }
   .compare-table thead th.hdr-groomsmen{ background:#4E7BA6; }
   .compare-table thead th.hdr-vendors{ background:#22201B; }
+  .compare-table td{
+    display:flex;
+    flex-direction:column;
+  }
   .mini-card{
     background:var(--done-bg);
     border:1px solid var(--line);
@@ -387,32 +413,51 @@
     margin-bottom:4px;
     line-height:1.3;
   }
+  .compare-table td .mini-card:only-child{
+    flex:1;
+    margin-bottom:0;
+  }
   .mini-card.mini-done{
     opacity:0.45;
     text-decoration:line-through;
   }
+  .mini-card .mini-note{
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-top:3px;
+    font-weight:400;
+    line-height:1.35;
+  }
 
   .manage-toggle{
-    width:100%;
+    flex-shrink:0;
     background:var(--paper);
     border:1px solid var(--line);
     border-radius:12px;
-    padding:10px;
+    padding:8px 12px;
     color:var(--sage-deep);
     font-family:'Karla', sans-serif;
     font-size:14px;
     font-weight:500;
     cursor:pointer;
     margin-bottom:0;
-  }
-  .time-filter{
-    padding:14px 16px 0 16px;
-  }
-  .time-filter-top{
     display:flex;
     align-items:center;
-    justify-content:space-between;
-    margin-bottom:2px;
+    justify-content:center;
+    gap:6px;
+  }
+  .manage-toggle.open{
+    background:var(--sage-deep);
+    border-color:var(--sage-deep);
+    color:#fff;
+  }
+  .manage-toggle svg{
+    width:16px;
+    height:16px;
+    flex-shrink:0;
+  }
+  .time-filter{
+    padding:14px 16px 18px 16px;
   }
   .time-filter-caption{
     font-size:12px;
@@ -420,20 +465,28 @@
     text-transform:uppercase;
     color:var(--ink-soft);
     font-weight:600;
+    margin-bottom:8px;
+  }
+  .time-filter-slider-wrap{
+    position:relative;
+    padding:18px 2px;
   }
   .time-filter-pill{
+    position:absolute;
+    top:50%;
+    left:var(--pct, 0%);
+    transform:translate3d(calc(-1 * var(--pct, 0%)), -50%, 0);
+    pointer-events:none;
+    z-index:2;
     font-family:'Karla', sans-serif;
     font-size:13px;
     font-weight:700;
     color:#FDFCF9;
     background:var(--sage-deep);
     border-radius:999px;
-    padding:3px 12px;
+    padding:5px 12px;
     white-space:nowrap;
-  }
-  .time-filter-slider-wrap{
-    position:relative;
-    padding:14px 2px 0 2px;
+    box-shadow:0 1px 4px rgba(46,44,38,0.22);
   }
   input.time-filter-slider{
     -webkit-appearance:none;
@@ -445,26 +498,27 @@
     outline:none;
     margin:0;
     display:block;
+    position:relative;
+    z-index:1;
   }
   input.time-filter-slider::-webkit-slider-thumb{
     -webkit-appearance:none;
     appearance:none;
-    width:22px;
-    height:22px;
-    border-radius:50%;
-    background:#FDFCF9;
-    border:3px solid var(--sage-deep);
-    box-shadow:0 1px 4px rgba(46,44,38,0.28);
+    width:108px;
+    height:30px;
+    border-radius:999px;
+    background:transparent;
+    border:none;
+    box-shadow:none;
     cursor:pointer;
-    margin-top:0;
   }
   input.time-filter-slider::-moz-range-thumb{
-    width:22px;
-    height:22px;
-    border-radius:50%;
-    background:#FDFCF9;
-    border:3px solid var(--sage-deep);
-    box-shadow:0 1px 4px rgba(46,44,38,0.28);
+    width:108px;
+    height:30px;
+    border-radius:999px;
+    background:transparent;
+    border:none;
+    box-shadow:none;
     cursor:pointer;
   }
   input.time-filter-slider::-moz-range-track{
@@ -516,6 +570,27 @@
   }
   .manage-panel-body{
     padding:6px 16px 24px 16px;
+  }
+  .manage-group-head{
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    padding:8px 4px;
+    gap:10px;
+    border-radius:8px;
+    cursor:grab;
+  }
+  .manage-block{
+    border-bottom:1px solid var(--line-soft);
+  }
+  .manage-block.dragging{ opacity:0.4; }
+  .manage-group-head .manage-check{
+    font-weight:600;
+    font-size:15px;
+    color:var(--sage-deep);
+  }
+  .manage-row.nested{
+    padding-left:28px;
   }
   .manage-row{
     display:flex;
@@ -603,12 +678,12 @@
     color:var(--ink);
   }
   .contact-role{
-    font-size:11.5px;
+    font-size:14px;
     color:var(--ink-soft);
     margin-top:1px;
   }
   .contact-note{
-    font-size:11.5px;
+    font-size:14px;
     color:var(--ink-soft);
     margin-top:4px;
     font-style:italic;
@@ -636,7 +711,7 @@
     pointer-events:none;
   }
   .contact-missing{
-    font-size:11px;
+    font-size:14px;
     color:var(--ink-soft);
     opacity:0.7;
   }
@@ -688,14 +763,15 @@ const PEOPLE = [
   {id:'parents_anna', name:"May & Andre", role:"Anna's Parents", group:'Parents'},
   {id:'parents_david', name:"Betty & Woody", role:"David's Parents", group:'Parents'},
 
-  {id:'planner', name:'Planner', role:'Planning Team', group:'Planning Team', contactName:'Athena', phone:'647-974-3565', email:'athena.destinyweddings@gmail.com'},
+  {id:'planner', name:'Athena & Assistant', role:'Planning Team', group:'Planning Team', contactName:'Athena', phone:'647-974-3565', email:'athena.destinyweddings@gmail.com'},
 
   {id:'dj', name:'Justin Liu', role:'DJ', group:'Vendors', phone:'416-908-8668', email:'info@djlentertainment.com'},
   {id:'mc', name:'Ken Cheung', role:'MC / Officiant', group:'Vendors', phone:'647-990-8460', email:null},
-  {id:'photovideo', name:'Timelesstree Studio', role:'Photo & Video', group:'Vendors', phone:null, email:null},
+  {id:'photovideo', name:'Estelle & Team', role:'Photo & Video', group:'Vendors', phone:'289-969-0873', email:null, contactNote:'2 photographers and 2 videographers'},
   {id:'mua', name:'Sherry & Assistant', role:'Hair & Makeup Team', group:'Vendors', phone:null, email:null},
   {id:'photobooth', name:'Chronobooth', role:'Photobooth Vendor', group:'Vendors', contactName:'Bruce', phone:'647-708-0077', email:'chronobooth.to@gmail.com'},
   {id:'florist', name:'The Watering Can Flower Market', shortName:'WateringCan', role:'Florist', group:'Vendors', contactName:'Tara', phone:'905-562-0088', email:'events@twcfm.ca'},
+  {id:'cakeshop', name:'Cake Shop', role:'Cake Shop', group:'Vendors', contactName:'Kelly', phone:'365-324-1792', address:'460 Dundas Street East, Waterdown, ON<br>Lobby Trend 2 – Back Gate (L8B 2A5)', contactOnly:true},
 
   {id:'mimi', name:'Mimi', role:'The Wedding Dog', group:'Mimi'},
 
@@ -706,6 +782,10 @@ const PEOPLE = [
 const ALL_BRIDESMAIDS = ['bm_annad','bm_bernita','bm_gini','bm_louise','bm_kristin','bm_angela'];
 const ALL_GROOMSMEN = ['gm_kai','gm_tony','gm_jy','gm_stanley','gm_anish','gm_adam'];
 const ALL_PARENTS = ['parents_anna','parents_david'];
+const SPEECHES_1_NOTE = 'Bridesmaids: Dong, Angela, Bernita (1 min each).<br>Groomsmen: Kai, Stanley, JY (1 min each).';
+const SPEECHES_2_NOTE = 'Groomsmen: Tony, Anish, Ziming (1 min each).<br>Bridesmaids: Louise, Kristin, Gini (1 min each).';
+const GROUP_PHOTO_NOTE = 'Everyone from ceremony, followed by:<br>1. Bride\'s family<br>2. Groom\'s family<br>3. Both families<br>4. Extended family of bride<br>5. Extended family of groom<br>6. Bridal party photo<br>7. Bachelorette photo<br>8. Bachelor photo<br>9. High school friends<br>10. Waterloo friends<br>11. Sports &amp; raving friends';
+const REHEARSAL_NOTE = '1. David + Parents<br>2. Groomsmen<br>3. Bridesmaid<br>4. Anna + Parents<br>5. Mimi — Ring';
 
 // sortKey = minutes from 00:00 on wedding day; times after midnight get +1440
 function tk(h,m,pm){ let hh=h; if(pm && h!==12) hh+=12; if(!pm && h===12) hh=0; return hh*60+m; }
@@ -716,43 +796,41 @@ const TASKS = [
   {id:'t1d', time:'6:45 AM', sort:tk(6,45,false), title:'Wake up', people:['bm_annad'], note:null},
   {id:'t2c', time:'7:30 AM', sort:tk(7,30,false), title:'Leave Toronto', people:['bm_annad'], note:null},
   {id:'t0', time:'8:00 AM', sort:tk(8,0,false), title:'Wake up', people:['anna','david','bm_bernita','bm_louise','bm_gini','bm_kristin'], note:null},
-  {id:'t1', time:'8:30 AM', sort:tk(8,30,false), title:'Leave Hamilton Hotel', people:['anna'], note:null},
+  {id:'t1', time:'8:30 AM', sort:tk(8,30,false), title:'Leave Hamilton Hotel', people:['anna','david'], note:null},
   {id:'t1b', time:'8:30 AM', sort:tk(8,30,false)+1, title:"Leave Hotel in Dong's car", people:['bm_bernita','bm_louise','bm_gini','bm_kristin'], note:null},
   {id:'t1c', time:'8:30 AM', sort:tk(8,30,false)+2, title:'Pickup the girls at Sandman Hotel', people:['bm_annad'], note:null},
   {id:'t1e', time:'8:30 AM', sort:tk(8,30,false)+4, title:'Leave Toronto', people:['bm_angela'], note:null},
-  {id:'t2', time:'9:00 AM', sort:tk(9,0,false), title:'Arrive at venue', people:['anna', ...ALL_BRIDESMAIDS.filter(id=>id!=='bm_angela')], note:null},
+  {id:'t2', time:'9:00 AM', sort:tk(9,0,false), title:'Arrive at venue', people:['anna','david', ...ALL_BRIDESMAIDS.filter(id=>id!=='bm_angela')], note:null},
   {id:'t2b', time:'9:00 AM', sort:tk(9,0,false)+1, title:'Leave Toronto', people:['gm_kai','gm_stanley','gm_tony','gm_jy'], note:'Stop in Watertown to pick up the wedding cake on the way.'},
   {id:'t3', time:'9:30 AM', sort:tk(9,30,false), title:'Hair & Makeup — Anna', people:['anna','mua'], note:null},
   {id:'t4', time:'9:30 AM', sort:tk(9,30,false)+1, title:'Hair & Makeup — Kristin', people:['bm_kristin','mua'], note:null},
-  {id:'t3b', time:'9:30 AM', sort:tk(9,30,false)+2, title:'Steam clothes', people:['bm_bernita','bm_gini','bm_louise'], note:null},
+  {id:'t3b', time:'9:30 AM', sort:tk(9,30,false)+2, title:'Steam clothes', people:['bm_annad','bm_bernita','bm_gini','bm_louise'], note:null},
   {id:'t3c', time:'10:00 AM', sort:tk(10,0,false), title:'Arrive & steam clothes', people:['bm_angela'], note:null},
   {id:'t3d', time:'10:00 AM', sort:tk(10,0,false)+1, title:'Do own makeup', people:['bm_bernita'], note:null},
   {id:'t3e', time:'10:00 AM', sort:tk(10,0,false)+2, title:'Do own makeup + hair', people:['bm_louise'], note:null},
   {id:'t3f', time:'10:00 AM', sort:tk(10,0,false)+3, title:'Steam clothes', people:['david'], note:null},
-  {id:'t5', time:'10:30 AM', sort:tk(10,30,false), title:'Planner arrives on site', people:['planner'], note:null},
+  {id:'t5', time:'11:00 AM', sort:tk(11,0,false), title:'Planner arrives on site', people:['planner'], note:null},
   {id:'t6', time:'10:30 AM', sort:tk(10,30,false)+1, title:'DJ load-in (10am–1am)', people:['dj'], note:null},
   {id:'t7', time:'10:30 AM', sort:tk(10,30,false)+2, title:'Hair — Bernita', people:['bm_bernita','mua'], note:null},
   {id:'t7b', time:'10:30 AM', sort:tk(10,30,false)+3, title:'Do own makeup', people:['bm_angela'], note:null},
   {id:'t7c', time:'10:30 AM', sort:tk(10,30,false)+4, title:'Steam clothes', people:['bm_kristin'], note:null},
-  {id:'t8', time:'10:30 AM', sort:tk(10,30,false)+5, title:'Pick up the cake', people:['gm_kai','gm_tony','gm_jy','gm_stanley'], note:'One of you — coordinate so it only happens once!'},
-  {id:'t9', time:'11:00 AM', sort:tk(11,0,false), title:'Set up the Charm Bar', people:['planner'], note:null},
-  {id:'t9b', time:'11:00 AM', sort:tk(11,0,false)+1, title:'Steam reception dress', people:ALL_BRIDESMAIDS.filter(id=>id!=='bm_angela'), note:null},
+  {id:'t8', time:'10:30 AM', sort:tk(10,30,false)+5, title:'Pick up the cake', people:['gm_kai','gm_tony','gm_jy','gm_stanley'], note:'460 Dundas Street East, Waterdown, ON<br>Lobby Trend 2 – Back Gate (L8B 2A5)<br>Kelly 365-324-1792'},
+  {id:'t9', time:'11:30 AM', sort:tk(11,30,false), title:'Set up the Charm Bar', people:['planner'], note:null},
   {id:'t9c', time:'11:00 AM', sort:tk(11,0,false)+2, title:'Do makeup + hair', people:['bm_gini'], note:null},
-  {id:'t13', time:'11:00 AM', sort:tk(11,0,false)+3, title:'Hair — May', people:['parents_anna','mua'], note:'This slot is for May only — Andre doesn\'t need to be here for it.'},
+  {id:'t13', time:'11:30 AM', sort:tk(11,30,false)+2, title:'Hair — May', people:['parents_anna','mua'], note:'This slot is for May only — Andre doesn\'t need to be here for it.'},
   {id:'t11', time:'11:00 AM', sort:tk(11,0,false)+4, title:'Arrive at venue', people:ALL_GROOMSMEN, note:null},
   {id:'m1', time:'11:00 AM', sort:tk(11,0,false)+5, title:'Dropped off at dog sitter', people:['mimi'], note:null},
-  {id:'t12', time:'11:30 AM', sort:tk(11,30,false), title:'Set up the Welcome Area', people:['planner'], note:null},
-  {id:'t12b', time:'11:30 AM', sort:tk(11,30,false)+1, title:'Steam ceremony dress', people:ALL_BRIDESMAIDS.filter(id=>id!=='bm_angela'), note:null},
-  {id:'t10', time:'11:30 AM', sort:tk(11,30,false)+2, title:'Hair Service — Angela', people:['bm_angela','mua'], note:null},
+  {id:'t12', time:'12:00 PM', sort:tk(12,0,true), title:'Set up the Welcome Area', people:['planner'], note:null},
+  {id:'t10', time:'11:00 AM', sort:tk(11,0,false)+3, title:'Hair Service — Angela', people:['bm_angela','mua'], note:null},
   {id:'t20', time:'11:30 AM', sort:tk(11,30,false)+3, title:'Get ready', people:ALL_GROOMSMEN, note:"Don't forget to put on your boutonniere."},
-  {id:'t14', time:'12:00 PM', sort:tk(12,0,true), title:'Set up Ceremony Area Fans', people:['planner'], note:null},
+  {id:'t14', time:'12:30 PM', sort:tk(12,30,true)+2, title:'Set up Ceremony Area Fans', people:['planner'], note:null},
   {id:'t15', time:'12:00 PM', sort:tk(12,0,true)+1, title:'Arrive on site (12pm–10pm call time)', people:['photovideo'], note:null},
-  {id:'t16', time:'12:00 PM', sort:tk(12,0,true)+2, title:'Get-ready photos', people:['anna', ...ALL_BRIDESMAIDS], note:null},
-  {id:'t17', time:'12:10 PM', sort:tk(12,10,true), title:'Lunch', people:['anna','david','planner','dj','parents_anna','mua', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
-  {id:'t18', time:'12:30 PM', sort:tk(12,30,true), title:'Get-ready photo', people:['anna'], note:null},
-  {id:'t19', time:'12:30 PM', sort:tk(12,30,true)+1, title:'Florist arrives', people:['planner','florist'], note:null},
-  {id:'t21b', time:'12:45 PM', sort:tk(12,45,true), title:'Charge 16 lamps', people:['planner'], note:null},
-  {id:'t21', time:'1:00 PM', sort:tk(1,0,true), title:'First look', people:['anna','david'], note:null},
+  {id:'t16', time:'12:00 PM', sort:tk(12,0,true)+2, title:'Get-ready photos', people:['anna', ...ALL_BRIDESMAIDS, 'photovideo'], note:null},
+  {id:'t17', time:'12:10 PM', sort:tk(12,10,true), title:'Lunch', people:['anna','david','dj','parents_anna','mua', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
+  {id:'t18', time:'12:30 PM', sort:tk(12,30,true), title:'Get-ready photo', people:['anna','photovideo'], note:null},
+  {id:'t19', time:'12:30 PM', sort:tk(12,30,true)+1, title:'Florist arrives', people:['florist'], note:null},
+  {id:'t21b', time:'12:30 PM', sort:tk(12,30,true)+1.5, title:'Florist arrives — receive & charge 16 lamps', people:['planner'], note:null},
+  {id:'t21', time:'1:00 PM', sort:tk(1,0,true), title:'First look', people:['anna','david','photovideo'], note:null},
   {id:'t21c', time:'1:00 PM', sort:tk(1,0,true)+1, title:'Be there for the first look', people:['gm_kai','gm_stanley'], note:'Check in with the photographer a few minutes ahead of time.'},
   {id:'t21d', time:'1:00 PM', sort:tk(1,0,true)+2, title:'Coordinate first look', people:['planner'], note:null},
   {id:'t21e', time:'1:00 PM', sort:tk(1,0,true)+3, title:'Film the first look', people:['gm_anish'], note:null},
@@ -764,10 +842,11 @@ const TASKS = [
   {id:'t23', time:'2:20 PM', sort:tk(2,20,true), title:'Shuttle bus leaves from Fairview Mall', people:['guest'], note:null},
   {id:'t23b', time:'2:30 PM', sort:tk(2,30,true), title:'Pick up Mimi from Dog Sitter', people:['parents_anna','mimi'], note:null},
   {id:'m2b', time:'2:30 PM', sort:tk(2,30,true)+1, title:'Supervise Mimi until her turn', people:['planner','mimi'], note:'She\'s ring bearer at 5:00 PM.'},
-  {id:'t24', time:'3:00 PM', sort:tk(3,0,true), title:'Ceremony rehearsal', people:['anna','dj', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN, ...ALL_PARENTS], note:'Parents: this is the "arrive early" call time.'},
+  {id:'t24', time:'3:00 PM', sort:tk(3,0,true), title:'Ceremony rehearsal', people:['anna','david','dj','mc','mimi', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN, ...ALL_PARENTS], note:REHEARSAL_NOTE},
   {id:'t25', time:'3:00 PM', sort:tk(3,0,true)+1, title:'MC / Officiant arrives', people:['mc'], note:null},
   {id:'t25b', time:'3:00 PM', sort:tk(3,0,true)+2, title:'Wrap up and leave venue', people:['mua'], note:null},
   {id:'t26', time:'3:00 PM', sort:tk(3,0,true)+3, title:'Florist team wraps and leaves', people:['planner','florist'], note:null},
+  {id:'t26c', time:'3:00 PM', sort:tk(3,0,true)+4, title:'Reception decor shots', people:['photovideo'], note:null},
   {id:'t27', time:'4:30 PM', sort:tk(4,30,true), title:'Guests begin arriving', people:['guest'], note:null},
   {id:'t28', time:'4:30 PM', sort:tk(4,30,true)+1, title:'Hair & Makeup touch-up', people:['anna'], note:null},
   {id:'t29', time:'4:30 PM', sort:tk(4,30,true)+2, title:'Ceremony decor shoot', people:['photovideo'], note:null},
@@ -781,70 +860,91 @@ const TASKS = [
   {id:'m5', time:'5:00 PM', sort:tk(5,0,true)+1, title:'Walk down the aisle — Ring Bearer', people:['mimi'], note:null},
   {id:'t32', time:'5:00 PM', sort:tk(5,0,true)+2, title:'Cue the processional', people:['planner'], note:null},
   {id:'t31c', time:'5:00 PM', sort:tk(5,0,true)+3, title:'Queue ceremony music', people:['dj'], note:null},
-  {id:'t33', time:'5:30 PM', sort:tk(5,30,true), title:'Group photos', people:['anna','david', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN, 'photovideo'], note:null},
-  {id:'t34', time:'5:30 PM', sort:tk(5,30,true)+1, title:'Assist with group photo lineup', people:['planner'], note:null},
+  {id:'t31d', time:'5:00 PM', sort:tk(5,0,true)+4, title:'Officiate wedding', people:['mc'], note:null},
+  {id:'t33', time:'5:30 PM', sort:tk(5,30,true), title:'Group photos', people:['guest','anna','david', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN, ...ALL_PARENTS, 'photovideo'], note:GROUP_PHOTO_NOTE},
+  {id:'t34', time:'5:30 PM', sort:tk(5,30,true)+1, title:'Assist with group photo lineup', people:['planner'], note:GROUP_PHOTO_NOTE},
+  {id:'t33c', time:'5:30 PM', sort:tk(5,30,true)+1.5, title:'Prompt for group photo', people:['mc'], note:GROUP_PHOTO_NOTE},
   {id:'m3', time:'5:30 PM', sort:tk(5,30,true)+2, title:'Dog sitter picks up from venue', people:['mimi'], note:null},
-  {id:'t35', time:'6:00 PM', sort:tk(6,0,true), title:'Cocktail hour', people:['guest'], note:null},
+  {id:'t35', time:'6:00 PM', sort:tk(6,0,true), title:'Cocktail hour', people:['guest','anna'], note:null},
   {id:'t35c', time:'6:00 PM', sort:tk(6,0,true)+3, title:'DIY Charm Bar (6–7pm)', people:['guest'], note:null},
   {id:'t36', time:'6:00 PM', sort:tk(6,0,true)+1, title:'Move florals inside for reception', people:['planner'], note:null},
   {id:'t35b', time:'6:00 PM', sort:tk(6,0,true)+2, title:'Queue cocktail hour playlist', people:['dj'], note:null},
   {id:'t37', time:'6:30 PM', sort:tk(6,30,true), title:'Change into reception dress', people:['anna'], note:null},
-  {id:'t38', time:'7:00 PM', sort:tk(7,0,true), title:'Reception — couple entrance', people:['guest','anna','david'], note:null},
+  {id:'t38', time:'7:00 PM', sort:tk(7,0,true), title:'Reception', people:['guest'], note:null},
+  {id:'t38c', time:'7:00 PM', sort:tk(7,0,true)+0.25, title:'Couple entrance', people:['anna','david'], note:null},
   {id:'t39', time:'7:00 PM', sort:tk(7,0,true)+1, title:'Cue all entrances', people:['planner'], note:null},
   {id:'t40', time:'7:00 PM', sort:tk(7,0,true)+2, title:'MC opening', people:['mc'], note:null},
   {id:'t41', time:'7:00 PM', sort:tk(7,0,true)+3, title:'Group entrance', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
   {id:'t38b', time:'7:00 PM', sort:tk(7,0,true)+4, title:'Queue reception entrance playlist', people:['dj'], note:null},
-  {id:'t42', time:'7:15 PM', sort:tk(7,15,true), title:'First dance', people:['anna','david'], note:null},
-  {id:'t42b', time:'7:15 PM', sort:tk(7,15,true)+1, title:'Play First Dance track', people:['dj'], note:'Confirm the couple\'s chosen song ahead of time.'},
-  {id:'t43', time:'7:20 PM', sort:tk(7,20,true), title:'First course', people:['guest'], note:null},
-  {id:'t45', time:'7:20 PM', sort:tk(7,20,true)+1, title:'Sunset photos', people:['anna','david','photovideo'], note:null},
+  {id:'t38d', time:'7:00 PM', sort:tk(7,0,true)+5, title:'Capture reception entrance', people:['photovideo'], note:null},
+  {id:'t42', time:'7:15 PM', sort:tk(7,15,true), title:'First dance', people:['guest','anna','david'], note:null},
+  {id:'t42b', time:'7:15 PM', sort:tk(7,15,true)+1, title:'Play First Dance track', people:['dj'], note:null},
+  {id:'t42c', time:'7:15 PM', sort:tk(7,15,true)+2, title:'Capture first dance', people:['photovideo'], note:null},
+  {id:'t61', time:'7:20 PM', sort:tk(7,20,true), title:'Cake cutting', people:['guest','anna','david'], note:null},
+  {id:'t61c', time:'7:20 PM', sort:tk(7,20,true)+0.5, title:'Prompt for cake cutting', people:['mc'], note:null},
+  {id:'t61b', time:'7:20 PM', sort:tk(7,20,true)+0.75, title:'Capture cake cutting', people:['photovideo'], note:null},
+  {id:'t43', time:'7:20 PM', sort:tk(7,20,true)+1, title:'First course', people:['guest'], note:null},
+  {id:'t45', time:'7:20 PM', sort:tk(7,20,true)+2, title:'Sunset photos', people:['anna','david','photovideo'], note:null},
   {id:'t59', time:'7:45 PM', sort:tk(7,45,true), title:'Dad speech (2 min)', people:['parents_anna'], note:null},
-  {id:'t44', time:'8:00 PM', sort:tk(8,0,true), title:'Game #1 — Questions', people:['guest','anna','david'], note:null},
-  {id:'t44b', time:'8:00 PM', sort:tk(8,0,true)+1, title:'Introduce Game #1', people:['mc'], note:null},
-  {id:'t46', time:'8:15 PM', sort:tk(8,15,true), title:'Second course', people:['guest'], note:null},
-  {id:'t46b', time:'8:15 PM', sort:tk(8,15,true)+0.5, title:'Introduce bridesmaid speeches', people:['mc'], note:null},
-  {id:'t47', time:'8:15 PM', sort:tk(8,15,true)+1, title:'Speech #1 (1 min)', people:['bm_annad'], note:null},
-  {id:'t48', time:'8:15 PM', sort:tk(8,15,true)+2, title:'Speech #2 (1 min)', people:['bm_angela'], note:null},
-  {id:'t49', time:'8:15 PM', sort:tk(8,15,true)+3, title:'Speech #3 (1 min)', people:['bm_bernita'], note:null},
-  {id:'t50', time:'8:15 PM', sort:tk(8,15,true)+4, title:'Speech #4 (1 min)', people:['bm_louise'], note:null},
-  {id:'t50b', time:'8:25 PM', sort:tk(8,25,true), title:'Live performance', people:['guest'], note:null},
-  {id:'t51', time:'8:30 PM', sort:tk(8,30,true), title:'Main course', people:['guest'], note:null},
-  {id:'t51b', time:'8:30 PM', sort:tk(8,30,true)+0.5, title:'Introduce groomsmen speeches', people:['mc'], note:null},
-  {id:'t52', time:'8:30 PM', sort:tk(8,30,true)+1, title:'Speech #1 (1 min)', people:['gm_kai'], note:null},
-  {id:'t53', time:'8:30 PM', sort:tk(8,30,true)+2, title:'Speech #2 (1 min)', people:['gm_stanley'], note:null},
-  {id:'t54', time:'8:30 PM', sort:tk(8,30,true)+3, title:'Speech #3 (1 min)', people:['gm_jy'], note:null},
-  {id:'t54b', time:'8:30 PM', sort:tk(8,30,true)+4, title:'Speech #4 (1 min)', people:['gm_tony'], note:null},
-  {id:'t54c', time:'8:30 PM', sort:tk(8,30,true)+5, title:'Speech #5 (1 min)', people:['gm_anish'], note:null},
-  {id:'t54d', time:'8:30 PM', sort:tk(8,30,true)+6, title:'Speech #6 (1 min)', people:['gm_adam'], note:'Listed as "Ziming" on the sheet.'},
-  {id:'t58', time:'8:40 PM', sort:tk(8,40,true), title:'Game #2 — Guess the Bride', people:['guest','anna','david'], note:null},
-  {id:'t58b', time:'8:40 PM', sort:tk(8,40,true)+1, title:'Introduce Game #2', people:['mc'], note:null},
+  {id:'t59c', time:'7:45 PM', sort:tk(7,45,true)+2, title:"Listen to Dad's speech", people:['anna','david'], note:null},
+  {id:'t59b', time:'7:45 PM', sort:tk(7,45,true)+1, title:"Help translate Anna's dad's speech", people:['mc'], note:null},
+  {id:'t44', time:'8:00 PM', sort:tk(8,0,true), title:'Game #1 — Questions about the couple', people:['guest','anna','david'], note:null},
+  {id:'t44b', time:'8:00 PM', sort:tk(8,0,true)+1, title:'Introduce Game #1 — Questions about the couple', people:['mc'], note:null},
+  {id:'t44c', time:'8:00 PM', sort:tk(8,0,true)+3, title:'Queue Game #1 soundtrack', people:['dj'], note:null},
+  {id:'t46', time:'8:15 PM', sort:tk(8,15,true), title:'Second course + Speeches', people:['guest'], note:SPEECHES_1_NOTE},
+  {id:'t46b', time:'8:15 PM', sort:tk(8,15,true)+0.5, title:'Introduce speeches', people:['mc'], note:SPEECHES_1_NOTE},
+  {id:'t47', time:'8:15 PM', sort:tk(8,15,true)+1, title:'Dong speech (1 min)', people:['bm_annad'], note:SPEECHES_1_NOTE},
+  {id:'t48', time:'8:15 PM', sort:tk(8,15,true)+2, title:'Angela speech #2 (1 min)', people:['bm_angela'], note:SPEECHES_1_NOTE},
+  {id:'t49', time:'8:15 PM', sort:tk(8,15,true)+3, title:'Bernita speech #3 (1 min)', people:['bm_bernita'], note:SPEECHES_1_NOTE},
+  {id:'t52', time:'8:15 PM', sort:tk(8,15,true)+4, title:'Kai speech #1 (1 min)', people:['gm_kai'], note:SPEECHES_1_NOTE},
+  {id:'t53', time:'8:15 PM', sort:tk(8,15,true)+5, title:'Stanley speech #2 (1 min)', people:['gm_stanley'], note:SPEECHES_1_NOTE},
+  {id:'t54', time:'8:15 PM', sort:tk(8,15,true)+6, title:'JY speech #3 (1 min)', people:['gm_jy'], note:SPEECHES_1_NOTE},
+  {id:'t46c', time:'8:15 PM', sort:tk(8,15,true)+7, title:'Capture speeches', people:['photovideo'], note:SPEECHES_1_NOTE},
+  {id:'t46d', time:'8:15 PM', sort:tk(8,15,true)+8, title:'Listen to the speeches', people:['anna','david'], note:SPEECHES_1_NOTE},
+  {id:'t50b', time:'8:25 PM', sort:tk(8,25,true), title:'Live performance + Table toasting', people:['guest'], note:'Table toasting is optional — skip if there\'s no time.'},
+  {id:'t50e', time:'8:25 PM', sort:tk(8,25,true)+1, title:'Introduce Live Performance (Vanessa & Dickson)', people:['mc'], note:null},
+  {id:'t51', time:'8:30 PM', sort:tk(8,30,true), title:'Main course + Speeches', people:['guest'], note:SPEECHES_2_NOTE},
+  {id:'t51c', time:'8:30 PM', sort:tk(8,30,true)+0.25, title:'Prompt table toasting', people:['mc'], note:'Optional — skip if there\'s no time.'},
+  {id:'t51e', time:'8:30 PM', sort:tk(8,30,true)+0.35, title:'Capture table toast', people:['photovideo'], note:'Optional — skip if there\'s no time.'},
+  {id:'t51b', time:'8:30 PM', sort:tk(8,30,true)+0.5, title:'Introduce speeches', people:['mc'], note:SPEECHES_2_NOTE},
+  {id:'t54b', time:'8:30 PM', sort:tk(8,30,true)+1, title:'Tony speech #4 (1 min)', people:['gm_tony'], note:SPEECHES_2_NOTE},
+  {id:'t54c', time:'8:30 PM', sort:tk(8,30,true)+2, title:'Anish speech #5 (1 min)', people:['gm_anish'], note:SPEECHES_2_NOTE},
+  {id:'t54d', time:'8:30 PM', sort:tk(8,30,true)+3, title:'Ziming speech #6 (1 min)', people:['gm_adam'], note:SPEECHES_2_NOTE},
+  {id:'t50', time:'8:30 PM', sort:tk(8,30,true)+4, title:'Louise speech #4 (1 min)', people:['bm_louise'], note:SPEECHES_2_NOTE},
+  {id:'t50d', time:'8:30 PM', sort:tk(8,30,true)+5, title:'Kristin speech #5 (1 min)', people:['bm_kristin'], note:SPEECHES_2_NOTE},
+  {id:'t50c', time:'8:30 PM', sort:tk(8,30,true)+6, title:'Gini speech #6 (1 min)', people:['bm_gini'], note:SPEECHES_2_NOTE},
+  {id:'t51d', time:'8:30 PM', sort:tk(8,30,true)+8, title:'Capture speeches', people:['photovideo'], note:SPEECHES_2_NOTE},
+  {id:'t51f', time:'8:30 PM', sort:tk(8,30,true)+9, title:'Listen to the speeches', people:['anna','david'], note:SPEECHES_2_NOTE},
+  {id:'t58', time:'8:40 PM', sort:tk(8,40,true), title:"Game #2 — Guess the bride's hand", people:['guest','anna','david'], note:null},
+  {id:'t58b', time:'8:40 PM', sort:tk(8,40,true)+1, title:"Introduce Game #2 — Guess the bride's hand", people:['mc'], note:null},
+  {id:'t58d', time:'8:40 PM', sort:tk(8,40,true)+2, title:'Queue Game #2 soundtrack', people:['dj'], note:null},
   {id:'t58c', time:'8:00 PM', sort:tk(8,0,true)+2, title:'Arrive on site', people:['photobooth'], note:null},
-  {id:'t56', time:'9:00 PM', sort:tk(9,0,true), title:'Dessert served', people:['guest'], note:null},
+  {id:'t56', time:'9:00 PM', sort:tk(9,0,true), title:'Dessert + Thank-you speech', people:['guest'], note:null},
   {id:'t57', time:'9:00 PM', sort:tk(9,0,true)+1, title:'Photobooth opens (9pm–12am)', people:['guest','photobooth'], note:null},
-  {id:'t60', time:'9:20 PM', sort:tk(9,20,true), title:'Thank-you speeches', people:['anna','david'], note:null},
-  {id:'t60b', time:'9:20 PM', sort:tk(9,20,true)+1, title:'Introduce Thank-you speeches', people:['mc'], note:null},
-  {id:'t61', time:'9:30 PM', sort:tk(9,30,true), title:'Cake cutting', people:['guest','anna','david'], note:null},
-  {id:'t61c', time:'9:30 PM', sort:tk(9,30,true)+2, title:'Introduce Cake cutting', people:['mc'], note:null},
-  {id:'t61b', time:'9:30 PM', sort:tk(9,30,true)+1, title:'Capture cake cutting', people:['photovideo'], note:null},
-  {id:'t62', time:'9:45 PM', sort:tk(9,45,true), title:'Fairylights exit photo op', people:['guest', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
-  {id:'t62c', time:'9:45 PM', sort:tk(9,45,true)+2, title:'Introduce Fairylight Photo Op Outside', people:['mc'], note:null},
-  {id:'t62b', time:'9:45 PM', sort:tk(9,45,true)+1, title:'Night-time photo op', people:['photovideo'], note:null},
+  {id:'t60', time:'9:00 PM', sort:tk(9,0,true)+2, title:'Thank-you speeches', people:['anna','david'], note:null},
+  {id:'t60b', time:'9:00 PM', sort:tk(9,0,true)+3, title:'Introduce Thank-you speeches', people:['mc'], note:null},
+  {id:'t62', time:'9:15 PM', sort:tk(9,15,true), title:'Fairylights exit photo op', people:['guest','anna','david', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
+  {id:'t62c', time:'9:15 PM', sort:tk(9,15,true)+2, title:'Introduce Fairylight Photo Op Outside', people:['mc'], note:null},
+  {id:'t62b', time:'9:15 PM', sort:tk(9,15,true)+1, title:'Fairylights exit photo op', people:['photovideo'], note:null},
+  {id:'t62d', time:'9:30 PM', sort:tk(9,30,true), title:'Prompt phone lights dance kick off', people:['mc'], note:null},
+  {id:'t62e', time:'9:30 PM', sort:tk(9,30,true)+1, title:'Queue Dance Floor Kickoff "The Flight"', people:['dj'], note:null},
+  {id:'t62f', time:'9:30 PM', sort:tk(9,30,true)+2, title:'Capture dance floor', people:['photovideo'], note:null},
   {id:'t63', time:'10:00 PM', sort:tk(10,0,true), title:'Dance floor opens', people:['guest'], note:null},
   {id:'t63c', time:'10:00 PM', sort:tk(10,0,true)+2, title:'Introduce dance floor opening', people:['mc'], note:null},
   {id:'t63b', time:'10:00 PM', sort:tk(10,0,true)+1, title:'Queue dance floor playlist', people:['dj'], note:null},
   {id:'t63d', time:'10:30 PM', sort:tk(10,30,true), title:'Photobooth (10:30–11pm)', people:['anna','david'], note:null},
-  {id:'t64', time:'11:00 PM', sort:24*60+0, title:'Clean up the Welcome Area & Charm Bar', people:['planner'], note:null},
+  {id:'t64', time:'8:30 PM', sort:tk(8,30,true)+7, title:'Move welcome table items inside before they leave', people:['planner'], note:null},
   {id:'t69', time:'11:00 PM', sort:24*60+3, title:'Take home flowers (11pm–12am)', people:['guest'], note:null},
   {id:'t67b', time:'11:30 PM', sort:24*60+31, title:'Dance! (11:30pm–12am)', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN, 'anna','david'], note:null},
-  {id:'t68', time:'12:00 AM', sort:24*60+60, title:'Coach bus leaves', people:['guest'], note:null},
   {id:'m4', time:'12:00 AM', sort:24*60+61, title:'Picked up from dog sitter', people:['mimi'], note:null},
   {id:'t70', time:'12:00 AM', sort:24*60+62, title:'Dance floor closes', people:['guest'], note:null},
   {id:'t65', time:'12:00 AM', sort:24*60+63, title:'Photobooth wraps and leaves', people:['guest','photobooth'], note:null},
   {id:'t66', time:'12:00 AM', sort:24*60+64, title:'Grab your photobooth strip', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
   {id:'t72', time:'12:00 AM', sort:24*60+65, title:'Say goodbye to guests (12–12:30am)', people:['anna','david'], note:null},
   {id:'t70b', time:'12:30 AM', sort:24*60+90, title:'Shuttle bus leaves', people:['guest'], note:null},
+  {id:'t71c', time:'12:30 AM', sort:24*60+92, title:'Help with cleanup (12:30–1am)', people:['bm_annad', ...ALL_GROOMSMEN], note:null},
   {id:'t71', time:'1:00 AM', sort:24*60+120, title:'Get out of venue', people:['guest'], note:null},
-  {id:'t71b', time:'1:00 AM', sort:24*60+121, title:'DJ wraps and leaves', people:['dj'], note:null},
+  {id:'t71b', time:'12:30 AM', sort:24*60+91, title:'DJ wraps and leaves (12:30–1am)', people:['dj'], note:null},
 ];
 
 TASKS.sort((a,b)=>a.sort-b.sort);
@@ -872,11 +972,51 @@ async function saveCompleted(){
    ========================================================= */
 
 let stage = 'picker'; // 'picker' | 'personal' | 'compare' | 'contacts'
-let lastScheduleStage = 'picker';
 let currentPerson = null;
 let showArchive = false;
 
 function personById(id){ return PEOPLE.find(p=>p.id===id); }
+
+function hashRoute(){
+  return decodeURIComponent((location.hash || '').replace(/^#\/?/, ''));
+}
+
+function applyRoute(){
+  const h = hashRoute();
+  if(h==='compare'){
+    stage = 'compare';
+  } else if(h==='contacts'){
+    stage = 'contacts';
+  } else if(h==='more'){
+    stage = 'more';
+  } else if(h && personById(h) && !personById(h).contactOnly){
+    stage = 'personal';
+    currentPerson = h;
+  } else {
+    stage = 'picker';
+    currentPerson = null;
+  }
+}
+
+function go(hash){
+  const nextHash = hash ? '#'+hash : '';
+  if((location.hash || '') === nextHash){
+    applyRoute();
+    render();
+    return;
+  }
+  const url = hash ? '#'+hash : (location.pathname + location.search);
+  history.pushState({hash: hash||''}, '', url);
+  applyRoute();
+  render();
+  window.scrollTo(0,0);
+}
+
+window.addEventListener('popstate', ()=>{
+  applyRoute();
+  render();
+  window.scrollTo(0,0);
+});
 
 function tasksFor(personId){
   return TASKS.filter(t => t.people.includes(personId));
@@ -896,29 +1036,33 @@ let compareManageOpen = false;
 let compareTimeCutoffIndex = 0; // hide time rows before this index in orderedTimeLabels()
 
 function defaultCompareOrder(){
-  let order = PEOPLE.map(p=>p.id);
-  const moveTo = (id, index)=>{
-    const i = order.indexOf(id);
-    if(i===-1) return;
-    order.splice(i,1);
-    order.splice(index,0,id);
-  };
-  // Guest first
-  moveTo('guest', 0);
-  // Planner 3rd, Timelesstree (photo & video) 4th
-  moveTo('planner', 3);
-  moveTo('photovideo', 4);
-  // Parents (incl. May) as a group, after Vendors, before Mimi
-  const parentsIds = ['parents_anna','parents_david'];
-  parentsIds.forEach(id=>{
-    const i = order.indexOf(id);
-    if(i>-1) order.splice(i,1);
+  const idsInGroup = (group)=> PEOPLE.filter(p=>p.group===group).map(p=>p.id);
+  const preferred = [
+    'anna',
+    'david',
+    'guest',
+    'planner',
+    'photovideo', // Estelle & Team
+    'dj',         // Justin
+    'mc',         // Ken
+    'mua',        // Sherry
+    'florist',    // Watering Can
+    'photobooth', // Chronobooth
+    ...idsInGroup('Bridesmaids'),
+    ...idsInGroup('Groomsmen'),
+    ...idsInGroup('Parents'),
+    'mimi',
+  ];
+  const seen = new Set();
+  const order = [];
+  preferred.forEach(id=>{
+    if(PEOPLE.some(p=>p.id===id) && !seen.has(id)){
+      seen.add(id);
+      order.push(id);
+    }
   });
-  const mimiIndex = order.indexOf('mimi');
-  const insertAt = mimiIndex === -1 ? order.length : mimiIndex;
-  parentsIds.forEach((id,offset)=>{
-    if(order.includes(id)) return; // safety, shouldn't happen
-    order.splice(insertAt+offset, 0, id);
+  PEOPLE.forEach(p=>{
+    if(!seen.has(p.id) && !p.contactOnly) order.push(p.id);
   });
   return order;
 }
@@ -932,11 +1076,38 @@ function initCompareState(){
   }
 }
 
-function moveCompareIdToIndex(id, targetIndex){
-  const i = compareOrder.indexOf(id);
-  if(i===-1) return;
-  compareOrder.splice(i,1);
-  compareOrder.splice(targetIndex,0,id);
+function compareIdsInGroup(group){
+  return compareOrder.filter(id=>personById(id)?.group===group);
+}
+
+function renderManagePersonRow(id, nested){
+  const p = personById(id);
+  const on = compareVisible.has(id);
+  return `
+        <div class="manage-row${nested?' nested':''}" data-id="${id}">
+          <div class="drag-handle" title="Drag to reorder">&#8942;&#8942;</div>
+          <label class="manage-check">
+            <input type="checkbox" data-id="${id}" class="visToggle" ${on?'checked':''}/>
+            <span class="${on?'':'manage-off'}">${p.name}<span class="manage-role"> — ${p.role}</span></span>
+          </label>
+        </div>`;
+}
+
+function renderManageGroup(group){
+  const ids = compareIdsInGroup(group);
+  if(!ids.length) return '';
+  const nOn = ids.filter(id=>compareVisible.has(id)).length;
+  return `
+        <div class="manage-block" data-group="${group}">
+          <div class="manage-group-head">
+            <div class="drag-handle" title="Drag to reorder">&#8942;&#8942;</div>
+            <label class="manage-check">
+              <input type="checkbox" class="groupToggle" data-group="${group}" ${nOn===ids.length?'checked':''}/>
+              <span class="${nOn===0?'manage-off':''}">${group}</span>
+            </label>
+          </div>
+          ${ids.map(id=>renderManagePersonRow(id, true)).join('')}
+        </div>`;
 }
 
 let dragSourceId = null;
@@ -949,19 +1120,14 @@ function renderCompare(){
   let html = `
   <div class="compare-shell">
     <div class="compare-topbar">
-      <button class="back-btn" id="compareBack">&#8592; Back</button>
       <div class="compare-title serif">Everyone's Schedule</div>
-    </div>
-    <div style="padding:14px 16px 6px 16px;">
-      <button class="manage-toggle" id="manageToggle">${compareManageOpen ? 'Hide' : 'Show'} filter &amp; reorder</button>
+      <button class="manage-toggle${compareManageOpen ? ' open' : ''}" id="manageToggle" aria-pressed="${compareManageOpen ? 'true' : 'false'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" y1="2" x2="14" y2="6"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="16" y1="18" x2="16" y2="22"/></svg>Filter</button>
     </div>
     <div class="time-filter">
-      <div class="time-filter-top">
-        <div class="time-filter-caption">Hide times before</div>
+      <div class="time-filter-caption">Hide times before</div>
+      <div class="time-filter-slider-wrap" id="timeFilterWrap" style="--pct:${times.length>1 ? (compareTimeCutoffIndex/(times.length-1)*100) : 0}%">
+        <input type="range" id="timeFilterSlider" class="time-filter-slider" min="0" max="${Math.max(times.length-1,0)}" step="1" value="${compareTimeCutoffIndex}"/>
         <div class="time-filter-pill" id="timeFilterValue">${compareTimeCutoffIndex===0 ? 'Start of day' : times[compareTimeCutoffIndex]}</div>
-      </div>
-      <div class="time-filter-slider-wrap">
-        <input type="range" id="timeFilterSlider" class="time-filter-slider" min="0" max="${Math.max(times.length-1,0)}" step="1" value="${compareTimeCutoffIndex}" style="--pct:${times.length>1 ? (compareTimeCutoffIndex/(times.length-1)*100) : 0}%"/>
       </div>
     </div>
   `;
@@ -973,24 +1139,24 @@ function renderCompare(){
         <button class="manage-panel-done" id="managePanelDone">Done</button>
       </div>
       <div class="manage-panel-body">`;
-    compareOrder.forEach((id,idx)=>{
+    const emittedGroups = new Set();
+    compareOrder.forEach(id=>{
       const p = personById(id);
-      const on = compareVisible.has(id);
-      html += `
-        <div class="manage-row" data-id="${id}">
-          <div class="drag-handle" title="Drag to reorder">&#8942;&#8942;</div>
-          <label class="manage-check">
-            <input type="checkbox" data-id="${id}" class="visToggle" ${on?'checked':''}/>
-            <span class="${on?'':'manage-off'}">${p.name}<span class="manage-role"> — ${p.role}</span></span>
-          </label>
-        </div>`;
+      if(p && (p.group==='Bridesmaids' || p.group==='Groomsmen')){
+        if(!emittedGroups.has(p.group)){
+          emittedGroups.add(p.group);
+          html += renderManageGroup(p.group);
+        }
+        return;
+      }
+      html += renderManagePersonRow(id, false);
     });
     html += `</div></div>`;
   }
 
   html += `
     <div class="compare-scroll">
-      <table class="compare-table">
+      <table class="compare-table" style="--cols:${visibleOrder.length}">
         <thead>
           <tr>
             <th class="time-col">Time</th>
@@ -1008,7 +1174,7 @@ function renderCompare(){
       if(cellTasks.length===0){
         html += `<td></td>`;
       } else {
-        html += `<td>${cellTasks.map(t=>`<div class="mini-card ${completed[t.id]?'mini-done':''}">${t.title}</div>`).join('')}</td>`;
+        html += `<td>${cellTasks.map(t=>`<div class="mini-card ${completed[t.id]?'mini-done':''}">${t.title}${t.note?`<div class="mini-note">${t.note}</div>`:''}</div>`).join('')}</td>`;
       }
     });
     html += `</tr>`;
@@ -1023,19 +1189,6 @@ function renderCompare(){
 }
 
 function attachCompareHandlers(){
-  const topbarEl = document.querySelector('.compare-topbar');
-  if(topbarEl){
-    const setStickyOffset = ()=>{
-      document.documentElement.style.setProperty('--sticky-offset', topbarEl.offsetHeight+'px');
-    };
-    setStickyOffset();
-    window.addEventListener('resize', setStickyOffset, {once:false});
-  }
-  document.getElementById('compareBack').addEventListener('click', ()=>{
-    stage = 'picker';
-    render();
-    window.scrollTo(0,0);
-  });
   document.getElementById('manageToggle').addEventListener('click', ()=>{
     compareManageOpen = !compareManageOpen;
     render();
@@ -1044,10 +1197,11 @@ function attachCompareHandlers(){
   if(timeSlider){
     const timeLabels = orderedTimeLabels();
     const timeValueEl = document.getElementById('timeFilterValue');
+    const timeWrap = document.getElementById('timeFilterWrap');
     const maxIdx = Math.max(timeLabels.length-1, 0);
     const updatePct = (idx)=>{
       const pct = maxIdx>0 ? (idx/maxIdx*100) : 0;
-      timeSlider.style.setProperty('--pct', pct+'%');
+      if(timeWrap) timeWrap.style.setProperty('--pct', pct+'%');
     };
     timeSlider.addEventListener('input', ()=>{
       const idx = parseInt(timeSlider.value, 10);
@@ -1073,36 +1227,65 @@ function attachCompareHandlers(){
       render();
     });
   });
+  document.querySelectorAll('.groupToggle').forEach(el=>{
+    const group = el.getAttribute('data-group');
+    const ids = compareIdsInGroup(group);
+    const nOn = ids.filter(id=>compareVisible.has(id)).length;
+    el.indeterminate = nOn>0 && nOn<ids.length;
+    el.addEventListener('change', ()=>{
+      ids.forEach(id=>{
+        if(el.checked) compareVisible.add(id);
+        else compareVisible.delete(id);
+      });
+      render();
+    });
+  });
 
   let dragEl = null;
-  document.querySelectorAll('.manage-row').forEach(row=>{
-    const handle = row.querySelector('.drag-handle');
-    if(!handle) return;
+  const bindDrag = (handle, unit)=>{
     handle.style.touchAction = 'none';
-
     handle.addEventListener('pointerdown', (e)=>{
-      dragEl = row;
-      row.classList.add('dragging');
+      dragEl = unit;
+      unit.classList.add('dragging');
       try{ handle.setPointerCapture(e.pointerId); }catch(err){}
     });
-
     handle.addEventListener('pointermove', (e)=>{
       if(!dragEl) return;
       e.preventDefault();
       const target = document.elementFromPoint(e.clientX, e.clientY);
-      const targetRow = target && target.closest('.manage-row');
-      if(targetRow && targetRow !== dragEl && targetRow.parentElement === dragEl.parentElement){
-        const rect = targetRow.getBoundingClientRect();
+      const container = dragEl.parentElement;
+      if(!target || !container) return;
+      let targetEl = null;
+      if(dragEl.classList.contains('manage-block')){
+        targetEl = target.closest('.manage-block, .manage-panel-body > .manage-row');
+        if(targetEl && targetEl.classList.contains('manage-row') && targetEl.closest('.manage-block')){
+          targetEl = targetEl.closest('.manage-block');
+        }
+      } else {
+        targetEl = target.closest('.manage-row');
+      }
+      if(targetEl && targetEl !== dragEl && targetEl.parentElement === container){
+        const rect = targetEl.getBoundingClientRect();
         const before = (e.clientY - rect.top) < rect.height/2;
-        targetRow.parentElement.insertBefore(dragEl, before ? targetRow : targetRow.nextSibling);
+        container.insertBefore(dragEl, before ? targetEl : targetEl.nextSibling);
       }
     });
-
     const finishDrag = (e)=>{
       if(!dragEl) return;
       try{ handle.releasePointerCapture(e.pointerId); }catch(err){}
       dragEl.classList.remove('dragging');
-      compareOrder = Array.from(document.querySelectorAll('.manage-row')).map(r=>r.getAttribute('data-id'));
+      const body = document.querySelector('.manage-panel-body');
+      const order = [];
+      if(body){
+        Array.from(body.children).forEach(el=>{
+          if(el.classList.contains('manage-block')){
+            el.querySelectorAll('.manage-row[data-id]').forEach(r=>order.push(r.getAttribute('data-id')));
+          } else if(el.classList.contains('manage-row') && el.getAttribute('data-id')){
+            order.push(el.getAttribute('data-id'));
+          }
+        });
+      }
+      if(order.length) compareOrder = order;
       dragEl = null;
       render();
     };
@@ -1110,12 +1293,19 @@ function attachCompareHandlers(){
     handle.addEventListener('pointercancel', ()=>{
       if(dragEl){ dragEl.classList.remove('dragging'); dragEl=null; }
     });
+  };
+  document.querySelectorAll('.manage-row').forEach(row=>{
+    const handle = row.querySelector(':scope > .drag-handle');
+    if(handle) bindDrag(handle, row);
+  });
+  document.querySelectorAll('.manage-block').forEach(block=>{
+    const handle = block.querySelector('.manage-group-head .drag-handle');
+    if(handle) bindDrag(handle, block);
   });
 }
 
 function render(){
   const root = document.getElementById('root');
-  if(stage!=='contacts' && stage!=='more'){ lastScheduleStage = stage; }
   if(stage==='picker'){
     root.innerHTML = renderPicker();
     attachPickerHandlers();
@@ -1164,13 +1354,17 @@ function renderContacts(){
   vendors.forEach(p=>{
     const telHref = p.phone ? `tel:${p.phone.replace(/[^0-9+]/g,'')}` : null;
     const mailHref = p.email ? `mailto:${p.email}` : null;
-    const roleLine = p.contactName ? `${p.role} · ${p.contactName}` : p.role;
+    const displayName = (p.id==='planner' || p.id==='cakeshop') && p.contactName ? p.contactName : p.name;
+    const roleLine = (p.id==='planner' || p.id==='cakeshop') ? p.role : (p.contactName ? `${p.role} · ${p.contactName}` : p.role);
+    const detailLine = [p.phone, p.email].filter(Boolean).join(' · ');
     html += `
       <div class="contact-card">
         <div>
-          <div class="contact-name">${p.name}</div>
+          <div class="contact-name">${displayName}</div>
           <div class="contact-role">${roleLine}</div>
-          ${(p.phone || p.email) ? `<div class="contact-note">${[p.phone, p.email].filter(Boolean).join(' · ')}</div>` : `<div class="contact-missing">No contact info yet</div>`}
+          ${p.contactNote ? `<div class="contact-note">${p.contactNote}</div>` : ''}
+          ${detailLine ? `<div class="contact-note">${detailLine}</div>` : (p.address || p.contactNote ? '' : `<div class="contact-missing">No contact info yet</div>`)}
+          ${p.address ? `<div class="contact-note">${p.address}</div>` : ''}
         </div>
         <div class="contact-actions">
           <a class="contact-btn ${telHref ? '' : 'disabled'}" ${telHref ? `href="${telHref}"` : ''} title="Call">&#128222;</a>
@@ -1191,7 +1385,7 @@ function attachContactsHandlers(){
 /* ---- More tab: reference links ---- */
 const REFERENCE_LINKS = [
   {id:'ig', title:'Instagram Reels', desc:'Content & reel ideas for the day', url:null},
-  {id:'pin', title:'Pinterest Board', desc:'Photo references for the shoot list', url:null},
+  {id:'pin', title:'Pinterest Board', desc:'Photo references for the shoot list', url:'https://pin.it/5pkBL2Isq'},
   {id:'seating', title:'Seating Chart', desc:'Table assignments for the reception', url:null},
 ];
 
@@ -1246,16 +1440,16 @@ function renderPicker(){
     </div>
     <div class="content">
       <div class="picker-intro">
-        <h2>Who are you?</h2>
-        <p>Tap your name to see today's schedule, filtered just for you.</p>
+        <p>Find your name to see your schedule</p>
       </div>
-      <div style="text-align:center;margin:0 0 18px 0;">
-        <a id="compareLink" style="font-size:14px;color:var(--sage-deep);text-decoration:underline;text-decoration-color:var(--line);cursor:pointer;">Compare everyone's schedule &#8594;</a>
+      <div class="compare-pill-wrap">
+        <a class="compare-pill" id="compareLink">Compare everyone's schedule &#8594;</a>
       </div>
   `;
 
   groups.forEach(g=>{
-    const members = PEOPLE.filter(p=>p.group===g);
+    const members = PEOPLE.filter(p=>p.group===g && !p.contactOnly);
+    if(!members.length) return;
     html += `<div class="group-label">${g}</div><div class="card-grid">`;
     members.forEach(m=>{
       const wide = (m.group==='Guests' || m.id==='planner' || m.id==='mimi') ? ' wide' : '';
@@ -1278,19 +1472,14 @@ function renderPicker(){
 function attachPickerHandlers(){
   document.querySelectorAll('.person-card').forEach(el=>{
     el.addEventListener('click', ()=>{
-      currentPerson = el.getAttribute('data-id');
-      stage = 'personal';
       showArchive = false;
-      render();
-      window.scrollTo(0,0);
+      go(el.getAttribute('data-id'));
     });
   });
   const compareLink = document.getElementById('compareLink');
   if(compareLink){
     compareLink.addEventListener('click', ()=>{
-      stage = 'compare';
-      render();
-      window.scrollTo(0,0);
+      go('compare');
     });
   }
 }
@@ -1303,7 +1492,7 @@ function renderPersonal(){
 
   let banner = '';
   if(p.id==='parents_anna'){
-    banner = `<div class="banner"><b>Reminder —</b> please arrive together for the 3:00 PM ceremony rehearsal. Only May has a hair &amp; makeup slot, at 11:00 AM — Andre doesn't need to be there for that.</div>`;
+    banner = `<div class="banner"><b>Reminder —</b> please arrive together for the 3:00 PM ceremony rehearsal. Only May has a hair &amp; makeup slot, at 11:30 AM — Andre doesn't need to be there for that.</div>`;
   } else if(ALL_PARENTS.includes(p.id)){
     banner = `<div class="banner"><b>Reminder —</b> parents arrive earlier than the rest of the guests, for the 3:00 PM ceremony rehearsal.</div>`;
   } else if(p.id==='mua'){
@@ -1315,16 +1504,9 @@ function renderPersonal(){
   let html = `
   <div class="shell">
     <div class="content">
-      <div class="topbar" style="padding-top:18px;">
-        <button class="back-btn" id="backBtn">&#8592; Switch person</button>
-        <div class="whoami">
-          <div class="name">${p.name}</div>
-          <div class="role">${p.role}</div>
-        </div>
-      </div>
       ${banner}
       <div class="section-title">
-        <span>Today's tasks</span>
+        <span>${p.name}'s Schedule</span>
         <span class="count-pill">${todo.length}</span>
       </div>
   `;
@@ -1355,22 +1537,16 @@ function renderTaskRow(t, isDone){
   return `
     <div class="task ${isDone?'done':''}" data-id="${t.id}">
       <div class="time">${t.time}</div>
-      <div class="checkbox ${isDone?'checked':''}" data-id="${t.id}">${CHECK_SVG}</div>
       <div class="body">
         <div class="title">${t.title}</div>
         ${t.note ? `<div class="note">${t.note}</div>` : ''}
       </div>
+      <div class="checkbox ${isDone?'checked':''}" data-id="${t.id}">${CHECK_SVG}</div>
     </div>
   `;
 }
 
 function attachPersonalHandlers(){
-  document.getElementById('backBtn').addEventListener('click', ()=>{
-    stage = 'picker';
-    currentPerson = null;
-    render();
-    window.scrollTo(0,0);
-  });
   const archiveToggle = document.getElementById('archiveToggle');
   if(archiveToggle){
     archiveToggle.addEventListener('click', ()=>{
@@ -1392,24 +1568,19 @@ function attachPersonalHandlers(){
    INIT
    ========================================================= */
 document.getElementById('navSchedule').addEventListener('click', ()=>{
-  stage = lastScheduleStage;
-  render();
-  window.scrollTo(0,0);
+  go('');
 });
 document.getElementById('navContacts').addEventListener('click', ()=>{
-  stage = 'contacts';
-  render();
-  window.scrollTo(0,0);
+  go('contacts');
 });
 document.getElementById('navMore').addEventListener('click', ()=>{
-  stage = 'more';
-  render();
-  window.scrollTo(0,0);
+  go('more');
 });
 
 (async function init(){
   document.getElementById('root').innerHTML = `<div style="padding:60px 20px;text-align:center;color:#726F63;font-family:'Karla',sans-serif;">Loading your day…</div>`;
   await loadCompleted();
+  applyRoute();
   render();
 })();
 </script>
