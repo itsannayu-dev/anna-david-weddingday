@@ -7,6 +7,35 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600&display=swap');
 
+  @font-face{
+    font-family:'Editors Note';
+    src:url('fonts/EditorsNote-Regular.otf') format('opentype');
+    font-weight:400;
+    font-style:normal;
+    font-display:swap;
+  }
+  @font-face{
+    font-family:'Editors Note';
+    src:url('fonts/EditorsNote-Italic.otf') format('opentype');
+    font-weight:400;
+    font-style:italic;
+    font-display:swap;
+  }
+  @font-face{
+    font-family:'Editors Note';
+    src:url('fonts/EditorsNote-Medium.otf') format('opentype');
+    font-weight:500;
+    font-style:normal;
+    font-display:swap;
+  }
+  @font-face{
+    font-family:'Editors Note';
+    src:url('fonts/EditorsNote-MediumItalic.otf') format('opentype');
+    font-weight:500;
+    font-style:italic;
+    font-display:swap;
+  }
+
   :root{
     --cream:#FAF7F0;
     --paper:#FFFFFF;
@@ -86,6 +115,11 @@
   .arch-header .sub{
     font-size:15px;
     color:rgba(253,252,249,0.92);
+  }
+  .entry-hero .eyebrow,
+  .entry-hero h1,
+  .entry-hero .sub{
+    font-family:'Editors Note', serif;
   }
 
   /* ---------- content pad ---------- */
@@ -1215,6 +1249,55 @@ let stage = 'picker'; // 'picker' | 'personal' | 'compare' | 'contacts' | 'cars'
 let currentPerson = null;
 let showArchive = false;
 let showDongNote = false;
+let showPackingList = false;
+
+const BRIDESMAIDS_PACKING = ALL_BRIDESMAIDS.filter(id=>id!=='bm_annad');
+const GROOMSMEN_PACKING_ITEMS = ['Suit', 'Black Bowtie', 'Dress shoes', 'Dress socks'];
+
+function bridesmaidPackingList(personId){
+  const items = [
+    'Bridesmaid Dress',
+    'Heels',
+    'Jewelry',
+    'Sunglasses',
+    'Portable Phone Charger',
+    'Fuzzy / Normal Slippers',
+  ];
+  if(personId!=='bm_kristin') items.push('Make-up');
+  if(personId!=='bm_kristin' && personId!=='bm_bernita' && personId!=='bm_angela') items.push('Hairstyling Items');
+  if(personId==='bm_bernita') items.push('Steamer');
+  return items;
+}
+
+function packingListForPerson(personId){
+  if(BRIDESMAIDS_PACKING.includes(personId)) return bridesmaidPackingList(personId);
+  if(ALL_GROOMSMEN.includes(personId)) return GROOMSMEN_PACKING_ITEMS;
+  return null;
+}
+
+function hasPackingList(personId){
+  return packingListForPerson(personId) !== null;
+}
+
+function renderPackingModal(personId){
+  const items = packingListForPerson(personId);
+  return `
+  <div class="modal-overlay" id="packingOverlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Packing List</div>
+        <button class="modal-close" id="packingClose" aria-label="Close">&#10005;</button>
+      </div>
+      <div class="modal-sub">What to pack for the wedding day.</div>
+      <div class="modal-section">
+        <div class="modal-section-title">Pack</div>
+        <ul class="modal-list">
+          ${items.map(i=>`<li>${i}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+  </div>`;
+}
 
 /* ---- Dong's personal note/checklist (pre-wedding + morning of) ---- */
 const DONG_NOTE = {
@@ -1295,12 +1378,13 @@ function applyRoute(){
     stage = 'more';
   } else if(h && personById(h) && !personById(h).contactOnly){
     stage = 'personal';
-    if(currentPerson !== h){ showDongNote = false; }
+    if(currentPerson !== h){ showDongNote = false; showPackingList = false; }
     currentPerson = h;
   } else {
     stage = 'picker';
     currentPerson = null;
     showDongNote = false;
+    showPackingList = false;
   }
 }
 
@@ -1881,11 +1965,21 @@ function renderPersonal(){
         <div class="note-link-arrow">&#8250;</div>
       </div>` : '';
 
+  const packingLink = hasPackingList(p.id) ? `
+      <div class="note-link-card" id="packingLink">
+        <div>
+          <div class="note-link-title">Packing list</div>
+          <div class="note-link-sub">What to pack for the wedding day</div>
+        </div>
+        <div class="note-link-arrow">&#8250;</div>
+      </div>` : '';
+
   let html = `
   <div class="shell">
     <div class="content">
       ${banner}
       ${dongNoteLink}
+      ${packingLink}
       <div class="section-title">
         <span>${p.name}'s Schedule</span>
         <span class="count-pill">${todo.length}</span>
@@ -1914,6 +2008,9 @@ function renderPersonal(){
 
   if(p.id==='bm_annad' && showDongNote){
     html += renderDongNoteModal();
+  }
+  if(hasPackingList(p.id) && showPackingList){
+    html += renderPackingModal(p.id);
   }
 
   return html;
@@ -1969,6 +2066,30 @@ function attachPersonalHandlers(){
   if(dongNoteClose){
     dongNoteClose.addEventListener('click', ()=>{
       showDongNote = false;
+      render();
+    });
+  }
+
+  const packingLink = document.getElementById('packingLink');
+  if(packingLink){
+    packingLink.addEventListener('click', ()=>{
+      showPackingList = true;
+      render();
+    });
+  }
+  const packingOverlay = document.getElementById('packingOverlay');
+  if(packingOverlay){
+    packingOverlay.addEventListener('click', (e)=>{
+      if(e.target === packingOverlay){
+        showPackingList = false;
+        render();
+      }
+    });
+  }
+  const packingClose = document.getElementById('packingClose');
+  if(packingClose){
+    packingClose.addEventListener('click', ()=>{
+      showPackingList = false;
       render();
     });
   }
