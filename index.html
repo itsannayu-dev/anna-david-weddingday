@@ -2001,21 +2001,31 @@ const REFERENCE_LINKS = [
   {id:'pin', title:'Pinterest Board', desc:'Photo references for the shoot list', url:'https://pin.it/5pkBL2Isq'},
 ];
 
-/* ---- More tab: seating chart (PDF) ---- */
-const SEATING_CHART = {
-  src: 'seating-chart.pdf',
-  title: 'Seating Chart',
-  desc: 'Who sits where — 13 tables plus the head table',
-  meta: 'PDF · 1 page · 122 guests',
-};
+/* ---- More tab: attached files, opened in a new tab ---- */
+const ATTACHMENTS = [
+  {
+    id:'chart',
+    src:'seating-chart.pdf',
+    title:'Seating Chart',
+    desc:'Who sits where — 13 tables plus the head table',
+    meta:'PDF · 1 page · 122 guests',
+  },
+  {
+    id:'setup',
+    src:'setup-references.jpg',
+    title:'Setup References',
+    desc:'How to set up each table, sign, and display',
+    meta:'Image · 8 sections',
+  },
+];
 
-function renderSeatingChartCard(){
+function renderAttachmentCard(a){
   return `
-      <a class="contact-card doc-card" href="${SEATING_CHART.src}" target="_blank" rel="noopener">
+      <a class="contact-card doc-card" href="${a.src}" target="_blank" rel="noopener">
         <div>
-          <div class="contact-name">${SEATING_CHART.title}</div>
-          <div class="contact-role">${SEATING_CHART.desc}</div>
-          <div class="doc-meta">${SEATING_CHART.meta}</div>
+          <div class="contact-name">${a.title}</div>
+          <div class="contact-role">${a.desc}</div>
+          <div class="doc-meta">${a.meta}</div>
         </div>
         <div class="contact-actions">
           <span class="contact-btn" aria-hidden="true">&#8599;</span>
@@ -2095,7 +2105,7 @@ function renderMore(){
         </div>
       </div>`;
   });
-  html += renderSeatingChartCard();
+  ATTACHMENTS.forEach(a=>{ html += renderAttachmentCard(a); });
   html += renderFloorPlanCard();
   html += `
     </div>
