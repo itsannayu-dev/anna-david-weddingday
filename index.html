@@ -922,9 +922,44 @@
     opacity:0.7;
   }
 
+  /* ---------- food allergy table ---------- */
+  .allergy-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13.5px;
+    color:var(--ink);
+  }
+  .allergy-table th{
+    text-align:left;
+    font-family:'Karla', sans-serif;
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--sage-deep);
+    padding:0 8px 7px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .allergy-table th:last-child, .allergy-table td:last-child{ padding-right:0; }
+  .allergy-table td{
+    padding:9px 8px 9px 0;
+    border-bottom:1px solid var(--line-soft);
+    vertical-align:top;
+    line-height:1.4;
+  }
+  .allergy-table tr:last-child td{ border-bottom:none; }
+  .allergy-table-col{
+    white-space:nowrap;
+    font-weight:600;
+    color:var(--sage-deep);
+    width:1%;
+  }
+  .allergy-name{ white-space:nowrap; }
+  .allergy-unknown{ color:var(--ink-soft); opacity:0.6; font-weight:400; }
+
   /* ---------- pdf attachment card ---------- */
   /* Same shape as .contact-card; the whole card is the link. */
-  .doc-card{ text-decoration:none; }
+  .doc-card{ text-decoration:none; cursor:pointer; }
   .doc-meta{
     font-size:12.5px;
     color:var(--ink-soft);
@@ -1431,6 +1466,7 @@ let showArchive = true;
 let showDongNote = false;
 let showPackingList = false;
 let showFloorPlan = false;
+let showAllergies = false;
 
 const BRIDESMAIDS_PACKING = ALL_BRIDESMAIDS.filter(id=>id!=='bm_annad');
 const GROOMSMEN_PACKING_ITEMS = ['Suit', 'Black Bowtie', 'Dress shoes', 'Dress socks'];
@@ -1567,7 +1603,7 @@ function applyRoute(){
     showDongNote = false;
     showPackingList = false;
   }
-  if(stage !== 'more'){ showFloorPlan = false; }
+  if(stage !== 'more'){ showFloorPlan = false; showAllergies = false; }
 }
 
 function go(hash){
@@ -2049,14 +2085,51 @@ const ATTACHMENTS = [
     desc:'How to set up each table, sign, and display',
     meta:'Image · 10 sections',
   },
-  {
-    id:'allergies',
-    src:'food-allergies.png',
-    title:'Food Allergy List',
-    desc:'Allergies and dietary needs, with table numbers',
-    meta:'Image · 13 guests',
-  },
 ];
+
+/* ---- More tab: food allergies & dietary needs ----
+   Edit this list directly. `table` may be left blank if unknown. */
+const FOOD_ALLERGIES = [
+  {table:'T2',  name:'Kristin So',       need:'Nut allergy'},
+  {table:'T13', name:'Kelvin Lau',       need:'Nut allergy'},
+  {table:'T12', name:'Steven Luu',       need:'No peanuts'},
+  {table:'T12', name:'Remira Melendrez', need:'No walnuts'},
+  {table:'T11', name:'Janice Cheung',    need:'No shellfish'},
+  {table:'T12', name:'Anthony Cho',      need:'Pescatarian'},
+  {table:'T11', name:'Bindi Mehta',      need:'Vegetarian'},
+  {table:'T3',  name:'Elaine Yuan',      need:'Vegan preferred'},
+  {table:'T3',  name:'Kevin Ding',       need:'No cilantro'},
+  {table:'T7',  name:'Rob Lin',          need:'Birch allergy (apple, peach, plum, pear, apricot, almonds)'},
+  {table:'T3',  name:'Eric Sun',         need:'No raw apple, raw peach, raw cherry'},
+  {table:'T3',  name:'Linda Zhang',      need:'No raw apple, raw peach, raw cherry'},
+  {table:'',    name:'Tina Gong',        need:'No raw banana'},
+];
+
+function renderAllergiesModal(){
+  return `
+  <div class="modal-overlay" id="allergyOverlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Food Allergy List</div>
+        <button class="modal-close" id="allergyClose" aria-label="Close">&#10005;</button>
+      </div>
+      <div class="modal-sub">${FOOD_ALLERGIES.length} guests with allergies or dietary needs.</div>
+      <table class="allergy-table">
+        <thead>
+          <tr><th>Table</th><th>Guest</th><th>Needs</th></tr>
+        </thead>
+        <tbody>
+          ${FOOD_ALLERGIES.map(g=>`
+          <tr>
+            <td class="allergy-table-col">${g.table || '<span class="allergy-unknown">—</span>'}</td>
+            <td class="allergy-name">${g.name}</td>
+            <td>${g.need}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
 
 function renderAttachmentCard(a){
   return `
@@ -2141,12 +2214,26 @@ ${renderHero()}
       </div>`;
   });
   ATTACHMENTS.forEach(a=>{ html += renderAttachmentCard(a); });
+  html += `
+      <div class="contact-card doc-card" id="allergyLink">
+        <div>
+          <div class="contact-name">Food Allergy List</div>
+          <div class="contact-role">Allergies and dietary needs, with table numbers</div>
+          <div class="doc-meta">${FOOD_ALLERGIES.length} guests</div>
+        </div>
+        <div class="contact-actions">
+          <span class="contact-btn" aria-hidden="true">&#8250;</span>
+        </div>
+      </div>`;
   html += renderFloorPlanCard();
   html += `
     </div>
   </div>`;
   if(showFloorPlan){
     html += renderFloorPlanLightbox();
+  }
+  if(showAllergies){
+    html += renderAllergiesModal();
   }
   return html;
 }
@@ -2175,6 +2262,30 @@ function attachMoreHandlers(){
       render();
     });
   }
+  const allergyLink = document.getElementById('allergyLink');
+  if(allergyLink){
+    allergyLink.addEventListener('click', ()=>{
+      showAllergies = true;
+      render();
+    });
+  }
+  const allergyOverlay = document.getElementById('allergyOverlay');
+  if(allergyOverlay){
+    allergyOverlay.addEventListener('click', (e)=>{
+      if(e.target === allergyOverlay){
+        showAllergies = false;
+        render();
+      }
+    });
+  }
+  const allergyClose = document.getElementById('allergyClose');
+  if(allergyClose){
+    allergyClose.addEventListener('click', ()=>{
+      showAllergies = false;
+      render();
+    });
+  }
+
   // The viewport locks pinch-zoom, so tapping the plan toggles a 2x scroll view.
   const stage = document.getElementById('floorPlanStage');
   if(stage){
