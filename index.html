@@ -469,8 +469,7 @@
     margin-top:6px;
   }
   .archive-toggle:hover{ border-color:var(--sage); color:var(--sage-deep); }
-
-
+  .archive-toggle{ margin-bottom:6px; }
 
   footer.note{
     text-align:center;
@@ -1378,7 +1377,7 @@ function applyRoute(){
     stage = 'more';
   } else if(h && personById(h) && !personById(h).contactOnly){
     stage = 'personal';
-    if(currentPerson !== h){ showDongNote = false; showPackingList = false; }
+    if(currentPerson !== h){ showArchive = false; showDongNote = false; showPackingList = false; }
     currentPerson = h;
   } else {
     stage = 'picker';
@@ -1927,7 +1926,6 @@ function renderPicker(){
 function attachPickerHandlers(){
   document.querySelectorAll('.person-card').forEach(el=>{
     el.addEventListener('click', ()=>{
-      showArchive = false;
       go(el.getAttribute('data-id'));
     });
   });
@@ -1942,8 +1940,8 @@ function attachPickerHandlers(){
 function renderPersonal(){
   const p = personById(currentPerson);
   const all = tasksFor(currentPerson);
-  const todo = all.filter(t=>!completed[t.id]);
-  const done = all.filter(t=>completed[t.id]);
+  const doneCount = all.filter(t=>completed[t.id]).length;
+  const todoCount = all.length - doneCount;
 
   let banner = '';
   if(p.id==='parents_anna'){
@@ -1982,23 +1980,19 @@ function renderPersonal(){
       ${packingLink}
       <div class="section-title">
         <span>${p.name}'s Schedule</span>
-        <span class="count-pill">${todo.length}</span>
+        <span class="count-pill">${doneCount} / ${all.length}</span>
       </div>
+      ${`<button class="archive-toggle" id="archiveToggle">${showArchive ? 'Hide' : 'Show'} completed (${doneCount})</button>`}
   `;
 
-  if(todo.length===0){
+  const visible = showArchive ? all : all.filter(t=>!completed[t.id]);
+
+  if(visible.length===0){
     html += `<div class="empty-state"><span class="serif">All clear</span>You're all caught up for now.</div>`;
   } else {
-    todo.forEach(t=>{
-      html += renderTaskRow(t,false);
+    visible.forEach(t=>{
+      html += renderTaskRow(t, !!completed[t.id]);
     });
-  }
-
-  if(done.length>0){
-    html += `<button class="archive-toggle" id="archiveToggle">${showArchive ? 'Hide' : 'Show'} completed (${done.length}) — archived</button>`;
-    if(showArchive){
-      done.forEach(t=>{ html += renderTaskRow(t,true); });
-    }
   }
 
   html += `
