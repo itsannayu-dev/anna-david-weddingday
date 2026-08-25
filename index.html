@@ -1227,17 +1227,15 @@ TASKS.sort((a,b)=>a.sort-b.sort);
    ========================================================= */
 const STORE_KEY = 'checklist-completed-v1';
 let completed = {}; // {taskId: true}
-let storageReady = false;
 
-async function loadCompleted(){
+function loadCompleted(){
   try{
-    const res = await window.storage.get(STORE_KEY, true);
-    if(res && res.value){ completed = JSON.parse(res.value); }
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){ completed = JSON.parse(raw); }
   }catch(e){ completed = {}; }
-  storageReady = true;
 }
-async function saveCompleted(){
-  try{ await window.storage.set(STORE_KEY, JSON.stringify(completed), true); }catch(e){ /* ignore */ }
+function saveCompleted(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(completed)); }catch(e){ /* ignore */ }
 }
 
 /* =========================================================
@@ -2036,7 +2034,7 @@ function attachPersonalHandlers(){
       const id = el.getAttribute('data-id');
       completed[id] = !completed[id];
       render();
-      await saveCompleted();
+      saveCompleted();
     });
   });
 
@@ -2105,9 +2103,8 @@ document.getElementById('navMore').addEventListener('click', ()=>{
   go('more');
 });
 
-(async function init(){
-  document.getElementById('root').innerHTML = `<div style="padding:60px 20px;text-align:center;color:#726F63;font-family:'Karla',sans-serif;">Loading your day…</div>`;
-  await loadCompleted();
+(function init(){
+  loadCompleted();
   applyRoute();
   render();
 })();
