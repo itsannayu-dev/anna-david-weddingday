@@ -1234,6 +1234,10 @@ const WELCOME_AREA_NOTE = [
   'Place cardbox',
   'Place photo frames (3)',
 ].map(i=>'• '+i).join('<br>');
+const CEREMONY_FANS_NOTE = [
+  'Place fans on the seats',
+  'Place a reserved sign on the left and right of the first row',
+].map(i=>'• '+i).join('<br>');
 const CANDLES_CARDS_NOTE = [
   '5 tealight candles around each floral arrangement',
   'Place tulip name cards based on the seating plan',
@@ -1287,7 +1291,7 @@ const TASKS = [
   {id:'t10', time:'11:00 AM', sort:tk(11,0,false)+3, title:'Hair Service — Angela', people:['bm_angela','mua'], note:null},
   {id:'t20', time:'11:30 AM', sort:tk(11,30,false)+3, title:'Get ready', people:ALL_GROOMSMEN, note:"Don't forget to put on your boutonniere."},
   {id:'t20c', time:'11:30 AM', sort:tk(11,30,false)+4, title:'Film Content Videos', people:ALL_BRIDESMAIDS, note:null},
-  {id:'t14', time:'12:30 PM', sort:tk(12,30,true)+2, title:'Set up Ceremony Area Fans', people:['planner'], note:null},
+  {id:'t14', time:'12:30 PM', sort:tk(12,30,true)+2, title:'Set up Ceremony Area Fans + Reserved Signs', people:['planner'], note:CEREMONY_FANS_NOTE},
   {id:'t15', time:'12:00 PM', sort:tk(12,0,true)+1, title:'Arrive on site (12pm–10pm call time)', people:['photovideo'], note:null},
   {id:'t16', time:'12:00 PM', sort:tk(12,0,true)+2, title:'Get-ready photos', people:['anna', ...ALL_BRIDESMAIDS, 'photovideo'], note:null},
   {id:'t17', time:'12:10 PM', sort:tk(12,10,true), title:'Lunch', people:['anna','david','dj','parents_anna','mua', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
