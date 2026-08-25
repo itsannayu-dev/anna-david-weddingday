@@ -469,8 +469,7 @@
     margin-top:6px;
   }
   .archive-toggle:hover{ border-color:var(--sage); color:var(--sage-deep); }
-
-
+  .archive-toggle{ margin-bottom:6px; }
 
   footer.note{
     text-align:center;
@@ -859,8 +858,11 @@
     cursor:pointer;
   }
   .nav-btn svg{ width:20px; height:20px; }
+  .nav-btn{ position:relative; }
+  .nav-btn::before{ content:''; position:absolute; top:0; left:20%; right:20%; height:2px; background:transparent; border-radius:0 0 2px 2px; }
   .nav-btn.active{ color:var(--sage-deep); }
   .nav-btn.active svg{ stroke:var(--sage-deep); }
+  .nav-btn.active::before{ background:var(--sage-deep); }
   .nav-pad{ padding-bottom:76px; }
 
   /* ---------- contacts ---------- */
@@ -1100,7 +1102,7 @@ const TASKS = [
   {id:'t22f', time:'1:30 PM', sort:tk(1,30,true)+1, title:'Outdoor photos', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
   {id:'t22b', time:'1:30 PM', sort:tk(1,30,true)+2, title:'Set up Candles & Name Cards', people:['planner'], note:null},
   {id:'t22c', time:'2:00 PM', sort:tk(2,0,true), title:'Family photos', people:['anna','david','photovideo'], note:null},
-  {id:'t22d', time:'2:00 PM', sort:tk(2,0,true)+1, title:'Practise entrance routine', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
+  {id:'t22d', time:'2:00 PM', sort:tk(2,0,true)+1, title:'Practice entrance routine', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
   {id:'t23', time:'2:20 PM', sort:tk(2,20,true), title:'Shuttle bus leaves from Fairview Mall', people:['guest'], note:null},
   {id:'t23b', time:'2:30 PM', sort:tk(2,30,true), title:'Pick up Mimi from Dog Sitter', people:['parents_anna','mimi'], note:null},
   {id:'m2b', time:'2:30 PM', sort:tk(2,30,true)+1, title:'Supervise Mimi until her turn', people:['planner','mimi'], note:'She\'s ring bearer at 5:00 PM.'},
@@ -1227,18 +1229,31 @@ TASKS.sort((a,b)=>a.sort-b.sort);
    STORAGE (shared across everyone with the link)
    ========================================================= */
 const STORE_KEY = 'checklist-completed-v1';
+const PREFS_KEY = 'wedding-day-prefs';
 let completed = {}; // {taskId: true}
-let storageReady = false;
+let prefs = {};
 
-async function loadCompleted(){
-  try{
-    const res = await window.storage.get(STORE_KEY, true);
-    if(res && res.value){ completed = JSON.parse(res.value); }
-  }catch(e){ completed = {}; }
-  storageReady = true;
+function loadPrefs(){
+  try{ prefs = JSON.parse(localStorage.getItem(PREFS_KEY)) || {}; }catch(e){ prefs = {}; }
+  if(typeof prefs.showArchive === 'boolean') showArchive = prefs.showArchive;
+  if(typeof prefs.compareManageOpen === 'boolean') compareManageOpen = prefs.compareManageOpen;
+  if(typeof prefs.compareTimeCutoffIndex === 'number') compareTimeCutoffIndex = prefs.compareTimeCutoffIndex;
+  if(Array.isArray(prefs.compareOrder)) compareOrder = prefs.compareOrder;
+  if(Array.isArray(prefs.compareVisible)) compareVisible = new Set(prefs.compareVisible);
 }
-async function saveCompleted(){
-  try{ await window.storage.set(STORE_KEY, JSON.stringify(completed), true); }catch(e){ /* ignore */ }
+function savePref(key, value){
+  prefs[key] = value;
+  try{ localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); }catch(e){}
+}
+
+function loadCompleted(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){ completed = JSON.parse(raw); }
+  }catch(e){ completed = {}; }
+}
+function saveCompleted(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(completed)); }catch(e){ /* ignore */ }
 }
 
 /* =========================================================
@@ -1247,7 +1262,7 @@ async function saveCompleted(){
 
 let stage = 'picker'; // 'picker' | 'personal' | 'compare' | 'contacts' | 'cars' | 'more'
 let currentPerson = null;
-let showArchive = false;
+let showArchive = true;
 let showDongNote = false;
 let showPackingList = false;
 
@@ -1582,6 +1597,7 @@ function renderCompare(){
 function attachCompareHandlers(){
   document.getElementById('manageToggle').addEventListener('click', ()=>{
     compareManageOpen = !compareManageOpen;
+    savePref('compareManageOpen', compareManageOpen);
     render();
   });
   const timeSlider = document.getElementById('timeFilterSlider');
@@ -1601,6 +1617,7 @@ function attachCompareHandlers(){
     });
     timeSlider.addEventListener('change', ()=>{
       compareTimeCutoffIndex = parseInt(timeSlider.value, 10);
+      savePref('compareTimeCutoffIndex', compareTimeCutoffIndex);
       render();
     });
   }
@@ -1608,6 +1625,7 @@ function attachCompareHandlers(){
   if(managePanelDoneBtn){
     managePanelDoneBtn.addEventListener('click', ()=>{
       compareManageOpen = false;
+      savePref('compareManageOpen', compareManageOpen);
       render();
     });
   }
@@ -1615,6 +1633,7 @@ function attachCompareHandlers(){
     el.addEventListener('change', ()=>{
       const id = el.getAttribute('data-id');
       if(el.checked){ compareVisible.add(id); } else { compareVisible.delete(id); }
+      savePref('compareVisible', [...compareVisible]);
       render();
     });
   });
@@ -1628,6 +1647,7 @@ function attachCompareHandlers(){
         if(el.checked) compareVisible.add(id);
         else compareVisible.delete(id);
       });
+      savePref('compareVisible', [...compareVisible]);
       render();
     });
   });
@@ -1676,7 +1696,7 @@ function attachCompareHandlers(){
           }
         });
       }
-      if(order.length) compareOrder = order;
+      if(order.length){ compareOrder = order; savePref('compareOrder', compareOrder); }
       dragEl = null;
       render();
     };
@@ -1927,7 +1947,6 @@ function renderPicker(){
 function attachPickerHandlers(){
   document.querySelectorAll('.person-card').forEach(el=>{
     el.addEventListener('click', ()=>{
-      showArchive = false;
       go(el.getAttribute('data-id'));
     });
   });
@@ -1942,8 +1961,8 @@ function attachPickerHandlers(){
 function renderPersonal(){
   const p = personById(currentPerson);
   const all = tasksFor(currentPerson);
-  const todo = all.filter(t=>!completed[t.id]);
-  const done = all.filter(t=>completed[t.id]);
+  const doneCount = all.filter(t=>completed[t.id]).length;
+  const todoCount = all.length - doneCount;
 
   let banner = '';
   if(p.id==='parents_anna'){
@@ -1982,23 +2001,19 @@ function renderPersonal(){
       ${packingLink}
       <div class="section-title">
         <span>${p.name}'s Schedule</span>
-        <span class="count-pill">${todo.length}</span>
+        <span class="count-pill">${doneCount} / ${all.length}</span>
       </div>
+      ${`<button class="archive-toggle" id="archiveToggle">${showArchive ? 'Hide' : 'Show'} completed (${doneCount})</button>`}
   `;
 
-  if(todo.length===0){
+  const visible = showArchive ? all : all.filter(t=>!completed[t.id]);
+
+  if(visible.length===0){
     html += `<div class="empty-state"><span class="serif">All clear</span>You're all caught up for now.</div>`;
   } else {
-    todo.forEach(t=>{
-      html += renderTaskRow(t,false);
+    visible.forEach(t=>{
+      html += renderTaskRow(t, !!completed[t.id]);
     });
-  }
-
-  if(done.length>0){
-    html += `<button class="archive-toggle" id="archiveToggle">${showArchive ? 'Hide' : 'Show'} completed (${done.length}) — archived</button>`;
-    if(showArchive){
-      done.forEach(t=>{ html += renderTaskRow(t,true); });
-    }
   }
 
   html += `
@@ -2034,6 +2049,7 @@ function attachPersonalHandlers(){
   if(archiveToggle){
     archiveToggle.addEventListener('click', ()=>{
       showArchive = !showArchive;
+      savePref('showArchive', showArchive);
       render();
     });
   }
@@ -2042,7 +2058,7 @@ function attachPersonalHandlers(){
       const id = el.getAttribute('data-id');
       completed[id] = !completed[id];
       render();
-      await saveCompleted();
+      saveCompleted();
     });
   });
 
@@ -2111,10 +2127,10 @@ document.getElementById('navMore').addEventListener('click', ()=>{
   go('more');
 });
 
-(async function init(){
-  document.getElementById('root').innerHTML = `<div style="padding:60px 20px;text-align:center;color:#726F63;font-family:'Karla',sans-serif;">Loading your day…</div>`;
-  await loadCompleted();
+(function init(){
+  loadCompleted();
   applyRoute();
+  loadPrefs();
   render();
 })();
 </script>
