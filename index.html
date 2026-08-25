@@ -923,44 +923,13 @@
   }
 
   /* ---------- pdf attachment card ---------- */
-  .doc-card{
-    display:flex;
-    align-items:center;
-    gap:13px;
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:14px;
-    padding:14px 16px;
-    margin-bottom:10px;
-    text-decoration:none;
-  }
-  .doc-icon{
-    flex-shrink:0;
-    width:42px;
-    height:42px;
-    border-radius:10px;
-    background:var(--done-bg);
-    border:1px solid var(--line);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family:'Karla', sans-serif;
-    font-size:10px;
-    font-weight:600;
-    letter-spacing:0.04em;
-    color:var(--sage-deep);
-  }
-  .doc-body{ flex:1; min-width:0; }
+  /* Same shape as .contact-card; the whole card is the link. */
+  .doc-card{ text-decoration:none; }
   .doc-meta{
     font-size:12.5px;
     color:var(--ink-soft);
     opacity:0.8;
     margin-top:3px;
-  }
-  .doc-open{
-    flex-shrink:0;
-    color:var(--sage-deep);
-    font-size:16px;
   }
 
   /* ---------- floor plan card + lightbox ---------- */
@@ -2042,14 +2011,15 @@ const SEATING_CHART = {
 
 function renderSeatingChartCard(){
   return `
-      <a class="doc-card" href="${SEATING_CHART.src}" target="_blank" rel="noopener">
-        <div class="doc-icon" aria-hidden="true">PDF</div>
-        <div class="doc-body">
+      <a class="contact-card doc-card" href="${SEATING_CHART.src}" target="_blank" rel="noopener">
+        <div>
           <div class="contact-name">${SEATING_CHART.title}</div>
           <div class="contact-role">${SEATING_CHART.desc}</div>
           <div class="doc-meta">${SEATING_CHART.meta}</div>
         </div>
-        <div class="doc-open" aria-hidden="true">&#8599;</div>
+        <div class="contact-actions">
+          <span class="contact-btn" aria-hidden="true">&#8599;</span>
+        </div>
       </a>`;
 }
 
