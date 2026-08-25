@@ -1180,6 +1180,36 @@ const SPEECHES_2_NOTE = 'Groomsmen: Tony, Anish, Ziming (1 min each).<br>Bridesm
 const GROUP_PHOTO_NOTE = 'Everyone from ceremony, followed by:<br>1. Bride\'s family<br>2. Groom\'s family<br>3. Both families<br>4. Extended family of bride<br>5. Extended family of groom<br>6. Bridal party photo<br>7. Bachelorette photo<br>8. Bachelor photo<br>9. High school friends<br>10. Waterloo friends<br>11. Sports &amp; raving friends';
 const REHEARSAL_NOTE = '1. David + Parents<br>2. Groomsmen<br>3. Bridesmaid<br>4. Anna + Parents<br>5. Mimi — Ring';
 
+// Setup checklists for the planning team. See the Setup References board in the More tab.
+const CHARM_BAR_NOTE = [
+  'Have the green charm sign on the table, hanging off the side',
+  'Display the “How to DIY a charm” sign',
+  'Place all the wooden boxes on the table, on top of the green sign to hold it down',
+  'Place beads into the wooden boxes by theme',
+  'Place a lamp on this table',
+  'Put together the keychain stand <i>(will get a bridesmaid to help)</i>',
+  'Place all keychains on the stand',
+].map(i=>'• '+i).join('<br>');
+const WELCOME_AREA_NOTE = [
+  'Set up the welcome sign stand <i>(will see if bridesmaids can do this earlier)</i>',
+  'Steam the welcome sign <i>(will see if bridesmaids can do this earlier)</i>',
+  'Tie the welcome sign bows',
+  'Place guestbook + pens',
+  'Place guestbook sign',
+  'Place cardbox',
+  'Place photo frames (3)',
+].map(i=>'• '+i).join('<br>');
+const CANDLES_CARDS_NOTE = [
+  '5 tealight candles around each floral arrangement',
+  'Place tulip name cards based on the seating plan',
+].map(i=>'• '+i).join('<br>');
+const HEAD_TABLE_NOTE = [
+  'Move the pillars inside',
+  'Move the florals by the head table',
+  'Head table gets 2 candle vases + bud vases + some tealight candles',
+  'Hang the pearl + bow stringed decor along the front of the table',
+].map(i=>'• '+i).join('<br>');
+
 // sortKey = minutes from 00:00 on wedding day; times after midnight get +1440
 function tk(h,m,pm){ let hh=h; if(pm && h!==12) hh+=12; if(!pm && h===12) hh=0; return hh*60+m; }
 
@@ -1212,13 +1242,13 @@ const TASKS = [
   {id:'t7c', time:'10:30 AM', sort:tk(10,30,false)+4, title:"Steam Anna's Veil + anything else that hasn't been steamed", people:['bm_kristin'], note:null},
   {id:'t8', time:'10:00 AM', sort:tk(10,0,false)+4, title:'Pick up the cake', people:['bm_annad','gm_kai','gm_stanley'], note:'460 Dundas Street East, Waterdown, ON<br>Lobby Trend 2 – Back Gate (L8B 2A5)<br>Kelly 365-324-1792'},
   {id:'t3g', time:'10:30 AM', sort:tk(10,30,false), title:'Arrive at venue & steam their dress', people:['bm_annad'], note:null},
-  {id:'t9', time:'11:30 AM', sort:tk(11,30,false), title:'Set up the Charm Bar', people:['planner'], note:null},
+  {id:'t9', time:'11:30 AM', sort:tk(11,30,false), title:'Set up the Charm Bar', people:['planner'], note:CHARM_BAR_NOTE},
   {id:'t9c', time:'11:00 AM', sort:tk(11,0,false)+2, title:'Do makeup + hair', people:['bm_gini'], note:null},
   {id:'t20b', time:'11:00 AM', sort:tk(11,0,false)+1, title:'Do own makeup & hair', people:['bm_annad'], note:null},
   {id:'t13', time:'11:30 AM', sort:tk(11,30,false)+2, title:'Hair — May', people:['parents_anna','mua'], note:'This slot is for May only — Andre doesn\'t need to be here for it.'},
   {id:'t11', time:'11:00 AM', sort:tk(11,0,false)+4, title:'Arrive at venue', people:ALL_GROOMSMEN, note:null},
   {id:'m1', time:'11:00 AM', sort:tk(11,0,false)+5, title:'Dropped off at dog sitter', people:['mimi'], note:null},
-  {id:'t12', time:'12:00 PM', sort:tk(12,0,true), title:'Set up the Welcome Area', people:['planner'], note:null},
+  {id:'t12', time:'12:00 PM', sort:tk(12,0,true), title:'Set up the Welcome Area', people:['planner'], note:WELCOME_AREA_NOTE},
   {id:'t10', time:'11:00 AM', sort:tk(11,0,false)+3, title:'Hair Service — Angela', people:['bm_angela','mua'], note:null},
   {id:'t20', time:'11:30 AM', sort:tk(11,30,false)+3, title:'Get ready', people:ALL_GROOMSMEN, note:"Don't forget to put on your boutonniere."},
   {id:'t20c', time:'11:30 AM', sort:tk(11,30,false)+4, title:'Film Content Videos', people:ALL_BRIDESMAIDS, note:null},
@@ -1235,7 +1265,7 @@ const TASKS = [
   {id:'t21e', time:'1:00 PM', sort:tk(1,0,true)+3, title:'First Look on the Bridge', people:['gm_anish'], note:null},
   {id:'t22', time:'1:30 PM', sort:tk(1,30,true), title:'Indoor & outdoor photos', people:['anna','david','photovideo'], note:null},
   {id:'t22f', time:'1:30 PM', sort:tk(1,30,true)+1, title:'Outdoor photos', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
-  {id:'t22b', time:'1:30 PM', sort:tk(1,30,true)+2, title:'Set up Candles & Name Cards', people:['planner'], note:null},
+  {id:'t22b', time:'1:30 PM', sort:tk(1,30,true)+2, title:'Set up Candles & Name Cards', people:['planner'], note:CANDLES_CARDS_NOTE},
   {id:'t22c', time:'2:00 PM', sort:tk(2,0,true), title:'Family photos', people:['anna','david','photovideo'], note:null},
   {id:'t22d', time:'2:00 PM', sort:tk(2,0,true)+1, title:'Practice entrance routine', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
   {id:'t23', time:'2:20 PM', sort:tk(2,20,true), title:'Shuttle bus leaves from Fairview Mall', people:['guest'], note:null},
@@ -1269,7 +1299,7 @@ const TASKS = [
   {id:'m3', time:'5:30 PM', sort:tk(5,30,true)+2, title:'Dog sitter picks up from venue', people:['mimi'], note:null},
   {id:'t35', time:'6:00 PM', sort:tk(6,0,true), title:'Cocktail hour', people:[...WITH_GUEST,'anna'], note:null},
   {id:'t35c', time:'6:00 PM', sort:tk(6,0,true)+3, title:'DIY Charm Bar (6–7pm)', people:[...WITH_GUEST], note:null},
-  {id:'t36', time:'6:00 PM', sort:tk(6,0,true)+1, title:'Move florals inside for reception', people:['planner'], note:null},
+  {id:'t36', time:'6:00 PM', sort:tk(6,0,true)+1, title:'Move florals inside + set up Head Table', people:['planner'], note:HEAD_TABLE_NOTE},
   {id:'t35b', time:'6:00 PM', sort:tk(6,0,true)+2, title:'Queue cocktail hour playlist', people:['dj'], note:null},
   {id:'t37', time:'6:30 PM', sort:tk(6,30,true), title:'Change into reception dress', people:['anna'], note:null},
   {id:'t38', time:'7:00 PM', sort:tk(7,0,true), title:'Reception', people:[...WITH_GUEST, ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
@@ -1286,7 +1316,7 @@ const TASKS = [
   {id:'t61c', time:'7:20 PM', sort:tk(7,20,true)+0.5, title:'Prompt for cake cutting', people:['mc'], note:null},
   {id:'t61b', time:'7:20 PM', sort:tk(7,20,true)+0.75, title:'Capture cake cutting', people:['photovideo'], note:null},
   {id:'t43', time:'7:20 PM', sort:tk(7,20,true)+1, title:'First course', people:[...WITH_GUEST, ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
-  {id:'t45', time:'7:20 PM', sort:tk(7,20,true)+2, title:'Sunset photos', people:['anna','david','photovideo'], note:null},
+  {id:'t45', time:'7:20 PM', sort:tk(7,20,true)+2, title:'Sunset photos', people:['anna','david','photovideo','planner'], note:null},
   {id:'t59', time:'7:45 PM', sort:tk(7,45,true), title:'Dad speech (2 min)', people:['parents_anna'], note:null},
   {id:'t59c', time:'7:45 PM', sort:tk(7,45,true)+2, title:"Listen to Dad's speech", people:['anna','david'], note:null},
   {id:'t59b', time:'7:45 PM', sort:tk(7,45,true)+1, title:"Help translate Anna's dad's speech", people:['mc'], note:null},
