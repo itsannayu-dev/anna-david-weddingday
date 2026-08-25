@@ -1250,6 +1250,12 @@ const HEAD_TABLE_NOTE = [
   'Head table gets 2 candle vases + bud vases + some tealight candles',
   'Hang the pearl + bow stringed decor along the front of the table',
 ].map(i=>'• '+i).join('<br>');
+// Groomsmen back up the planner on the three stands that need assembling.
+const STANDS_NOTE = [
+  'Seating chart sign stand',
+  'Charm bar keychain stand',
+  'Welcome sign stand',
+].map(i=>'• '+i).join('<br>');
 
 // sortKey = minutes from 00:00 on wedding day; times after midnight get +1440
 function tk(h,m,pm){ let hh=h; if(pm && h!==12) hh+=12; if(!pm && h===12) hh=0; return hh*60+m; }
@@ -1292,10 +1298,12 @@ const TASKS = [
   {id:'t12', time:'12:00 PM', sort:tk(12,0,true), title:'Set up the Welcome Area', people:['planner'], note:WELCOME_AREA_NOTE},
   {id:'t10', time:'11:00 AM', sort:tk(11,0,false)+3, title:'Hair Service — Angela', people:['bm_angela','mua'], note:null},
   {id:'t20', time:'11:30 AM', sort:tk(11,30,false)+3, title:'Get ready', people:ALL_GROOMSMEN, note:"Don't forget to put on your boutonniere."},
+  {id:'t20d', time:'11:30 AM', sort:tk(11,30,false)+3.5, title:'Get-ready photos', people:[...ALL_GROOMSMEN, 'photovideo'], note:null},
   {id:'t20c', time:'11:30 AM', sort:tk(11,30,false)+4, title:'Film Content Videos', people:ALL_BRIDESMAIDS, note:null},
   {id:'t14', time:'12:30 PM', sort:tk(12,30,true)+2, title:'Set up Ceremony Area Fans + Reserved Signs', people:['planner'], note:CEREMONY_FANS_NOTE},
   {id:'t15', time:'12:00 PM', sort:tk(12,0,true)+1, title:'Arrive on site (12pm–10pm call time)', people:['photovideo'], note:null},
   {id:'t16', time:'12:00 PM', sort:tk(12,0,true)+2, title:'Get-ready photos', people:['anna', ...ALL_BRIDESMAIDS, 'photovideo'], note:null},
+  {id:'t20e', time:'12:00 PM', sort:tk(12,0,true)+3, title:'Help the Planner build stands (if needed)', people:ALL_GROOMSMEN, note:STANDS_NOTE},
   {id:'t17', time:'12:10 PM', sort:tk(12,10,true), title:'Lunch', people:['anna','david','dj','parents_anna','mua', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
   {id:'t18', time:'12:30 PM', sort:tk(12,30,true), title:'Get-ready photo', people:['anna','photovideo'], note:null},
   {id:'t19', time:'12:30 PM', sort:tk(12,30,true)+1, title:'Florist arrives', people:['florist'], note:null},
