@@ -1655,6 +1655,16 @@ function renderManageGroup(group){
 
 let dragSourceId = null;
 
+/* Shared hero — every tab renders this same block. */
+function renderHero(){
+  return `
+    <div class="arch-header entry-hero">
+      <div class="eyebrow">The Wedding of</div>
+      <h1>Anna &amp; David</h1>
+      <div class="sub">Saturday, September 5 · Lincoln Estate</div>
+    </div>`;
+}
+
 function renderCompare(){
   initCompareState();
   const times = orderedTimeLabels();
@@ -1895,11 +1905,7 @@ function renderContacts(){
   const vendors = PEOPLE.filter(p=>p.group==='Vendors' || p.id==='planner');
   let html = `
   <div class="shell">
-    <div class="arch-header">
-      <div class="eyebrow">The Wedding of</div>
-      <h1>Anna &amp; David</h1>
-      <div class="sub">Saturday, September 5 · Lincoln Estate</div>
-    </div>
+${renderHero()}
     <div class="content">
       <div class="picker-intro">
         <h2>Contacts</h2>
@@ -1961,11 +1967,7 @@ const CAR_SECTIONS = [
 function renderCars(){
   let html = `
   <div class="shell">
-    <div class="arch-header">
-      <div class="eyebrow">The Wedding of</div>
-      <h1>Anna &amp; David</h1>
-      <div class="sub">Saturday, September 5 · Lincoln Estate</div>
-    </div>
+${renderHero()}
     <div class="content">
       <div class="picker-intro">
         <h2>Cars</h2>
@@ -2081,11 +2083,7 @@ function renderFloorPlanLightbox(){
 function renderMore(){
   let html = `
   <div class="shell">
-    <div class="arch-header">
-      <div class="eyebrow">The Wedding of</div>
-      <h1>Anna &amp; David</h1>
-      <div class="sub">Saturday, September 5 · Lincoln Estate</div>
-    </div>
+${renderHero()}
     <div class="content">
       <div class="picker-intro">
         <h2>More</h2>
@@ -2159,11 +2157,7 @@ function renderPicker(){
 
   let html = `
   <div class="shell">
-    <div class="arch-header entry-hero">
-      <div class="eyebrow">The Wedding of</div>
-      <h1>Anna &amp; David</h1>
-      <div class="sub">Saturday, September 5 · Lincoln Estate</div>
-    </div>
+${renderHero()}
     <div class="content">
       <div class="picker-intro">
         <p>Find your name to see your schedule</p>
@@ -2245,6 +2239,7 @@ function renderPersonal(){
 
   let html = `
   <div class="shell">
+${renderHero()}
     <div class="content">
       ${banner}
       ${dongNoteLink}
