@@ -922,7 +922,48 @@
     opacity:0.7;
   }
 
-  /* ---------- seating plan card + lightbox ---------- */
+  /* ---------- pdf attachment card ---------- */
+  .doc-card{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:10px;
+    text-decoration:none;
+  }
+  .doc-icon{
+    flex-shrink:0;
+    width:42px;
+    height:42px;
+    border-radius:10px;
+    background:var(--done-bg);
+    border:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Karla', sans-serif;
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:0.04em;
+    color:var(--sage-deep);
+  }
+  .doc-body{ flex:1; min-width:0; }
+  .doc-meta{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    opacity:0.8;
+    margin-top:3px;
+  }
+  .doc-open{
+    flex-shrink:0;
+    color:var(--sage-deep);
+    font-size:16px;
+  }
+
+  /* ---------- floor plan card + lightbox ---------- */
   .plan-card{
     background:#fff;
     border:1px solid var(--line);
@@ -1390,7 +1431,7 @@ let currentPerson = null;
 let showArchive = true;
 let showDongNote = false;
 let showPackingList = false;
-let showSeatingPlan = false;
+let showFloorPlan = false;
 
 const BRIDESMAIDS_PACKING = ALL_BRIDESMAIDS.filter(id=>id!=='bm_annad');
 const GROOMSMEN_PACKING_ITEMS = ['Suit', 'Black Bowtie', 'Dress shoes', 'Dress socks'];
@@ -1527,7 +1568,7 @@ function applyRoute(){
     showDongNote = false;
     showPackingList = false;
   }
-  if(stage !== 'more'){ showSeatingPlan = false; }
+  if(stage !== 'more'){ showFloorPlan = false; }
 }
 
 function go(hash){
@@ -1991,47 +2032,68 @@ const REFERENCE_LINKS = [
   {id:'pin', title:'Pinterest Board', desc:'Photo references for the shoot list', url:'https://pin.it/5pkBL2Isq'},
 ];
 
-/* ---- More tab: seating plan ---- */
-const SEATING_PLAN = {
-  src: 'seating-plan.png',
-  title: 'Seating Plan',
+/* ---- More tab: seating chart (PDF) ---- */
+const SEATING_CHART = {
+  src: 'seating-chart.pdf',
+  title: 'Seating Chart',
+  desc: 'Who sits where — 13 tables plus the head table',
+  meta: 'PDF · 1 page · 122 guests',
+};
+
+function renderSeatingChartCard(){
+  return `
+      <a class="doc-card" href="${SEATING_CHART.src}" target="_blank" rel="noopener">
+        <div class="doc-icon" aria-hidden="true">PDF</div>
+        <div class="doc-body">
+          <div class="contact-name">${SEATING_CHART.title}</div>
+          <div class="contact-role">${SEATING_CHART.desc}</div>
+          <div class="doc-meta">${SEATING_CHART.meta}</div>
+        </div>
+        <div class="doc-open" aria-hidden="true">&#8599;</div>
+      </a>`;
+}
+
+/* ---- More tab: reception floor plan ---- */
+const FLOOR_PLAN = {
+  src: 'reception-floor-plan.png',
+  title: 'Reception Floor Plan',
   desc: '13 round tables under the 45′ × 55′ tent',
 };
 
-function renderSeatingPlanCard(){
+function renderFloorPlanCard(){
   return `
       <div class="plan-card">
         <div class="plan-card-head">
           <div>
-            <div class="contact-name">${SEATING_PLAN.title}</div>
-            <div class="contact-role">${SEATING_PLAN.desc}</div>
+            <div class="contact-name">${FLOOR_PLAN.title}</div>
+            <div class="contact-role">${FLOOR_PLAN.desc}</div>
           </div>
           <div class="contact-actions">
-            <a class="contact-btn" href="${SEATING_PLAN.src}" target="_blank" rel="noopener" title="Open full size">&#8599;</a>
+            <a class="contact-btn" href="${FLOOR_PLAN.src}" target="_blank" rel="noopener" title="Open full size">&#8599;</a>
           </div>
         </div>
-        <button class="plan-thumb" id="seatingPlanThumb" aria-label="View the seating plan full screen">
-          <img src="${SEATING_PLAN.src}" alt="Reception floor plan: 13 round tables arranged under a 45 by 55 foot tent on the concrete pad, beside the covered portion of the patio" loading="lazy">
+        <button class="plan-thumb" id="floorPlanThumb" aria-label="View the reception floor plan full screen">
+          <img src="${FLOOR_PLAN.src}" alt="Reception floor plan: 13 round tables arranged under a 45 by 55 foot tent on the concrete pad, beside the covered portion of the patio" loading="lazy">
         </button>
         <div class="plan-hint">Tap to view larger</div>
       </div>`;
 }
 
-function renderSeatingPlanLightbox(){
+function renderFloorPlanLightbox(){
   return `
-  <div class="plan-lightbox" id="seatingPlanOverlay">
+  <div class="plan-lightbox" id="floorPlanOverlay">
     <div class="plan-lightbox-bar">
       <div>
-        <div class="plan-lightbox-title">${SEATING_PLAN.title}</div>
+        <div class="plan-lightbox-title">${FLOOR_PLAN.title}</div>
         <div class="plan-lightbox-sub">Tap the plan to zoom</div>
       </div>
       <div class="plan-lightbox-actions">
-        <a class="plan-lightbox-open" href="${SEATING_PLAN.src}" target="_blank" rel="noopener">Full size &#8599;</a>
-        <button class="plan-lightbox-close" id="seatingPlanClose" aria-label="Close">&#10005;</button>
+        <a class="plan-lightbox-open" href="${FLOOR_PLAN.src}" target="_blank" rel="noopener">Full size &#8599;</a>
+        <button class="plan-lightbox-close" id="floorPlanClose" aria-label="Close">&#10005;</button>
       </div>
     </div>
-    <div class="plan-lightbox-stage" id="seatingPlanStage">
-      <img src="${SEATING_PLAN.src}" alt="${SEATING_PLAN.desc}">
+    <div class="plan-lightbox-stage" id="floorPlanStage">
+      <img src="${FLOOR_PLAN.src}" alt="${FLOOR_PLAN.desc}">
     </div>
   </div>`;
 }
@@ -2063,42 +2125,43 @@ function renderMore(){
         </div>
       </div>`;
   });
-  html += renderSeatingPlanCard();
+  html += renderSeatingChartCard();
+  html += renderFloorPlanCard();
   html += `
     </div>
   </div>`;
-  if(showSeatingPlan){
-    html += renderSeatingPlanLightbox();
+  if(showFloorPlan){
+    html += renderFloorPlanLightbox();
   }
   return html;
 }
 
 function attachMoreHandlers(){
-  const thumb = document.getElementById('seatingPlanThumb');
+  const thumb = document.getElementById('floorPlanThumb');
   if(thumb){
     thumb.addEventListener('click', ()=>{
-      showSeatingPlan = true;
+      showFloorPlan = true;
       render();
     });
   }
-  const overlay = document.getElementById('seatingPlanOverlay');
+  const overlay = document.getElementById('floorPlanOverlay');
   if(overlay){
     overlay.addEventListener('click', (e)=>{
       if(e.target === overlay){
-        showSeatingPlan = false;
+        showFloorPlan = false;
         render();
       }
     });
   }
-  const close = document.getElementById('seatingPlanClose');
+  const close = document.getElementById('floorPlanClose');
   if(close){
     close.addEventListener('click', ()=>{
-      showSeatingPlan = false;
+      showFloorPlan = false;
       render();
     });
   }
   // The viewport locks pinch-zoom, so tapping the plan toggles a 2x scroll view.
-  const stage = document.getElementById('seatingPlanStage');
+  const stage = document.getElementById('floorPlanStage');
   if(stage){
     const img = stage.querySelector('img');
     if(img){
