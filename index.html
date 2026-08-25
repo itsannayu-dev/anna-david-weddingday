@@ -1393,7 +1393,7 @@ function applyRoute(){
     stage = 'more';
   } else if(h && personById(h) && !personById(h).contactOnly){
     stage = 'personal';
-    if(currentPerson !== h){ showArchive = false; showDongNote = false; showPackingList = false; }
+    if(currentPerson !== h){ showDongNote = false; showPackingList = false; }
     currentPerson = h;
   } else {
     stage = 'picker';
