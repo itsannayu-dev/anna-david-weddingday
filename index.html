@@ -1226,7 +1226,22 @@ TASKS.sort((a,b)=>a.sort-b.sort);
    STORAGE (shared across everyone with the link)
    ========================================================= */
 const STORE_KEY = 'checklist-completed-v1';
+const PREFS_KEY = 'wedding-day-prefs';
 let completed = {}; // {taskId: true}
+let prefs = {};
+
+function loadPrefs(){
+  try{ prefs = JSON.parse(localStorage.getItem(PREFS_KEY)) || {}; }catch(e){ prefs = {}; }
+  if(typeof prefs.showArchive === 'boolean') showArchive = prefs.showArchive;
+  if(typeof prefs.compareManageOpen === 'boolean') compareManageOpen = prefs.compareManageOpen;
+  if(typeof prefs.compareTimeCutoffIndex === 'number') compareTimeCutoffIndex = prefs.compareTimeCutoffIndex;
+  if(Array.isArray(prefs.compareOrder)) compareOrder = prefs.compareOrder;
+  if(Array.isArray(prefs.compareVisible)) compareVisible = new Set(prefs.compareVisible);
+}
+function savePref(key, value){
+  prefs[key] = value;
+  try{ localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); }catch(e){}
+}
 
 function loadCompleted(){
   try{
@@ -1244,7 +1259,7 @@ function saveCompleted(){
 
 let stage = 'picker'; // 'picker' | 'personal' | 'compare' | 'contacts' | 'cars' | 'more'
 let currentPerson = null;
-let showArchive = false;
+let showArchive = true;
 let showDongNote = false;
 let showPackingList = false;
 
@@ -1579,6 +1594,7 @@ function renderCompare(){
 function attachCompareHandlers(){
   document.getElementById('manageToggle').addEventListener('click', ()=>{
     compareManageOpen = !compareManageOpen;
+    savePref('compareManageOpen', compareManageOpen);
     render();
   });
   const timeSlider = document.getElementById('timeFilterSlider');
@@ -1598,6 +1614,7 @@ function attachCompareHandlers(){
     });
     timeSlider.addEventListener('change', ()=>{
       compareTimeCutoffIndex = parseInt(timeSlider.value, 10);
+      savePref('compareTimeCutoffIndex', compareTimeCutoffIndex);
       render();
     });
   }
@@ -1605,6 +1622,7 @@ function attachCompareHandlers(){
   if(managePanelDoneBtn){
     managePanelDoneBtn.addEventListener('click', ()=>{
       compareManageOpen = false;
+      savePref('compareManageOpen', compareManageOpen);
       render();
     });
   }
@@ -1612,6 +1630,7 @@ function attachCompareHandlers(){
     el.addEventListener('change', ()=>{
       const id = el.getAttribute('data-id');
       if(el.checked){ compareVisible.add(id); } else { compareVisible.delete(id); }
+      savePref('compareVisible', [...compareVisible]);
       render();
     });
   });
@@ -1625,6 +1644,7 @@ function attachCompareHandlers(){
         if(el.checked) compareVisible.add(id);
         else compareVisible.delete(id);
       });
+      savePref('compareVisible', [...compareVisible]);
       render();
     });
   });
@@ -1673,7 +1693,7 @@ function attachCompareHandlers(){
           }
         });
       }
-      if(order.length) compareOrder = order;
+      if(order.length){ compareOrder = order; savePref('compareOrder', compareOrder); }
       dragEl = null;
       render();
     };
@@ -2026,6 +2046,7 @@ function attachPersonalHandlers(){
   if(archiveToggle){
     archiveToggle.addEventListener('click', ()=>{
       showArchive = !showArchive;
+      savePref('showArchive', showArchive);
       render();
     });
   }
@@ -2106,6 +2127,7 @@ document.getElementById('navMore').addEventListener('click', ()=>{
 (function init(){
   loadCompleted();
   applyRoute();
+  loadPrefs();
   render();
 })();
 </script>
