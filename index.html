@@ -2094,21 +2094,22 @@ const ATTACHMENTS = [
 ];
 
 /* ---- More tab: food allergies & dietary needs ----
-   Edit this list directly. `table` may be left blank if unknown. */
+   Edit this list directly. `table` may be left blank if unknown.
+   Kept in table order; blank tables sort to the bottom. */
 const FOOD_ALLERGIES = [
   {table:'T2',  name:'Kristin So',       need:'Nut allergy'},
-  {table:'T13', name:'Kelvin Lau',       need:'Nut allergy'},
-  {table:'T12', name:'Steven Luu',       need:'No peanuts'},
-  {table:'T12', name:'Remira Melendrez', need:'No walnuts'},
-  {table:'T11', name:'Janice Cheung',    need:'No shellfish'},
-  {table:'T12', name:'Anthony Cho',      need:'Pescatarian'},
-  {table:'T11', name:'Bindi Mehta',      need:'Vegetarian'},
   {table:'T3',  name:'Elaine Yuan',      need:'Vegan preferred'},
   {table:'T3',  name:'Kevin Ding',       need:'No cilantro'},
-  {table:'T7',  name:'Rob Lin',          need:'Birch allergy (apple, peach, plum, pear, apricot, almonds)'},
   {table:'T3',  name:'Eric Sun',         need:'No raw apple, raw peach, raw cherry'},
   {table:'T3',  name:'Linda Zhang',      need:'No raw apple, raw peach, raw cherry'},
-  {table:'',    name:'Tina Gong',        need:'No raw banana'},
+  {table:'T5',  name:'Tina Gong',        need:'No raw banana'},
+  {table:'T7',  name:'Rob Lin',          need:'Birch allergy (apple, peach, plum, pear, apricot, almonds)'},
+  {table:'T11', name:'Janice Cheung',    need:'No shellfish'},
+  {table:'T11', name:'Bindi Mehta',      need:'Vegetarian'},
+  {table:'T12', name:'Steven Luu',       need:'No peanuts'},
+  {table:'T12', name:'Remira Melendrez', need:'No walnuts'},
+  {table:'T12', name:'Anthony Cho',      need:'Pescatarian'},
+  {table:'T13', name:'Kelvin Lau',       need:'Nut allergy'},
 ];
 
 function renderAllergiesModal(){
