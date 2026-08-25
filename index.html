@@ -858,8 +858,11 @@
     cursor:pointer;
   }
   .nav-btn svg{ width:20px; height:20px; }
+  .nav-btn{ position:relative; }
+  .nav-btn::before{ content:''; position:absolute; top:0; left:20%; right:20%; height:2px; background:transparent; border-radius:0 0 2px 2px; }
   .nav-btn.active{ color:var(--sage-deep); }
   .nav-btn.active svg{ stroke:var(--sage-deep); }
+  .nav-btn.active::before{ background:var(--sage-deep); }
   .nav-pad{ padding-bottom:76px; }
 
   /* ---------- contacts ---------- */
