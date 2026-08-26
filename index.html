@@ -1330,6 +1330,8 @@ const HEAD_TABLE_NOTE = [
   'Head table gets 2 candle vases + bud vases + some tealight candles',
   'Hang the pearl + bow stringed decor along the front of the table',
 ].map(i=>'• '+i).join('<br>');
+// Both charm bar shifts get the same reminder that it runs itself.
+const CHARM_BAR_SHIFT_NOTE = 'The charm bar is self-serve — once guests have the hang of it, no need to supervise.';
 // Groomsmen back up the planner on the three stands that need assembling.
 const STANDS_NOTE = [
   'Seating chart sign stand',
@@ -1431,7 +1433,9 @@ const TASKS = [
   {id:'t35c', time:'6:00 PM', sort:tk(6,0,true)+3, title:'DIY Charm Bar (6–7pm)', people:[...WITH_GUEST], note:null},
   {id:'t36', time:'6:00 PM', sort:tk(6,0,true)+1, title:'Move florals inside + set up Head Table', people:['planner'], note:HEAD_TABLE_NOTE},
   {id:'t35b', time:'6:00 PM', sort:tk(6,0,true)+2, title:'Queue cocktail hour playlist', people:['dj'], note:null},
+  {id:'t35d', time:'6:00 PM', sort:tk(6,0,true)+4, title:'Help guests make keychains at the Charm Bar (6–6:30pm)', people:['bm_bernita','bm_kristin','bm_louise'], note:CHARM_BAR_SHIFT_NOTE},
   {id:'t37', time:'6:30 PM', sort:tk(6,30,true), title:'Change into reception dress', people:['anna'], note:null},
+  {id:'t35e', time:'6:30 PM', sort:tk(6,30,true)+1, title:'Take over the Charm Bar — help guests make keychains (6:30–7pm)', people:['bm_gini','bm_angela'], note:CHARM_BAR_SHIFT_NOTE},
   {id:'t38', time:'7:00 PM', sort:tk(7,0,true), title:'Reception', people:[...WITH_GUEST, ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
   {id:'t38c', time:'7:00 PM', sort:tk(7,0,true)+0.25, title:'Couple entrance', people:['anna','david'], note:null},
   {id:'t39', time:'7:00 PM', sort:tk(7,0,true)+1, title:'Cue all entrances', people:['planner'], note:null},
