@@ -868,6 +868,9 @@
     cursor:pointer;
   }
   .nav-btn svg{ width:20px; height:20px; }
+  .nav-btn span{ white-space:nowrap; }
+  /* "Transportation" is long enough to overflow a quarter of a narrow phone. */
+  #navCars span{ font-size:10px; }
   .nav-btn{ position:relative; }
   .nav-btn::before{ content:''; position:absolute; top:0; left:20%; right:20%; height:2px; background:transparent; border-radius:0 0 2px 2px; }
   .nav-btn.active{ color:var(--sage-deep); }
@@ -1148,6 +1151,84 @@
     color:var(--ink);
   }
 
+  /* ---------- transportation: shuttle bus ---------- */
+  /* The two departure times are the only thing riders really need to find,
+     so they get full-width cards above the roster instead of a meta line. */
+  .depart-grid{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:24px;
+  }
+  .depart-card{
+    background:linear-gradient(180deg, #455440 0%, #5C6E52 100%);
+    border-radius:14px;
+    padding:14px 16px;
+    color:#fff;
+  }
+  .depart-label{
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    font-weight:600;
+    color:rgba(255,255,255,0.78);
+  }
+  .depart-time{
+    font-family:'Fraunces', serif;
+    font-size:30px;
+    font-weight:600;
+    line-height:1.1;
+    margin-top:4px;
+  }
+  .depart-where{
+    font-size:14px;
+    color:rgba(255,255,255,0.92);
+    margin-top:2px;
+  }
+  .depart-note{
+    font-size:12.5px;
+    color:rgba(255,255,255,0.75);
+    margin-top:8px;
+    border-top:1px solid rgba(255,255,255,0.22);
+    padding-top:8px;
+    line-height:1.45;
+  }
+  .rider-list{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  .rider-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 14px;
+    border-bottom:1px solid var(--line-soft);
+    font-size:14.5px;
+    color:var(--ink);
+  }
+  .rider-row:last-child{ border-bottom:none; }
+  .rider-num{
+    font-size:12px;
+    color:var(--ink-soft);
+    min-width:20px;
+    font-variant-numeric:tabular-nums;
+  }
+  .rider-name{ flex:1; }
+  .rider-tag{
+    font-size:11px;
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+    font-weight:600;
+    color:var(--gold-text);
+    background:#FBF6E9;
+    border:1px solid #EAD9A8;
+    border-radius:999px;
+    padding:2px 8px;
+    white-space:nowrap;
+  }
+
   /* ---------- Export as PDF ----------
      The on-screen grid is a CSS grid that can't paginate, so the export
      builds a plain table into .print-root and prints that instead. Columns
@@ -1228,7 +1309,7 @@
   </button>
   <button class="nav-btn" id="navCars" data-nav="cars">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C1.4 11.3 1 12.1 1 13v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
-    <span>Cars</span>
+    <span>Transportation</span>
   </button>
   <button class="nav-btn" id="navMore" data-nav="more">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
@@ -1574,7 +1655,8 @@ function saveCompleted(){
    APP STATE / RENDER
    ========================================================= */
 
-let stage = 'picker'; // 'picker' | 'personal' | 'compare' | 'contacts' | 'cars' | 'more'
+// 'cars' is the Transportation landing page; 'drivers' and 'shuttle' are its sub-pages.
+let stage = 'picker'; // 'picker' | 'personal' | 'compare' | 'contacts' | 'cars' | 'drivers' | 'shuttle' | 'more'
 let currentPerson = null;
 let showArchive = true;
 let showDongNote = false;
@@ -1731,6 +1813,10 @@ function applyRoute(){
     stage = 'contacts';
   } else if(h==='cars'){
     stage = 'cars';
+  } else if(h==='cars/drivers'){
+    stage = 'drivers';
+  } else if(h==='cars/shuttle'){
+    stage = 'shuttle';
   } else if(h==='more'){
     stage = 'more';
   } else if(h && personById(h) && !personById(h).contactOnly){
@@ -2152,8 +2238,14 @@ function render(){
     root.innerHTML = renderContacts();
     attachContactsHandlers();
   } else if(stage==='cars'){
-    root.innerHTML = renderCars();
-    attachCarsHandlers();
+    root.innerHTML = renderTransport();
+    attachTransportHandlers();
+  } else if(stage==='drivers'){
+    root.innerHTML = renderDrivers();
+    attachSubPageHandlers();
+  } else if(stage==='shuttle'){
+    root.innerHTML = renderShuttle();
+    attachSubPageHandlers();
   } else if(stage==='more'){
     root.innerHTML = renderMore();
     attachMoreHandlers();
@@ -2165,9 +2257,9 @@ function render(){
 }
 
 function updateBottomNav(){
-  const onSchedule = stage!=='contacts' && stage!=='cars' && stage!=='more';
+  const onCars = stage==='cars' || stage==='drivers' || stage==='shuttle';
+  const onSchedule = stage!=='contacts' && !onCars && stage!=='more';
   const onContacts = stage==='contacts';
-  const onCars = stage==='cars';
   const onMore = stage==='more';
   const scheduleBtn = document.getElementById('navSchedule');
   const contactsBtn = document.getElementById('navContacts');
@@ -2221,7 +2313,7 @@ function attachContactsHandlers(){
   // Contact cards are plain links; nothing else to wire up yet.
 }
 
-/* ---- Cars tab ---- */
+/* ---- Transportation tab ---- */
 const CAR_SECTIONS = [
   {
     label:'To the venue',
@@ -2237,20 +2329,139 @@ const CAR_SECTIONS = [
     cars:[
       {title:"Dong's Car", meta:'Leaves at 1:00 AM', passengers:['Louise']},
       {title:"JY's Car", meta:'Kai driving · Leaves at 1:00 AM', passengers:['Kai','JY','Tony','Adam']},
-      {title:'Shuttle bus', meta:'Leaves at 12:00 AM', passengers:['Bernita','Kristin','Gini']},
+      // The shuttle bus used to be listed here with just Bernita, Kristin and Gini.
+      // It now has its own page with the full 47-person roster.
     ],
   },
 ];
 
-function renderCars(){
-  let html = `
+/* ---- Transportation tab: coach bus ----
+   Roster from the sign-up sheet. `returnOnly` riders skip the Fairview Mall
+   pickup and only board the bus leaving the venue at midnight. */
+const SHUTTLE = {
+  capacity: 56,
+  costPerPerson: '$37.99',
+  departures: [
+    {
+      label: 'To the venue',
+      time: '2:20 PM',
+      where: 'Fairview Mall &rarr; Lincoln Estate',
+      note: 'Be at the pickup spot a few minutes early — the bus leaves at 2:20 sharp.',
+    },
+    {
+      label: 'Back to the city',
+      time: '12:00 AM',
+      where: 'Lincoln Estate &rarr; Fairview Mall',
+      note: 'The only ride back. Miss it and you\'re finding your own way home.',
+    },
+  ],
+  riders: [
+    {name:'Jon Trieu'},
+    {name:'Emily Lu'},
+    {name:'Bernita Ng', returnOnly:true},
+    {name:'Teddy Yang'},
+    {name:'Rachel Poon'},
+    {name:'Max Xia'},
+    {name:'Jackie Liang'},
+    {name:'Bindi Mehta'},
+    {name:'Sharon Tee'},
+    {name:'Linda Luu'},
+    {name:'Chris Chua'},
+    {name:'Stephanie Wong'},
+    {name:'Kevin Lin'},
+    {name:'Kevin Li'},
+    {name:'Kevin Ding'},
+    {name:'Chris Fang'},
+    {name:'Jenny Wang'},
+    {name:'Terri Yip'},
+    {name:'Jeremy Lan'},
+    {name:'Ashley Fong'},
+    {name:'Bill Chen'},
+    {name:'Robert Lin'},
+    {name:'Jennie Cheung'},
+    {name:'Tina Gong'},
+    {name:'Morgan Williams'},
+    {name:'Dennis Young'},
+    {name:'Eva Ho'},
+    {name:'Raemar Sopoco'},
+    {name:'Kristin So', returnOnly:true},
+    {name:'Steven Lu'},
+    {name:'Remira Melendrez'},
+    {name:'Vincent McLoughlin'},
+    {name:'Kate Sergeeva'},
+    {name:'Gini Luong', returnOnly:true},
+    {name:'Irene Tran'},
+    {name:'Karen Chan Lim'},
+    {name:'Justin Chan'},
+    {name:'Darrin Lee'},
+    {name:'Julie Liang'},
+    {name:'Alex Petrovich'},
+    {name:'Katie Chung'},
+    {name:'Jordan Lau'},
+    {name:'Justin Law'},
+    {name:'Vikki Wan'},
+    {name:'Elman Chao'},
+    {name:'Anna Huang'},
+    {name:'Matt Sem'},
+  ],
+};
+
+function shuttleBoardingCount(){
+  return SHUTTLE.riders.filter(r=>!r.returnOnly).length;
+}
+
+function renderTransport(){
+  const carCount = CAR_SECTIONS.reduce((n,s)=>n+s.cars.length, 0);
+  return `
   <div class="shell">
 ${renderHero()}
     <div class="content">
       <div class="picker-intro">
-        <h2>Cars</h2>
-        <p>Who's riding together to and from the venue.</p>
+        <h2>Transportation</h2>
+        <p>How everyone is getting to and from the venue.</p>
       </div>
+      <div class="contact-card doc-card" id="driversLink">
+        <div>
+          <div class="contact-name">Drivers</div>
+          <div class="contact-role">Who's riding in which car, there and back</div>
+          <div class="doc-meta">${carCount} cars</div>
+        </div>
+        <div class="contact-actions">
+          <span class="contact-btn" aria-hidden="true">&#8250;</span>
+        </div>
+      </div>
+      <div class="contact-card doc-card" id="shuttleLink">
+        <div>
+          <div class="contact-name">Shuttle Bus</div>
+          <div class="contact-role">Leaves Fairview Mall at 2:20 PM, leaves the venue at midnight</div>
+          <div class="doc-meta">${SHUTTLE.riders.length} riders · ${SHUTTLE.capacity}-seat coach</div>
+        </div>
+        <div class="contact-actions">
+          <span class="contact-btn" aria-hidden="true">&#8250;</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// Shared header for the two Transportation sub-pages.
+function renderSubPageTop(title, sub){
+  return `
+      <div class="topbar">
+        <button class="back-btn" id="subPageBack">&#8592; Transportation</button>
+      </div>
+      <div class="picker-intro">
+        <h2>${title}</h2>
+        <p>${sub}</p>
+      </div>`;
+}
+
+function renderDrivers(){
+  let html = `
+  <div class="shell">
+${renderHero()}
+    <div class="content">
+${renderSubPageTop('Drivers', "Who's riding together to and from the venue.")}
   `;
   CAR_SECTIONS.forEach(section=>{
     html += `<div class="car-section-label">${section.label}</div>`;
@@ -2271,8 +2482,55 @@ ${renderHero()}
   return html;
 }
 
-function attachCarsHandlers(){
-  // Static content for now.
+function renderShuttle(){
+  const boarding = shuttleBoardingCount();
+  const returnOnly = SHUTTLE.riders.length - boarding;
+  let html = `
+  <div class="shell">
+${renderHero()}
+    <div class="content">
+${renderSubPageTop('Shuttle Bus', `${SHUTTLE.riders.length} riders on a ${SHUTTLE.capacity}-seat coach · ${SHUTTLE.costPerPerson} each.`)}
+      <div class="depart-grid">
+  `;
+  SHUTTLE.departures.forEach(d=>{
+    html += `
+        <div class="depart-card">
+          <div class="depart-label">${d.label}</div>
+          <div class="depart-time">${d.time}</div>
+          <div class="depart-where">${d.where}</div>
+          <div class="depart-note">${d.note}</div>
+        </div>`;
+  });
+  html += `
+      </div>
+      <div class="car-section-label">Riders &middot; ${boarding} boarding at Fairview, ${returnOnly} return only</div>
+      <div class="rider-list">
+  `;
+  SHUTTLE.riders.forEach((r,i)=>{
+    html += `
+        <div class="rider-row">
+          <span class="rider-num">${i+1}</span>
+          <span class="rider-name">${r.name}</span>
+          ${r.returnOnly ? `<span class="rider-tag">Return only</span>` : ''}
+        </div>`;
+  });
+  html += `
+      </div>
+    </div>
+  </div>`;
+  return html;
+}
+
+function attachTransportHandlers(){
+  const drivers = document.getElementById('driversLink');
+  if(drivers) drivers.addEventListener('click', ()=>go('cars/drivers'));
+  const shuttle = document.getElementById('shuttleLink');
+  if(shuttle) shuttle.addEventListener('click', ()=>go('cars/shuttle'));
+}
+
+function attachSubPageHandlers(){
+  const back = document.getElementById('subPageBack');
+  if(back) back.addEventListener('click', ()=>go('cars'));
 }
 
 /* ---- More tab: reference links ---- */
