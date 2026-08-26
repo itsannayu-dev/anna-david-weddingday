@@ -627,6 +627,16 @@
     line-height:1.35;
   }
 
+  .compare-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
+  }
+  /* On narrow phones the export button goes icon-only so the title stays on one line. */
+  @media (max-width: 400px){
+    .export-pdf .btn-label{ display:none; }
+  }
   .manage-toggle{
     flex-shrink:0;
     background:var(--paper);
@@ -1136,6 +1146,72 @@
     padding:4px 10px;
     font-size:13px;
     color:var(--ink);
+  }
+
+  /* ---------- Export as PDF ----------
+     The on-screen grid is a CSS grid that can't paginate, so the export
+     builds a plain table into .print-root and prints that instead. Columns
+     are chunked across landscape pages so the text stays readable. */
+  .print-root{ display:none; }
+  @media print{
+    @page{ size:landscape; margin:10mm; }
+    html, body{ background:#fff; overflow:visible; }
+    #root, .bottom-nav{ display:none !important; }
+    .print-root{
+      display:block;
+      -webkit-print-color-adjust:exact;
+      print-color-adjust:exact;
+    }
+    .print-page{ break-after:page; page-break-after:always; }
+    .print-page:last-child{ break-after:auto; page-break-after:auto; }
+    .print-header{ margin-bottom:8px; }
+    .print-title{
+      font-family:'Fraunces', serif;
+      font-size:15pt;
+      font-weight:600;
+      color:var(--sage-deep);
+    }
+    .print-meta{
+      font-size:8.5pt;
+      color:var(--ink-soft);
+      margin-top:2px;
+    }
+    table.print-table{
+      width:100%;
+      border-collapse:collapse;
+      table-layout:fixed;
+    }
+    .print-table thead{ display:table-header-group; }
+    .print-table tr{ break-inside:avoid; page-break-inside:avoid; }
+    .print-table th, .print-table td{
+      border:0.5pt solid var(--line);
+      padding:3pt 4pt;
+      vertical-align:top;
+      text-align:left;
+    }
+    .print-table thead th{ background:var(--sage-deep); color:#fff; }
+    .print-table thead th.hdr-bridesmaids{ background:#C9707F; }
+    .print-table thead th.hdr-groomsmen{ background:#4E7BA6; }
+    .print-table thead th.hdr-vendors{ background:#22201B; }
+    .print-name{
+      font-family:'Fraunces', serif;
+      font-size:9.5pt;
+      font-weight:600;
+      line-height:1.2;
+    }
+    .print-role{ font-size:7pt; color:rgba(255,255,255,0.92); }
+    .print-table .print-time{
+      width:52pt;
+      background:var(--cream);
+      font-weight:600;
+      font-size:8pt;
+      color:var(--sage-deep);
+    }
+    .print-table thead th.print-time{ background:var(--sage-deep); color:#fff; }
+    .print-card{ font-size:8pt; line-height:1.25; margin-bottom:2pt; }
+    .print-card:last-child{ margin-bottom:0; }
+    .print-card.print-done{ opacity:0.5; text-decoration:line-through; }
+    .print-note{ font-size:7pt; color:var(--ink-soft); margin-top:1pt; }
   }
 </style>
 </head>
@@ -1752,6 +1828,14 @@ function renderHero(){
     </div>`;
 }
 
+// Column header colour band, shared by the on-screen grid and the PDF export.
+function compareHeaderClass(p){
+  if(p.group==='Bridesmaids') return 'hdr-bridesmaids';
+  if(p.group==='Groomsmen') return 'hdr-groomsmen';
+  if(p.group==='Vendors' || p.id==='planner') return 'hdr-vendors';
+  return '';
+}
+
 function renderCompare(){
   initCompareState();
   const times = orderedTimeLabels();
@@ -1761,7 +1845,10 @@ function renderCompare(){
   <div class="compare-shell">
     <div class="compare-topbar">
       <div class="compare-title serif">Everyone's Schedule</div>
-      <button class="manage-toggle${compareManageOpen ? ' open' : ''}" id="manageToggle" aria-pressed="${compareManageOpen ? 'true' : 'false'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" y1="2" x2="14" y2="6"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="16" y1="18" x2="16" y2="22"/></svg>Filter</button>
+      <div class="compare-actions">
+        <button class="manage-toggle${compareManageOpen ? ' open' : ''}" id="manageToggle" aria-pressed="${compareManageOpen ? 'true' : 'false'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" y1="2" x2="14" y2="6"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="16" y1="18" x2="16" y2="22"/></svg>Filter</button>
+        <button class="manage-toggle export-pdf" id="exportPdf" aria-label="Export as PDF" title="Export as PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span class="btn-label">PDF</span></button>
+      </div>
     </div>
   `;
 
@@ -1800,7 +1887,7 @@ function renderCompare(){
         <thead>
           <tr>
             <th class="time-col">Time</th>
-            ${visibleOrder.map(id=>{ const p=personById(id); const groupClass = p.group==='Bridesmaids' ? 'hdr-bridesmaids' : p.group==='Groomsmen' ? 'hdr-groomsmen' : (p.group==='Vendors' || p.id==='planner') ? 'hdr-vendors' : ''; return `<th class="${groupClass}"><div class="col-name">${p.shortName || p.name}</div><div class="col-role">${p.role}</div></th>`; }).join('')}
+            ${visibleOrder.map(id=>{ const p=personById(id); return `<th class="${compareHeaderClass(p)}"><div class="col-name">${p.shortName || p.name}</div><div class="col-role">${p.role}</div></th>`; }).join('')}
           </tr>
         </thead>
         <tbody>
@@ -1828,12 +1915,73 @@ function renderCompare(){
   return html;
 }
 
+/* ---- Export as PDF ----
+   Six people per landscape page keeps the columns wide enough to read.
+   Whatever the Filter panel is hiding stays out of the export too. */
+const PRINT_PEOPLE_PER_PAGE = 6;
+
+function buildPrintPages(){
+  initCompareState();
+  const labels = orderedTimeLabels().filter((label,idx)=>idx >= compareTimeCutoffIndex);
+  const visibleOrder = compareOrder.filter(id=>compareVisible.has(id));
+
+  const chunks = [];
+  for(let i=0; i<visibleOrder.length; i+=PRINT_PEOPLE_PER_PAGE){
+    chunks.push(visibleOrder.slice(i, i+PRINT_PEOPLE_PER_PAGE));
+  }
+  if(chunks.length===0) chunks.push([]);
+
+  return chunks.map((ids, pageIdx)=>{
+    const head = ids.map(id=>{
+      const p = personById(id);
+      return `<th class="${compareHeaderClass(p)}"><div class="print-name">${p.shortName || p.name}</div><div class="print-role">${p.role}</div></th>`;
+    }).join('');
+    const body = labels.map(label=>{
+      const cells = ids.map(id=>{
+        const cellTasks = TASKS.filter(t=>t.time===label && t.people.includes(id));
+        return `<td>${cellTasks.map(t=>`<div class="print-card${completed[t.id] ? ' print-done' : ''}">${t.title}${t.note ? `<div class="print-note">${t.note}</div>` : ''}</div>`).join('')}</td>`;
+      }).join('');
+      return `<tr><td class="print-time">${label}</td>${cells}</tr>`;
+    }).join('');
+    return `
+      <section class="print-page">
+        <div class="print-header">
+          <div class="print-title">Anna &amp; David — Everyone's Schedule</div>
+          <div class="print-meta">Saturday, September 5 · Lincoln Estate · Page ${pageIdx+1} of ${chunks.length}</div>
+        </div>
+        <table class="print-table">
+          <thead><tr><th class="print-time">Time</th>${head}</tr></thead>
+          <tbody>${body}</tbody>
+        </table>
+      </section>`;
+  }).join('');
+}
+
+function exportScheduleAsPdf(){
+  let printRoot = document.getElementById('printRoot');
+  if(!printRoot){
+    printRoot = document.createElement('div');
+    printRoot.id = 'printRoot';
+    printRoot.className = 'print-root';
+    document.body.appendChild(printRoot);
+  }
+  printRoot.innerHTML = buildPrintPages();
+  const cleanup = ()=>{
+    printRoot.innerHTML = '';
+    window.removeEventListener('afterprint', cleanup);
+  };
+  window.addEventListener('afterprint', cleanup);
+  window.print();
+}
+
 function attachCompareHandlers(){
   document.getElementById('manageToggle').addEventListener('click', ()=>{
     compareManageOpen = !compareManageOpen;
     savePref('compareManageOpen', compareManageOpen);
     render();
   });
+  const exportBtn = document.getElementById('exportPdf');
+  if(exportBtn) exportBtn.addEventListener('click', exportScheduleAsPdf);
   const timeSlider = document.getElementById('timeFilterSlider');
   if(timeSlider){
     const timeLabels = orderedTimeLabels();
