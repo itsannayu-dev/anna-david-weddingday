@@ -1585,6 +1585,31 @@ let showAllergies = false;
 const BRIDESMAIDS_PACKING = ALL_BRIDESMAIDS.filter(id=>id!=='bm_annad');
 const GROOMSMEN_PACKING_ITEMS = ['Suit', 'Black Bowtie', 'Dress shoes', 'Dress socks'];
 
+const COUPLE_PACKING = {
+  anna: [
+    'Ceremony Dress',
+    'Reception Dress',
+    'Heels (x2)',
+    'Jewelry',
+    'Rings',
+    'Steamer (small + large)',
+    'Bridesmaid bouquets / items',
+    'PJs for the hotel',
+    'All the wedding setup items',
+  ],
+  david: [
+    'Suit',
+    'Bowtie',
+    'Dress shoes',
+    'Dress socks',
+    'Boutonnieres for the groomsmen',
+    'Ring',
+    'Hair products',
+    'PJs for the hotel',
+    'All the wedding setup items',
+  ],
+};
+
 function bridesmaidPackingList(personId){
   const items = [
     'Bridesmaid Dress',
@@ -1601,6 +1626,7 @@ function bridesmaidPackingList(personId){
 }
 
 function packingListForPerson(personId){
+  if(COUPLE_PACKING[personId]) return COUPLE_PACKING[personId];
   if(BRIDESMAIDS_PACKING.includes(personId)) return bridesmaidPackingList(personId);
   if(ALL_GROOMSMEN.includes(personId)) return GROOMSMEN_PACKING_ITEMS;
   return null;
