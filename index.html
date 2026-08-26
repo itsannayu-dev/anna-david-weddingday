@@ -2519,6 +2519,9 @@ function renderPicker(){
   const groups = [];
   const seen = new Set();
   PEOPLE.forEach(p=>{ if(!seen.has(p.group)){ seen.add(p.group); groups.push(p.group); } });
+  // Most people opening this are guests, so their card goes at the top.
+  const guestIdx = groups.indexOf('Guests');
+  if(guestIdx > 0) groups.unshift(groups.splice(guestIdx, 1)[0]);
 
   let html = `
   <div class="shell">
