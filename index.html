@@ -1210,6 +1210,10 @@ const ALL_BRIDESMAIDS = ['bm_annad','bm_bernita','bm_gini','bm_louise','bm_krist
 const ALL_GROOMSMEN = ['gm_kai','gm_tony','gm_jy','gm_stanley','gm_anish','gm_adam'];
 const ALL_PARENTS = ['parents_anna','parents_david'];
 const WITH_GUEST = ['guest','liveperf'];
+// Everyone who is fed at the reception. Mimi is with the dog sitter, and the
+// photobooth, florist, and hair & makeup teams aren't around for dinner.
+const NO_MEAL = ['mimi','photobooth','florist','mua','cakeshop'];
+const WITH_MEALS = PEOPLE.filter(p=>!NO_MEAL.includes(p.id)).map(p=>p.id);
 const SPEECHES_1_NOTE = 'Bridesmaids: Dong, Angela, Bernita (1 min each).<br>Groomsmen: Kai, Stanley, JY (1 min each).';
 const SPEECHES_2_NOTE = 'Groomsmen: Tony, Anish, Ziming (1 min each).<br>Bridesmaids: Kristin, Gini, Louise (1 min each).';
 const GROUP_PHOTO_NOTE = 'Everyone from ceremony, followed by:<br>1. Bride\'s family<br>2. Groom\'s family<br>3. Both families<br>4. Extended family of bride<br>5. Extended family of groom<br>6. Bridal party photo<br>7. Bachelorette photo<br>8. Bachelor photo<br>9. High school friends<br>10. Waterloo friends<br>11. Sports &amp; raving friends';
@@ -1364,7 +1368,7 @@ const TASKS = [
   {id:'t61', time:'7:20 PM', sort:tk(7,20,true), title:'Cake cutting', people:[...WITH_GUEST,'anna','david'], note:null},
   {id:'t61c', time:'7:20 PM', sort:tk(7,20,true)+0.5, title:'Prompt for cake cutting', people:['mc'], note:null},
   {id:'t61b', time:'7:20 PM', sort:tk(7,20,true)+0.75, title:'Capture cake cutting', people:['photovideo'], note:null},
-  {id:'t43', time:'7:20 PM', sort:tk(7,20,true)+1, title:'First course', people:[...WITH_GUEST, ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
+  {id:'t43', time:'7:30 PM', sort:tk(7,30,true), title:'First course', people:[...WITH_MEALS], note:null},
   {id:'t45', time:'7:20 PM', sort:tk(7,20,true)+2, title:'Sunset photos', people:['anna','david','photovideo','planner'], note:null},
   {id:'t59', time:'7:45 PM', sort:tk(7,45,true), title:'Dad speech (2 min)', people:['parents_anna'], note:null},
   {id:'t59c', time:'7:45 PM', sort:tk(7,45,true)+2, title:"Listen to Dad's speech", people:['anna','david'], note:null},
@@ -1372,7 +1376,8 @@ const TASKS = [
   {id:'t44', time:'8:00 PM', sort:tk(8,0,true), title:'Game #1 — Questions about the couple', people:[...WITH_GUEST,'anna','david', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
   {id:'t44b', time:'8:00 PM', sort:tk(8,0,true)+1, title:'Introduce Game #1 — Questions about the couple', people:['mc'], note:null},
   {id:'t44c', time:'8:00 PM', sort:tk(8,0,true)+3, title:'Queue Game #1 soundtrack', people:['dj'], note:null},
-  {id:'t46', time:'8:15 PM', sort:tk(8,15,true), title:'Second course + Speeches', people:[...WITH_GUEST, ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:SPEECHES_1_NOTE},
+  {id:'t46', time:'8:00 PM', sort:tk(8,0,true)+0.5, title:'Second course', people:[...WITH_MEALS], note:null},
+  {id:'t46e', time:'8:15 PM', sort:tk(8,15,true), title:'Speeches', people:[...WITH_GUEST, ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:SPEECHES_1_NOTE},
   {id:'t46b', time:'8:15 PM', sort:tk(8,15,true)+0.5, title:'Introduce speeches', people:['mc'], note:SPEECHES_1_NOTE},
   {id:'t47', time:'8:15 PM', sort:tk(8,15,true)+1, title:'Dong speech (1 min)', people:['bm_annad'], note:SPEECHES_1_NOTE},
   {id:'t48', time:'8:15 PM', sort:tk(8,15,true)+2, title:'Angela speech #2 (1 min)', people:['bm_angela'], note:SPEECHES_1_NOTE},
@@ -1387,7 +1392,7 @@ const TASKS = [
   {id:'t50v', time:'8:25 PM', sort:tk(8,25,true)+0.5, title:'Perform live performance', people:['liveperf'], note:null},
   {id:'t50f', time:'8:25 PM', sort:tk(8,25,true)+2, title:'Listen to live performance', people:['anna','david'], note:null},
   {id:'t50g', time:'8:25 PM', sort:tk(8,25,true)+3, title:'Table toasting (optional)', people:['anna','david'], note:'Skip if there\'s no time.'},
-  {id:'t51', time:'8:30 PM', sort:tk(8,30,true), title:'Main course + Speeches', people:[...WITH_GUEST, ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:SPEECHES_2_NOTE},
+  {id:'t51', time:'8:30 PM', sort:tk(8,30,true), title:'Main course + Speeches', people:[...WITH_MEALS], note:SPEECHES_2_NOTE},
   {id:'t51c', time:'8:30 PM', sort:tk(8,30,true)+0.25, title:'Prompt table toasting', people:['mc'], note:'Optional — skip if there\'s no time.'},
   {id:'t51e', time:'8:30 PM', sort:tk(8,30,true)+0.35, title:'Capture table toast', people:['photovideo'], note:'Optional — skip if there\'s no time.'},
   {id:'t51b', time:'8:30 PM', sort:tk(8,30,true)+0.5, title:'Introduce speeches', people:['mc'], note:SPEECHES_2_NOTE},
@@ -1403,7 +1408,7 @@ const TASKS = [
   {id:'t58b', time:'8:40 PM', sort:tk(8,40,true)+1, title:"Introduce Game #2 — Guess the bride's hand", people:['mc'], note:null},
   {id:'t58d', time:'8:40 PM', sort:tk(8,40,true)+2, title:'Queue Game #2 soundtrack', people:['dj'], note:null},
   {id:'t58c', time:'8:00 PM', sort:tk(8,0,true)+2, title:'Arrive on site', people:['photobooth'], note:null},
-  {id:'t56', time:'9:00 PM', sort:tk(9,0,true), title:'Dessert + Thank-you speech', people:[...WITH_GUEST, ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
+  {id:'t56', time:'9:00 PM', sort:tk(9,0,true), title:'Dessert + Thank-you speech', people:[...WITH_MEALS], note:null},
   {id:'t57', time:'8:45 PM', sort:tk(8,45,true), title:'Photobooth (8:45pm–11:45pm)', people:['guest','liveperf'], note:null},
   {id:'t57b', time:'8:45 PM', sort:tk(8,45,true)+1, title:'Photobooth open (8:45pm–11:45pm)', people:['photobooth'], note:null},
   {id:'t60', time:'9:00 PM', sort:tk(9,0,true)+2, title:'Thank-you speeches', people:['anna','david'], note:null},
@@ -1417,7 +1422,9 @@ const TASKS = [
   {id:'t63', time:'10:00 PM', sort:tk(10,0,true), title:'Dance floor opens', people:[...WITH_GUEST], note:null},
   {id:'t63c', time:'10:00 PM', sort:tk(10,0,true)+2, title:'Introduce dance floor opening', people:['mc'], note:null},
   {id:'t63b', time:'10:00 PM', sort:tk(10,0,true)+1, title:'Queue dance floor playlist', people:['dj'], note:null},
-  {id:'t63d', time:'10:30 PM', sort:tk(10,30,true), title:'Be at photobooth to take pics with guests (10:30–11pm)', people:['anna','david'], note:null},
+  {id:'t63e', time:'10:30 PM', sort:tk(10,30,true), title:'Late night food', people:[...WITH_MEALS], note:null},
+  {id:'t63d', time:'10:30 PM', sort:tk(10,30,true)+1, title:'Be at photobooth to take pics with guests (10:30–11pm)', people:['anna','david'], note:null},
+  {id:'t63f', time:'10:30 PM', sort:tk(10,30,true)+2, title:'Place flower wrapping paper on table', people:['planner'], note:null},
   {id:'t64', time:'8:30 PM', sort:tk(8,30,true)+7, title:'Move welcome table items inside before they leave', people:['planner'], note:null},
   {id:'t69', time:'11:00 PM', sort:24*60+3, title:'Take home flowers (11pm–12am)', people:[...WITH_GUEST], note:null},
   {id:'t67b', time:'11:30 PM', sort:24*60+31, title:'Dance! (11:30pm–12am)', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
