@@ -1290,7 +1290,8 @@ const WITH_GUEST = ['guest','liveperf'];
 // photobooth, florist, and hair & makeup teams aren't around for dinner.
 const NO_MEAL = ['mimi','photobooth','florist','mua','cakeshop'];
 const WITH_MEALS = PEOPLE.filter(p=>!NO_MEAL.includes(p.id)).map(p=>p.id);
-const SPEECHES_1_NOTE = 'Bridesmaids: Dong, Angela, Bernita (1 min each).<br>Groomsmen: Kai, Stanley, JY (1 min each).';
+const PARENT_SPEECHES_NOTE = "Anna's dad, then David's dad (2 min each). Ken translates both.";
+const SPEECHES_1_NOTE ='Bridesmaids: Dong, Angela, Bernita (1 min each).<br>Groomsmen: Kai, Stanley, JY (1 min each).';
 const SPEECHES_2_NOTE = 'Groomsmen: Tony, Anish, Ziming (1 min each).<br>Bridesmaids: Kristin, Gini, Louise (1 min each).';
 const GROUP_PHOTO_NOTE = 'Everyone from ceremony, followed by:<br>1. Bride\'s family<br>2. Groom\'s family<br>3. Both families<br>4. Extended family of bride<br>5. Extended family of groom<br>6. Bridal party photo<br>7. Bachelorette photo<br>8. Bachelor photo<br>9. High school friends<br>10. Waterloo friends<br>11. Sports &amp; raving friends';
 const REHEARSAL_NOTE = '1. David + Parents<br>2. Groomsmen<br>3. Bridesmaid<br>4. Anna + Parents<br>5. Mimi — Ring';
@@ -1451,10 +1452,12 @@ const TASKS = [
   {id:'t61b', time:'7:20 PM', sort:tk(7,20,true)+0.75, title:'Capture cake cutting', people:['photovideo'], note:null},
   {id:'t43', time:'7:30 PM', sort:tk(7,30,true), title:'First course', people:[...WITH_MEALS], note:null},
   {id:'t45', time:'7:20 PM', sort:tk(7,20,true)+2, title:'Sunset photos', people:['anna','david','photovideo','planner'], note:null},
-  {id:'t59', time:'7:45 PM', sort:tk(7,45,true), title:'Dad speech (2 min)', people:['parents_anna'], note:null},
-  {id:'t59d', time:'7:45 PM', sort:tk(7,45,true)+0.5, title:'Dad speech', people:['parents_david'], note:"Goes after Anna's dad's speech."},
-  {id:'t59c', time:'7:45 PM', sort:tk(7,45,true)+2, title:'Listen to the dad speeches', people:['anna','david'], note:null},
+  {id:'t59f', time:'7:45 PM', sort:tk(7,45,true)+0.25, title:'Parent speeches', people:[...WITH_GUEST], note:PARENT_SPEECHES_NOTE},
+  {id:'t59', time:'7:45 PM', sort:tk(7,45,true), title:'Dad speech (2 min)', people:['parents_anna'], note:PARENT_SPEECHES_NOTE},
+  {id:'t59d', time:'7:45 PM', sort:tk(7,45,true)+0.5, title:'Dad speech (2 min)', people:['parents_david'], note:PARENT_SPEECHES_NOTE},
+  {id:'t59c', time:'7:45 PM', sort:tk(7,45,true)+2, title:'Listen to the dad speeches', people:['anna','david'], note:PARENT_SPEECHES_NOTE},
   {id:'t59b', time:'7:45 PM', sort:tk(7,45,true)+1, title:"Help translate Anna's dad's speech", people:['mc'], note:null},
+  {id:'t59e', time:'7:45 PM', sort:tk(7,45,true)+1.5, title:"Help translate David's dad's speech", people:['mc'], note:null},
   {id:'t44', time:'8:00 PM', sort:tk(8,0,true), title:'Game #1 — Questions about the couple', people:[...WITH_GUEST,'anna','david', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
   {id:'t44b', time:'8:00 PM', sort:tk(8,0,true)+1, title:'Introduce Game #1 — Questions about the couple', people:['mc'], note:null},
   {id:'t44c', time:'8:00 PM', sort:tk(8,0,true)+3, title:'Queue Game #1 soundtrack', people:['dj'], note:null},
