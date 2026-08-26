@@ -2288,7 +2288,8 @@ const ATTACHMENTS = [
     src:'seating-chart.pdf',
     title:'Seating Chart',
     desc:'Who sits where — 13 tables plus the head table',
-    meta:'PDF · 1 page · 125 guests',
+    // No page count: the export carries a blank second page.
+    meta:'PDF · 125 guests · 8 vendors',
   },
   {
     id:'setup',
@@ -2302,20 +2303,23 @@ const ATTACHMENTS = [
 /* ---- More tab: food allergies & dietary needs ----
    Edit this list directly. `table` may be left blank if unknown.
    Kept in table order; blank tables sort to the bottom. */
+// Table numbers follow the Sep 5 seating chart, which renumbered every table
+// except Table 1 to match the reception floor plan. Same guests throughout —
+// only the numbers moved (old T2 is now T5, old T13 is now T4, and so on).
 const FOOD_ALLERGIES = [
-  {table:'T2',  name:'Kristin So',       need:'Nut allergy'},
-  {table:'T3',  name:'Elaine Yuan',      need:'Vegan preferred'},
-  {table:'T3',  name:'Kevin Ding',       need:'No cilantro'},
-  {table:'T3',  name:'Eric Sun',         need:'No raw apple, raw peach, raw cherry'},
-  {table:'T3',  name:'Linda Zhang',      need:'No raw apple, raw peach, raw cherry'},
-  {table:'T5',  name:'Tina Gong',        need:'No raw banana'},
-  {table:'T7',  name:'Rob Lin',          need:'Birch allergy (apple, peach, plum, pear, apricot, almonds)'},
-  {table:'T11', name:'Janice Cheung',    need:'No shellfish'},
-  {table:'T11', name:'Bindi Mehta',      need:'Vegetarian'},
-  {table:'T12', name:'Steven Luu',       need:'No peanuts'},
-  {table:'T12', name:'Remira Melendrez', need:'No walnuts'},
-  {table:'T12', name:'Anthony Cho',      need:'Pescatarian'},
-  {table:'T13', name:'Kelvin Lau',       need:'Nut allergy'},
+  {table:'T4',  name:'Kelvin Lau',       need:'Nut allergy'},
+  {table:'T5',  name:'Kristin So',       need:'Nut allergy'},
+  {table:'T6',  name:'Rob Lin',          need:'Birch allergy (apple, peach, plum, pear, apricot, almonds)'},
+  {table:'T8',  name:'Elaine Yuan',      need:'Vegan preferred'},
+  {table:'T8',  name:'Kevin Ding',       need:'No cilantro'},
+  {table:'T8',  name:'Eric Sun',         need:'No raw apple, raw peach, raw cherry'},
+  {table:'T8',  name:'Linda Zhang',      need:'No raw apple, raw peach, raw cherry'},
+  {table:'T11', name:'Tina Gong',        need:'No raw banana'},
+  {table:'T12', name:'Janice Cheung',    need:'No shellfish'},
+  {table:'T12', name:'Bindi Mehta',      need:'Vegetarian'},
+  {table:'T13', name:'Anthony Cho',      need:'Pescatarian'},
+  {table:'T13', name:'Steven Luu',       need:'No peanuts'},
+  {table:'T13', name:'Remira Melendrez', need:'No walnuts'},
 ];
 
 function renderAllergiesModal(){
