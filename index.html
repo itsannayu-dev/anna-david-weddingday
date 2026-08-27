@@ -2565,9 +2565,10 @@ const ATTACHMENTS = [
 /* ---- More tab: food allergies & dietary needs ----
    Edit this list directly. `table` may be left blank if unknown.
    Kept in table order; blank tables sort to the bottom. */
-// Table numbers follow the seating chart. The latest one inserted a new Table 7,
-// pushing the old tables 7 and 10-13 down a number; tables 1-6, 8, and 9 kept
-// theirs. Same 13 guests with needs — only their table numbers moved.
+// Table numbers follow the seating chart PDF, and past exports have renumbered
+// tables without changing anyone's seat — so re-check every row against a new
+// chart rather than assuming the numbers still hold. Verified against the
+// current one: 13 warning markers, matching the 13 rows below.
 const FOOD_ALLERGIES = [
   {table:'T4',  name:'Kelvin Lau',       need:'Nut allergy'},
   {table:'T5',  name:'Kristin So',       need:'Nut allergy'},
