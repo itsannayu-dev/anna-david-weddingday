@@ -1374,7 +1374,8 @@ const PARENT_SPEECHES_NOTE = "Anna's dad, then David's dad (2 min each). Ken tra
 const SPEECHES_1_NOTE ='Bridesmaids: Dong, Angela, Bernita (1 min each).<br>Groomsmen: Kai, Stanley, JY (1 min each).';
 const SPEECHES_2_NOTE = 'Groomsmen: Tony, Anish, Ziming (1 min each).<br>Bridesmaids: Kristin, Gini, Louise (1 min each).';
 const GROUP_PHOTO_NOTE = 'Everyone from ceremony, followed by:<br>1. Bride\'s family<br>2. Groom\'s family<br>3. Both families<br>4. Extended family of bride<br>5. Extended family of groom<br>6. Bridal party photo<br>7. Bachelorette photo<br>8. Bachelor photo<br>9. High school friends<br>10. Waterloo friends<br>11. Sports &amp; raving friends';
-const REHEARSAL_NOTE = '1. David + Parents<br>2. Groomsmen<br>3. Bridesmaid<br>4. Anna + Parents<br>5. Mimi — Ring';
+// Mimi isn't back from the dog sitter until 4:00 PM, so she misses this run-through.
+const REHEARSAL_NOTE = '1. David + Parents<br>2. Groomsmen<br>3. Bridesmaid<br>4. Anna + Parents<br>5. Mimi — Ring<br><br>Mimi is still at the dog sitter until 4:00 PM — walk her part through once she arrives.';
 
 // Setup checklists for the planning team. See the Setup References board in the More tab.
 const CHARM_BAR_NOTE = [
@@ -1457,7 +1458,7 @@ const TASKS = [
   {id:'t20b', time:'11:00 AM', sort:tk(11,0,false)+1, title:'Do own makeup & hair', people:['bm_annad'], note:null},
   {id:'t13', time:'11:30 AM', sort:tk(11,30,false)+2, title:'Hair — May', people:['parents_anna','mua'], note:'This slot is for May only — Andre doesn\'t need to be here for it.'},
   {id:'t11', time:'11:00 AM', sort:tk(11,0,false)+4, title:'Arrive at venue', people:ALL_GROOMSMEN, note:null},
-  {id:'m1', time:'11:00 AM', sort:tk(11,0,false)+5, title:'Dropped off at dog sitter', people:['mimi'], note:null},
+  {id:'m1', time:'9:30 AM', sort:tk(9,30,false)+3, title:'Drop Mimi off at the Dog Sitter', people:['bm_angela','mimi'], note:'Angela drops her off on the way in, before she gets to the venue at 10:00 AM.'},
   {id:'t12', time:'12:00 PM', sort:tk(12,0,true), title:'Set up the Welcome Area', people:['planner'], note:WELCOME_AREA_NOTE},
   {id:'t10', time:'11:00 AM', sort:tk(11,0,false)+3, title:'Hair Service — Angela', people:['bm_angela','mua'], note:null},
   {id:'t20', time:'11:30 AM', sort:tk(11,30,false)+3, title:'Get ready', people:ALL_GROOMSMEN, note:"Don't forget to put on your boutonniere."},
@@ -1481,9 +1482,9 @@ const TASKS = [
   {id:'t22c', time:'2:00 PM', sort:tk(2,0,true), title:'Family photos', people:['anna','david','photovideo'], note:null},
   {id:'t22d', time:'2:00 PM', sort:tk(2,0,true)+1, title:'Practice entrance routine', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN, 'dj'], note:null},
   {id:'t23', time:'2:20 PM', sort:tk(2,20,true), title:'Shuttle bus leaves from Fairview Mall', people:['guest'], note:null},
-  {id:'t23b', time:'2:30 PM', sort:tk(2,30,true), title:'Pick up Mimi from Dog Sitter', people:['parents_anna','mimi'], note:null},
-  {id:'m2b', time:'2:30 PM', sort:tk(2,30,true)+1, title:'Supervise Mimi until her turn', people:['planner','mimi'], note:'She\'s ring bearer at 5:00 PM.'},
-  {id:'t24', time:'3:00 PM', sort:tk(3,0,true), title:'Ceremony rehearsal', people:['anna','david','dj','mc','mimi','planner', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN, ...ALL_PARENTS], note:REHEARSAL_NOTE},
+  {id:'t23b', time:'4:00 PM', sort:tk(4,0,true), title:'Pick up Mimi from Dog Sitter', people:['parents_anna','mimi'], note:null},
+  {id:'m2b', time:'4:00 PM', sort:tk(4,0,true)+1, title:'Supervise Mimi until her turn', people:['planner','mimi'], note:'She\'s ring bearer at 5:00 PM.'},
+  {id:'t24', time:'3:00 PM', sort:tk(3,0,true), title:'Ceremony rehearsal', people:['anna','david','dj','mc','planner', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN, ...ALL_PARENTS], note:REHEARSAL_NOTE},
   {id:'t25', time:'3:00 PM', sort:tk(3,0,true)+1, title:'MC / Officiant arrives', people:['mc'], note:null},
   {id:'t25b', time:'3:00 PM', sort:tk(3,0,true)+2, title:'Wrap up and leave venue', people:['mua'], note:null},
   {id:'t26', time:'3:00 PM', sort:tk(3,0,true)+3, title:'Florist team wraps and leaves', people:['planner','florist'], note:null},
@@ -1510,7 +1511,7 @@ const TASKS = [
   {id:'t33', time:'5:30 PM', sort:tk(5,30,true), title:'Group photos', people:[...WITH_GUEST,'anna','david', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN, ...ALL_PARENTS, 'photovideo'], note:GROUP_PHOTO_NOTE},
   {id:'t34', time:'5:30 PM', sort:tk(5,30,true)+1, title:'Assist with group photo lineup', people:['planner'], note:GROUP_PHOTO_NOTE},
   {id:'t33c', time:'5:30 PM', sort:tk(5,30,true)+1.5, title:'Prompt for group photo', people:['mc'], note:GROUP_PHOTO_NOTE},
-  {id:'m3', time:'5:30 PM', sort:tk(5,30,true)+2, title:'Dog sitter picks up from venue', people:['mimi'], note:null},
+  {id:'m3', time:'6:15 PM', sort:tk(6,15,true), title:'Dog sitter picks up from venue', people:['mimi'], note:null},
   {id:'t35', time:'6:00 PM', sort:tk(6,0,true), title:'Cocktail hour', people:[...WITH_GUEST,'anna','david', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
   {id:'t35c', time:'6:00 PM', sort:tk(6,0,true)+3, title:'DIY Charm Bar (6–7pm)', people:[...WITH_GUEST], note:null},
   {id:'t36', time:'6:00 PM', sort:tk(6,0,true)+1, title:'Move florals inside + set up Head Table', people:['planner'], note:HEAD_TABLE_NOTE},
