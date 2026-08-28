@@ -445,6 +445,18 @@
     margin-top:2px;
     line-height:1.4;
   }
+  /* Addresses inside a note open in Maps. Only the checkbox marks a task done,
+     so a link in here doesn't steal that tap. */
+  .note-map{
+    display:inline-block;
+    margin-top:3px;
+    color:var(--sage-deep);
+    font-weight:600;
+    text-decoration:none;
+  }
+  .note-map:hover{ text-decoration:underline; }
+  /* Arrow lives in CSS so the print sheet can drop it and leave a plain address. */
+  .note-map::before{ content:'\2197'; margin-right:3px; }
   .task.done{ background:var(--done-bg); }
   .task.done .title{ color:var(--ink-soft); text-decoration:line-through; text-decoration-color:var(--line); }
 
@@ -1292,6 +1304,9 @@
     .print-card:last-child{ margin-bottom:0; }
     .print-card.print-done{ opacity:0.5; text-decoration:line-through; }
     .print-note{ font-size:7pt; color:var(--ink-soft); margin-top:1pt; }
+    /* On paper the address is just text — no arrow, no link colour. */
+    .print-note .note-map{ display:inline; margin-top:0; color:inherit; font-weight:inherit; }
+    .print-note .note-map::before{ content:none; }
   }
 </style>
 </head>
@@ -1377,6 +1392,16 @@ const GROUP_PHOTO_NOTE = 'Everyone from ceremony, followed by:<br>1. Bride\'s fa
 // Mimi isn't back from the dog sitter until 4:00 PM, so she misses this run-through.
 const REHEARSAL_NOTE = '1. David + Parents<br>2. Groomsmen<br>3. Bridesmaid<br>4. Anna + Parents<br>5. Mimi — Ring<br><br>Mimi is still at the dog sitter until 4:00 PM — walk her part through once she arrives.';
 
+/* ---- Mimi's dog sitter ----
+   Three separate runs go to this address (Angela at 9:30 AM and midnight,
+   Anna's parents at 4:00 PM), so it lives here once and gets appended to each
+   of those notes as a tappable maps link. */
+const DOG_SITTER = {
+  address: '3750 King St, Lincoln, Ontario',
+  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=3750+King+St+Lincoln+Ontario',
+};
+const DOG_SITTER_NOTE = `<a class="note-map" href="${DOG_SITTER.mapsUrl}" target="_blank" rel="noopener">${DOG_SITTER.address}</a>`;
+
 // Setup checklists for the planning team. See the Setup References board in the More tab.
 const CHARM_BAR_NOTE = [
   'Have the green charm sign on the table, hanging off the side',
@@ -1458,7 +1483,7 @@ const TASKS = [
   {id:'t20b', time:'11:00 AM', sort:tk(11,0,false)+1, title:'Do own makeup & hair', people:['bm_annad'], note:null},
   {id:'t13', time:'11:30 AM', sort:tk(11,30,false)+2, title:'Hair — May', people:['parents_anna','mua'], note:'This slot is for May only — Andre doesn\'t need to be here for it.'},
   {id:'t11', time:'11:00 AM', sort:tk(11,0,false)+4, title:'Arrive at venue', people:ALL_GROOMSMEN, note:null},
-  {id:'m1', time:'9:30 AM', sort:tk(9,30,false)+3, title:'Drop Mimi off at the Dog Sitter', people:['bm_angela','mimi'], note:'Angela drops her off on the way in, before she gets to the venue at 10:00 AM.'},
+  {id:'m1', time:'9:30 AM', sort:tk(9,30,false)+3, title:'Drop Mimi off at the Dog Sitter', people:['bm_angela','mimi'], note:'Angela drops her off on the way in, before she gets to the venue at 10:00 AM.<br>'+DOG_SITTER_NOTE},
   {id:'t12', time:'12:00 PM', sort:tk(12,0,true), title:'Set up the Welcome Area', people:['planner'], note:WELCOME_AREA_NOTE},
   {id:'t10', time:'11:00 AM', sort:tk(11,0,false)+3, title:'Hair Service — Angela', people:['bm_angela','mua'], note:null},
   {id:'t20', time:'11:30 AM', sort:tk(11,30,false)+3, title:'Get ready', people:ALL_GROOMSMEN, note:"Don't forget to put on your boutonniere."},
@@ -1482,7 +1507,7 @@ const TASKS = [
   {id:'t22c', time:'2:00 PM', sort:tk(2,0,true), title:'Family photos', people:['anna','david','photovideo'], note:null},
   {id:'t22d', time:'2:00 PM', sort:tk(2,0,true)+1, title:'Practice entrance routine', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN, 'dj'], note:null},
   {id:'t23', time:'2:20 PM', sort:tk(2,20,true), title:'Shuttle bus leaves from Fairview Mall', people:['guest'], note:null},
-  {id:'t23b', time:'4:00 PM', sort:tk(4,0,true), title:'Pick up Mimi from Dog Sitter', people:['parents_anna','mimi'], note:null},
+  {id:'t23b', time:'4:00 PM', sort:tk(4,0,true), title:'Pick up Mimi from Dog Sitter', people:['parents_anna','mimi'], note:DOG_SITTER_NOTE},
   {id:'m2b', time:'4:00 PM', sort:tk(4,0,true)+1, title:'Supervise Mimi until her turn', people:['planner','mimi'], note:'She\'s ring bearer at 5:00 PM.'},
   {id:'t24', time:'3:00 PM', sort:tk(3,0,true), title:'Ceremony rehearsal', people:['anna','david','dj','mc','planner', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN, ...ALL_PARENTS], note:REHEARSAL_NOTE},
   {id:'t25', time:'3:00 PM', sort:tk(3,0,true)+1, title:'MC / Officiant arrives', people:['mc'], note:null},
@@ -1603,7 +1628,7 @@ const TASKS = [
   {id:'t67b', time:'11:30 PM', sort:24*60+31, title:'Dance! (11:30pm–12am)', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
   {id:'t67c', time:'11:30 PM', sort:24*60+32, title:'Be on the Dance Floor (11:30–12am)', people:['anna','david'], note:null},
   // Sits just after the dance floor closes — this is Angela's last stop before Toronto.
-  {id:'m4', time:'12:00 AM', sort:24*60+63, title:'Pick up Mimi from the dog sitter', people:['bm_angela','mimi'], note:'Angela collects her on the way out, before driving back to Toronto.'},
+  {id:'m4', time:'12:00 AM', sort:24*60+63, title:'Pick up Mimi from the dog sitter', people:['bm_angela','mimi'], note:'Angela collects her on the way out, before driving back to Toronto.<br>'+DOG_SITTER_NOTE},
   {id:'t70', time:'12:00 AM', sort:24*60+62, title:'Dance floor closes', people:[...WITH_GUEST], note:null},
   {id:'t65', time:'11:45 PM', sort:24*60+45, title:'Photobooth wraps and leaves', people:['photobooth'], note:null},
   {id:'t65b', time:'11:45 PM', sort:24*60+45.5, title:'Photobooth closes', people:['guest','liveperf'], note:null},
