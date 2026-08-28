@@ -445,16 +445,15 @@
     margin-top:2px;
     line-height:1.4;
   }
-  /* Addresses inside a note open in Maps. Only the checkbox marks a task done,
-     so a link in here doesn't steal that tap. */
-  .note-map{
-    display:inline-block;
-    margin-top:3px;
+  /* Phone numbers and addresses inside a note are tappable. Only the checkbox
+     marks a task done, so a link in here doesn't steal that tap. */
+  .note-link, .note-map{
     color:var(--sage-deep);
     font-weight:600;
     text-decoration:none;
   }
-  .note-map:hover{ text-decoration:underline; }
+  .note-link:hover, .note-map:hover{ text-decoration:underline; }
+  .note-map{ display:inline-block; margin-top:3px; }
   /* Arrow lives in CSS so the print sheet can drop it and leave a plain address. */
   .note-map::before{ content:'\2197'; margin-right:3px; }
   .task.done{ background:var(--done-bg); }
@@ -1304,8 +1303,8 @@
     .print-card:last-child{ margin-bottom:0; }
     .print-card.print-done{ opacity:0.5; text-decoration:line-through; }
     .print-note{ font-size:7pt; color:var(--ink-soft); margin-top:1pt; }
-    /* On paper the address is just text — no arrow, no link colour. */
-    .print-note .note-map{ display:inline; margin-top:0; color:inherit; font-weight:inherit; }
+    /* On paper these are just text — no arrow, no link colour. */
+    .print-note .note-map, .print-note .note-link{ display:inline; margin-top:0; color:inherit; font-weight:inherit; }
     .print-note .note-map::before{ content:none; }
   }
 </style>
@@ -1337,6 +1336,18 @@
    ========================================================= */
 
 const CHECK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+
+/* ---- Mimi's dog sitter ----
+   Three runs go out to her place (Angela at 9:55 AM and again on her way home,
+   Anna's parents at 4:00 PM), and she has a contact card too — so the details
+   live here once and both read from them. */
+const DOG_SITTER = {
+  name: 'Rebecca',
+  phone: '778-770-1395',
+  bookedVia: 'Booked through Rover — that number reaches her there',
+  address: '3750 King St, Lincoln, Ontario',
+  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=3750+King+St+Lincoln+Ontario',
+};
 
 // ---- People ----
 const PEOPLE = [
@@ -1370,6 +1381,7 @@ const PEOPLE = [
   {id:'liveperf', name:'Vanessa & Dickson', shortName:'Vanessa&D', role:'Live Performance', group:'Vendors'},
   {id:'florist', name:'The Watering Can Flower Market', shortName:'WateringCan', role:'Florist', group:'Vendors', contactName:'Tara', phone:'905-562-0088', email:'events@twcfm.ca'},
   {id:'cakeshop', name:'Cake Shop', role:'Cake Shop', group:'Vendors', contactName:'Kelly', phone:'365-324-1792', address:'460 Dundas Street East, Waterdown, ON<br>Lobby Trend 2 – Back Gate (L8B 2A5)', contactOnly:true},
+  {id:'dogsitter', name:DOG_SITTER.name, role:'Dog Sitter', group:'Vendors', phone:DOG_SITTER.phone, contactNote:DOG_SITTER.bookedVia, address:DOG_SITTER.address, contactOnly:true},
 
   {id:'mimi', name:'Mimi', role:'The Wedding Dog', group:'Mimi'},
 
@@ -1383,7 +1395,7 @@ const ALL_PARENTS = ['parents_anna','parents_david'];
 const WITH_GUEST = ['guest','liveperf'];
 // Everyone who is fed at the reception. Mimi is with the dog sitter, and the
 // photobooth, florist, and hair & makeup teams aren't around for dinner.
-const NO_MEAL = ['mimi','photobooth','florist','mua','cakeshop'];
+const NO_MEAL = ['mimi','photobooth','florist','mua','cakeshop','dogsitter'];
 const WITH_MEALS = PEOPLE.filter(p=>!NO_MEAL.includes(p.id)).map(p=>p.id);
 const PARENT_SPEECHES_NOTE = "Anna's dad, then David's dad (2 min each). Ken translates both.";
 const SPEECHES_1_NOTE ='Bridesmaids: Dong, Angela, Bernita (1 min each).<br>Groomsmen: Kai, Stanley, JY (1 min each).';
@@ -1392,15 +1404,8 @@ const GROUP_PHOTO_NOTE = 'Everyone from ceremony, followed by:<br>1. Bride\'s fa
 // Mimi isn't back from the dog sitter until 4:00 PM, so she misses this run-through.
 const REHEARSAL_NOTE = '1. David + Parents<br>2. Groomsmen<br>3. Bridesmaid<br>4. Anna + Parents<br>5. Mimi — Ring<br><br>Mimi is still at the dog sitter until 4:00 PM — walk her part through once she arrives.';
 
-/* ---- Mimi's dog sitter ----
-   Three separate runs go to this address (Angela at 9:30 AM and midnight,
-   Anna's parents at 4:00 PM), so it lives here once and gets appended to each
-   of those notes as a tappable maps link. */
-const DOG_SITTER = {
-  address: '3750 King St, Lincoln, Ontario',
-  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=3750+King+St+Lincoln+Ontario',
-};
-const DOG_SITTER_NOTE = `<a class="note-map" href="${DOG_SITTER.mapsUrl}" target="_blank" rel="noopener">${DOG_SITTER.address}</a>`;
+// Her name, number and address on every task that involves a trip out there.
+const DOG_SITTER_NOTE = `${DOG_SITTER.name} · <a class="note-link" href="tel:${DOG_SITTER.phone.replace(/[^0-9+]/g,'')}">${DOG_SITTER.phone}</a><br><a class="note-map" href="${DOG_SITTER.mapsUrl}" target="_blank" rel="noopener">${DOG_SITTER.address}</a>`;
 
 // Setup checklists for the planning team. See the Setup References board in the More tab.
 const CHARM_BAR_NOTE = [
@@ -1628,7 +1633,7 @@ const TASKS = [
   {id:'t67b', time:'11:30 PM', sort:24*60+31, title:'Dance! (11:30pm–12am)', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
   {id:'t67c', time:'11:30 PM', sort:24*60+32, title:'Be on the Dance Floor (11:30–12am)', people:['anna','david'], note:null},
   // Sits just after the dance floor closes — this is Angela's last stop before Toronto.
-  {id:'m4', time:'12:00 AM', sort:24*60+63, title:'Pick up Mimi from the dog sitter', people:['bm_angela','mimi'], note:'Angela collects her on the way out, before driving back to Toronto.<br>'+DOG_SITTER_NOTE},
+  {id:'m4', time:'12:00 AM', sort:24*60+63, title:'Pick up Mimi from the dog sitter', people:['bm_angela','mimi'], note:'No set time — Angela leaves whenever she likes and collects Mimi on the way. Text Rebecca before heading over.<br>'+DOG_SITTER_NOTE},
   {id:'t70', time:'12:00 AM', sort:24*60+62, title:'Dance floor closes', people:[...WITH_GUEST], note:null},
   {id:'t65', time:'11:45 PM', sort:24*60+45, title:'Photobooth wraps and leaves', people:['photobooth'], note:null},
   {id:'t65b', time:'11:45 PM', sort:24*60+45.5, title:'Photobooth closes', people:['guest','liveperf'], note:null},
