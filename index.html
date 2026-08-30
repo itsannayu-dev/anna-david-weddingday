@@ -1511,7 +1511,7 @@ const TASKS = [
   {id:'t22b', time:'1:30 PM', sort:tk(1,30,true)+2, title:'Set up Candles & Name Cards', people:['planner'], note:CANDLES_CARDS_NOTE},
   {id:'t22c', time:'2:00 PM', sort:tk(2,0,true), title:'Family photos', people:['anna','david','photovideo'], note:null},
   {id:'t22d', time:'2:00 PM', sort:tk(2,0,true)+1, title:'Practice entrance routine', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN, 'dj'], note:null},
-  {id:'t23', time:'2:20 PM', sort:tk(2,20,true), title:'Shuttle bus leaves from Fairview Mall', people:['guest'], note:null},
+  {id:'t23', time:'2:15 PM', sort:tk(2,15,true), title:'Shuttle bus leaves from Fairview Mall', people:['guest'], note:null},
   {id:'t23b', time:'4:00 PM', sort:tk(4,0,true), title:'Pick up Mimi from Dog Sitter', people:['parents_anna','mimi'], note:DOG_SITTER_NOTE},
   {id:'m2b', time:'4:00 PM', sort:tk(4,0,true)+1, title:'Supervise Mimi until her turn', people:['planner','mimi'], note:'She\'s ring bearer at 5:00 PM.'},
   {id:'t24', time:'3:00 PM', sort:tk(3,0,true), title:'Ceremony rehearsal', people:['anna','david','dj','mc','planner', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN, ...ALL_PARENTS], note:REHEARSAL_NOTE},
@@ -1641,10 +1641,10 @@ const TASKS = [
   // Sits just before the bus leaves, so the loading job reads as the thing that
   // has to happen first.
   {id:'t71i', time:'12:00 AM', sort:24*60+65.5, title:'Help bring two cases of water + compost bags onto the shuttle bus', people:[...ALL_GROOMSMEN], note:null},
-  {id:'t70b', time:'12:00 AM', sort:24*60+66, title:'Shuttle bus leaves', people:['guest'], note:null},
+  {id:'t70b', time:'12:15 AM', sort:24*60+75, title:'Shuttle bus leaves', people:['guest'], note:null},
   // The three of them are the only wedding party on the bus, so the announcement
   // is theirs to make. Sits after the bus leaves — it happens on the ride.
-  {id:'t70c', time:'12:00 AM', sort:24*60+66.5, title:'Ride the shuttle bus back to Toronto', people:['bm_bernita','bm_gini','bm_kristin'], note:'Let people know there\'s water and barfing bags on board if anyone needs them — the groomsmen load both before the bus pulls out.'},
+  {id:'t70c', time:'12:15 AM', sort:24*60+75.5, title:'Ride the shuttle bus back to Toronto', people:['bm_bernita','bm_gini','bm_kristin'], note:'Let people know there\'s water and barfing bags on board if anyone needs them — the groomsmen load both before the bus pulls out.'},
   {id:'t71c', time:'12:00 AM', sort:24*60+64, title:'Help with cleanup', people:[...ALL_GROOMSMEN], note:null},
   {id:'t71h', time:'12:00 AM', sort:24*60+64.5, title:'Help with cleanup (optional)', people:['bm_annad','bm_louise'], note:'Optional — the groomsmen are on cleanup too.'},
   {id:'t71', time:'1:00 AM', sort:24*60+120, title:'Get out of venue', people:[...WITH_GUEST], note:null},
@@ -2375,21 +2375,21 @@ const CAR_SECTIONS = [
 /* ---- Transportation tab: coach bus ----
    Roster from the sign-up sheet, kept in alphabetical order — the numbers on
    the page are just row counters, not seat or sign-up numbers. `returnOnly`
-   riders skip the Fairview Mall pickup and only board the bus leaving the
-   venue at midnight. */
+   riders skip the Fairview Mall pickup and only board the bus home from the
+   venue. Both departure times are read from here everywhere they appear. */
 const SHUTTLE = {
   capacity: 56,
   costPerPerson: '$37.99',
   departures: [
     {
       label: 'To the venue',
-      time: '2:20 PM',
+      time: '2:15 PM',
       where: 'Fairview Mall &rarr; Lincoln Estate',
-      note: 'Be at the pickup spot a few minutes early — the bus leaves at 2:20 sharp.',
+      note: 'Be at the pickup spot a few minutes early — the bus leaves at 2:15 sharp.',
     },
     {
-      label: 'Back to the city',
-      time: '12:00 AM',
+      label: 'From the Venue',
+      time: '12:15 AM',
       where: 'Lincoln Estate &rarr; Fairview Mall',
       note: 'The only ride back. Miss it and you\'re finding your own way home.',
     },
@@ -2478,7 +2478,7 @@ ${renderHero()}
       <div class="contact-card doc-card" id="shuttleLink">
         <div>
           <div class="contact-name">Shuttle Bus</div>
-          <div class="contact-role">Leaves Fairview Mall at 2:20 PM, leaves the venue at midnight</div>
+          <div class="contact-role">Leaves Fairview Mall at ${SHUTTLE.departures[0].time}, leaves the venue at ${SHUTTLE.departures[1].time}</div>
           <div class="doc-meta">${SHUTTLE.riders.length} riders · ${SHUTTLE.capacity}-seat coach</div>
         </div>
         <div class="contact-actions">
