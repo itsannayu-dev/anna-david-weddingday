@@ -1228,6 +1228,18 @@
     line-height:1.45;
   }
 
+  /* Which way the diagram is oriented, so a seat can be matched to the real room. */
+  .seat-facing{
+    text-align:center;
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    font-weight:600;
+    color:var(--sage-deep);
+    margin-top:16px;
+  }
+  .seat-facing + .seat-ring{ margin-top:6px; }
+
   /* The seats are laid out as percentages of this square box, so the whole
      diagram scales with the screen and needs no fixed pixel width. */
   .seat-ring{
@@ -3145,6 +3157,11 @@ function renderSeatMap(){
   const labels = seatLabels(table.guests);
   const empty = table.seats - table.guests.length;
   const rect = table.shape === 'rect';
+  /* Every numbered table is drawn facing the head table, so the top of the ring is
+     the head-table side and seat 1 at the bottom has its back to it. The head
+     table itself has nothing to face, and the terrace is a slot count rather than a
+     real arrangement, so neither of those carries the marker. */
+  const facing = /^t\d+$/.test(table.id);
 
   /* One seat, drawn the same way whichever shape the table is. `pos` is null for
      the rectangular table, whose seats sit in a plain row rather than being
@@ -3179,7 +3196,8 @@ function renderSeatMap(){
         </div>`;
   } else {
     for(let i=0; i<table.seats; i++) seats += seatButton(i, seatPosition(i, table.seats));
-    diagram = `
+    diagram = `${facing ? `
+        <div class="seat-facing">&#8593; Head table this way</div>` : ''}
         <div class="seat-ring">
           <div class="seat-top">
             <div class="seat-top-label">${table.short}<span class="seat-top-sub">seat 1 at the bottom<br>clockwise &#8635;</span></div>
@@ -3202,7 +3220,7 @@ function renderSeatMap(){
   <div class="shell">
 ${renderHero()}
     <div class="content">
-${renderSubPageTop('Table Arrangement', 'Tap a seat to see who&rsquo;s sitting in it.', {route:'more', label:'More'})}
+${renderSubPageTop('Table Arrangement', 'Every table is drawn facing the head table &mdash; the top of the diagram is the head-table side. Tap a seat to see who&rsquo;s sitting in it.', {route:'more', label:'More'})}
       <div class="seat-tabs">
         ${SEATING.map(t=>`<button class="seat-tab${t.id===table.id?' active':''}" data-table="${t.id}">${t.short}</button>`).join('')}
       </div>
