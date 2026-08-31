@@ -1375,7 +1375,13 @@ const PEOPLE = [
 
   {id:'dj', name:'Justin Liu', role:'DJ', group:'Vendors', phone:'416-908-8668', email:'info@djlentertainment.com'},
   {id:'mc', name:'Ken Cheung', role:'MC / Officiant', group:'Vendors', phone:'647-990-8460', email:null},
-  {id:'photovideo', name:'Estelle & Team', role:'Photo & Video', group:'Vendors', phone:'289-969-0873', email:null, contactNote:'2 photographers and 2 videographers'},
+  // 'photovideo' carries the team's whole timeline, so it stays the schedule
+  // entity. The other three are contact cards only — a tappable number each,
+  // rather than one card holding four numbers nobody can dial.
+  {id:'photovideo', name:'Estelle & Team', role:'Photo & Video', group:'Vendors', phone:'289-969-0873', email:null, contactNote:'Estelle is 1st Photographer · all four on site 12pm–10pm'},
+  {id:'photo2', name:'Zeke', role:'2nd Photographer', group:'Vendors', phone:'905-328-9483', email:null, contactOnly:true},
+  {id:'video1', name:'Michelle', role:'1st Videographer', group:'Vendors', phone:'514-402-8554', email:null, contactOnly:true},
+  {id:'video2', name:'Titus', role:'2nd Videographer', group:'Vendors', phone:'514-434-3216', email:null, contactOnly:true},
   {id:'mua', name:'Sherry & Assistant', role:'Hair & Makeup Team', group:'Vendors', phone:'416-278-1873', email:null},
   {id:'photobooth', name:'Chronobooth', role:'Photobooth Vendor', group:'Vendors', contactName:'Bruce', phone:'647-708-0077', email:'chronobooth.to@gmail.com'},
   {id:'liveperf', name:'Vanessa & Dickson', shortName:'Vanessa&D', role:'Live Performance', group:'Vendors'},
@@ -1395,7 +1401,9 @@ const ALL_PARENTS = ['parents_anna','parents_david'];
 const WITH_GUEST = ['guest','liveperf'];
 // Everyone who is fed at the reception. Mimi is with the dog sitter, and the
 // photobooth, florist, and hair & makeup teams aren't around for dinner.
-const NO_MEAL = ['mimi','photobooth','florist','mua','cakeshop','dogsitter'];
+// 'photovideo' still covers the photo team's vendor meals for all four of them,
+// so the three contact-only cards stay off the meal list.
+const NO_MEAL = ['mimi','photobooth','florist','mua','cakeshop','dogsitter','photo2','video1','video2'];
 const WITH_MEALS = PEOPLE.filter(p=>!NO_MEAL.includes(p.id)).map(p=>p.id);
 const PARENT_SPEECHES_NOTE = "Anna's dad, then David's dad (2 min each). Ken translates both.";
 const SPEECHES_1_NOTE ='Bridesmaids: Dong, Angela, Bernita (1 min each).<br>Groomsmen: Kai, Stanley, JY (1 min each).';
