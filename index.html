@@ -1116,6 +1116,304 @@
     border-radius:0;
   }
 
+  /* ---------- attachment sub-steps ---------- */
+  /* The seating chart has two ways in — the PDF and the seat map — so the card
+     lists them as numbered steps instead of being one big link. */
+  /* .contact-card is a flex row; a stepped card stacks instead. */
+  .doc-card-steps{ display:block; }
+  .doc-steps{ margin-top:12px; }
+  .doc-step{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    width:100%;
+    padding:11px 0;
+    background:none;
+    border:none;
+    border-top:1px solid var(--line-soft);
+    font-family:'Karla', sans-serif;
+    font-size:14px;
+    color:var(--ink);
+    text-align:left;
+    text-decoration:none;
+    cursor:pointer;
+  }
+  .doc-step:last-child{ padding-bottom:0; }
+  .doc-step-num{
+    flex-shrink:0;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:var(--done-bg);
+    border:1px solid var(--line);
+    color:var(--sage-deep);
+    font-size:11.5px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .doc-step-body{ flex:1; }
+  .doc-step-hint{
+    display:block;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-top:1px;
+  }
+  .doc-step-go{
+    flex-shrink:0;
+    color:var(--sage-deep);
+    font-size:15px;
+  }
+
+  /* ---------- seating chart: table arrangement ---------- */
+  /* Table switcher. Bleeds past the content padding so the row can scroll all
+     the way to the screen edge instead of stopping short of it. */
+  .seat-tabs{
+    display:flex;
+    gap:6px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    margin:0 -20px 14px -20px;
+    padding:2px 20px 4px 20px;
+    scrollbar-width:none;
+  }
+  .seat-tabs::-webkit-scrollbar{ display:none; }
+  .seat-tab{
+    flex-shrink:0;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:7px 13px;
+    font-family:'Karla', sans-serif;
+    font-size:13px;
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .seat-tab.active{
+    background:var(--sage-deep);
+    border-color:var(--sage-deep);
+    color:#fff;
+    font-weight:600;
+  }
+  .seat-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px;
+    margin-bottom:12px;
+  }
+  .seat-card-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .seat-card-name{
+    font-family:'Fraunces', serif;
+    font-size:17px;
+    font-weight:600;
+    color:var(--ink);
+  }
+  .seat-card-count{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    flex-shrink:0;
+  }
+  .seat-card-note{
+    font-size:13px;
+    color:var(--ink-soft);
+    font-style:italic;
+    margin-top:5px;
+    line-height:1.45;
+  }
+
+  /* The seats are laid out as percentages of this square box, so the whole
+     diagram scales with the screen and needs no fixed pixel width. */
+  .seat-ring{
+    position:relative;
+    width:100%;
+    max-width:320px;
+    aspect-ratio:1 / 1;
+    margin:20px auto 2px auto;
+  }
+  .seat-top{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:52%;
+    height:52%;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:var(--done-bg);
+    border:1px dashed var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+  }
+  .seat-top-label{
+    font-family:'Fraunces', serif;
+    font-size:15px;
+    font-weight:600;
+    color:var(--ink-soft);
+    line-height:1.3;
+  }
+  .seat-top-sub{
+    display:block;
+    font-family:'Karla', sans-serif;
+    font-size:10.5px;
+    font-weight:400;
+    letter-spacing:0.02em;
+    margin-top:3px;
+  }
+  .seat{
+    position:absolute;
+    width:46px;
+    height:46px;
+    padding:0;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:#fff;
+    border:1.5px solid var(--line);
+    color:var(--ink);
+    font-family:'Karla', sans-serif;
+    font-size:12.5px;
+    font-weight:700;
+    line-height:1.1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+  }
+  .seat-num{
+    font-size:8.5px;
+    font-weight:500;
+    color:var(--ink-soft);
+  }
+  .seat.long{ font-size:10.5px; letter-spacing:-0.02em; }
+  .seat.empty{
+    border-style:dashed;
+    background:var(--cream);
+    color:var(--ink-soft);
+    font-weight:400;
+  }
+  .seat.selected{
+    background:var(--sage-deep);
+    border-color:var(--sage-deep);
+    color:#fff;
+    box-shadow:0 0 0 3px rgba(92,110,82,0.16);
+  }
+  .seat.selected .seat-num{ color:rgba(255,255,255,0.75); }
+  /* Dietary needs come from the allergy list, so a flagged seat is visible
+     without having to cross-reference it. */
+  .seat.flagged::after{
+    content:'\26A0';
+    position:absolute;
+    top:-4px;
+    right:-4px;
+    width:17px;
+    height:17px;
+    border-radius:50%;
+    background:#FBF6E9;
+    border:1px solid #EAD9A8;
+    color:#8A6530;
+    font-size:9px;
+    font-weight:400;
+    line-height:15px;
+    text-align:center;
+  }
+
+  /* Fixed height so tapping around the table doesn't shift the page. */
+  .seat-readout{
+    background:var(--cream);
+    border:1px solid var(--line-soft);
+    border-radius:12px;
+    padding:12px 14px;
+    margin-top:14px;
+    min-height:62px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .seat-readout-seat{
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    font-weight:600;
+    color:var(--sage-deep);
+  }
+  .seat-readout-name{
+    font-family:'Fraunces', serif;
+    font-size:16px;
+    font-weight:600;
+    color:var(--ink);
+    margin-top:3px;
+  }
+  .seat-readout-need{
+    font-size:13px;
+    color:#8A6530;
+    margin-top:4px;
+    line-height:1.4;
+  }
+  .seat-readout-hint{
+    font-size:13.5px;
+    color:var(--ink-soft);
+  }
+
+  .seat-list-label{
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin:20px 0 2px 0;
+  }
+  .seat-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    width:100%;
+    padding:9px 0;
+    background:none;
+    border:none;
+    border-bottom:1px solid var(--line-soft);
+    font-family:'Karla', sans-serif;
+    font-size:14px;
+    color:var(--ink);
+    text-align:left;
+    cursor:pointer;
+  }
+  .seat-row:last-child{ border-bottom:none; }
+  .seat-row-num{
+    flex-shrink:0;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:var(--done-bg);
+    border:1px solid var(--line);
+    color:var(--sage-deep);
+    font-size:11px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .seat-row.selected{ font-weight:600; }
+  .seat-row.selected .seat-row-num{
+    background:var(--sage-deep);
+    border-color:var(--sage-deep);
+    color:#fff;
+  }
+  .seat-row-empty{ color:var(--ink-soft); font-style:italic; }
+  .seat-row-flag{
+    margin-left:auto;
+    flex-shrink:0;
+    font-size:12px;
+    color:#8A6530;
+  }
+
   /* ---------- cars ---------- */
   .car-section-label{
     font-size:12px;
@@ -1701,14 +1999,19 @@ function saveCompleted(){
    APP STATE / RENDER
    ========================================================= */
 
-// 'cars' is the Transportation landing page; 'drivers' and 'shuttle' are its sub-pages.
-let stage = 'picker'; // 'picker' | 'personal' | 'compare' | 'contacts' | 'cars' | 'drivers' | 'shuttle' | 'more'
+// 'cars' is the Transportation landing page; 'drivers' and 'shuttle' are its
+// sub-pages. 'tables' is the seat map, a sub-page of 'more'.
+let stage = 'picker'; // 'picker' | 'personal' | 'compare' | 'contacts' | 'cars' | 'drivers' | 'shuttle' | 'more' | 'tables'
 let currentPerson = null;
 let showArchive = true;
 let showDongNote = false;
 let showPackingList = false;
 let showFloorPlan = false;
 let showAllergies = false;
+// Seat map: which table is showing and which seat is tapped. `seatTable` starts
+// null rather than SEATING[0].id because SEATING is declared further down.
+let seatTable = null;
+let seatSelected = null; // 0-based seat index
 
 const BRIDESMAIDS_PACKING = ALL_BRIDESMAIDS.filter(id=>id!=='bm_annad');
 const GROOMSMEN_PACKING_ITEMS = ['Suit', 'Black Bowtie', 'Dress shoes', 'Dress socks'];
@@ -1865,6 +2168,8 @@ function applyRoute(){
     stage = 'shuttle';
   } else if(h==='more'){
     stage = 'more';
+  } else if(h==='more/tables'){
+    stage = 'tables';
   } else if(h && personById(h) && !personById(h).contactOnly){
     stage = 'personal';
     if(currentPerson !== h){ showDongNote = false; showPackingList = false; }
@@ -1876,6 +2181,9 @@ function applyRoute(){
     showPackingList = false;
   }
   if(stage !== 'more'){ showFloorPlan = false; showAllergies = false; }
+  // The table you were looking at survives a trip back to More; the tapped seat
+  // doesn't, so the readout always starts from its prompt.
+  if(stage !== 'tables'){ seatSelected = null; }
 }
 
 function go(hash){
@@ -2295,6 +2603,9 @@ function render(){
   } else if(stage==='more'){
     root.innerHTML = renderMore();
     attachMoreHandlers();
+  } else if(stage==='tables'){
+    root.innerHTML = renderSeatMap();
+    attachSeatMapHandlers();
   } else {
     root.innerHTML = renderPersonal();
     attachPersonalHandlers();
@@ -2304,9 +2615,9 @@ function render(){
 
 function updateBottomNav(){
   const onCars = stage==='cars' || stage==='drivers' || stage==='shuttle';
-  const onSchedule = stage!=='contacts' && !onCars && stage!=='more';
+  const onMore = stage==='more' || stage==='tables';
+  const onSchedule = stage!=='contacts' && !onCars && !onMore;
   const onContacts = stage==='contacts';
-  const onMore = stage==='more';
   const scheduleBtn = document.getElementById('navSchedule');
   const contactsBtn = document.getElementById('navContacts');
   const carsBtn = document.getElementById('navCars');
@@ -2498,11 +2809,13 @@ ${renderHero()}
   </div>`;
 }
 
-// Shared header for the two Transportation sub-pages.
-function renderSubPageTop(title, sub){
+// Shared header for sub-pages. `back` names the parent route the arrow returns
+// to; it defaults to Transportation, which owns two of the three sub-pages.
+function renderSubPageTop(title, sub, back){
+  const parent = back || {route:'cars', label:'Transportation'};
   return `
       <div class="topbar">
-        <button class="back-btn" id="subPageBack">&#8592; Transportation</button>
+        <button class="back-btn" id="subPageBack" data-back="${parent.route}">&#8592; ${parent.label}</button>
       </div>
       <div class="picker-intro">
         <h2>${title}</h2>
@@ -2584,7 +2897,7 @@ function attachTransportHandlers(){
 
 function attachSubPageHandlers(){
   const back = document.getElementById('subPageBack');
-  if(back) back.addEventListener('click', ()=>go('cars'));
+  if(back) back.addEventListener('click', ()=>go(back.getAttribute('data-back') || 'cars'));
 }
 
 /* ---- More tab: reference links ---- */
@@ -2602,6 +2915,12 @@ const ATTACHMENTS = [
     desc:'Who sits where — 14 tables plus the head table',
     // No page count: the export carries a blank second page.
     meta:'PDF · 131 guests · 8 vendors',
+    // Two ways into the same chart: the export as it came, and the seat map built
+    // from it. A card with `steps` renders as a list instead of one big link.
+    steps:[
+      {label:'View PDF', hint:'The chart exactly as exported', href:'seating-chart.pdf'},
+      {label:'View Table Arrangement', hint:'One table at a time, tap a seat for the name', route:'more/tables'},
+    ],
   },
   {
     id:'setup',
@@ -2661,18 +2980,253 @@ function renderAllergiesModal(){
   </div>`;
 }
 
+/* ---- More tab: table arrangement ----
+   Transcribed from seating-chart.pdf, in the order the names appear inside each
+   of the chart's table boxes. That order IS the seating: the first name takes the
+   middle of the back of the table and the rest run clockwise from there. So when
+   the chart is re-exported, re-transcribe these lists in order — sorting one
+   alphabetically would silently move everybody's seat.
+   `seats` is how many places the table is set for, so a table that isn't full
+   shows its empty places instead of closing the gap. */
+const SEATING = [
+  {id:'head', label:'Head Table', short:'Head', seats:2,
+   note:'A two-top at the top centre of the tent.',
+   guests:['Anna Yu','David Zhou']},
+  {id:'t1', label:'Table 1', short:'T1', seats:10,
+   guests:['Angela Yu','Andre Yu','May Chen','Mitch Logan','Erica Zhu','Wei Wei Wang','YuDe Wu','Vicky Wang']},
+  {id:'t2', label:'Table 2', short:'T2', seats:10,
+   guests:['Emily Yuen','Tiger Yu','Daniel Yu','Dickson Yu','Vanessa Wong','Summer Chen','Sunny Chen','Meji Chen']},
+  {id:'t3', label:'Table 3', short:'T3', seats:10,
+   guests:['Lenlen','Ya Fang','Mario Polera','Monica Chen','Kelly Zhen','Ricky Ma','Andrea Cao','Terry Xie','Qin Chen','Xin Lin Mo']},
+  {id:'t4', label:'Table 4', short:'T4', seats:10,
+   guests:['Viktor Zhou','Vincent Chan','Emily Chung','Andrew H','Elman Chao','Kelvin Lau','Christine Tse','Skye Hosue','Luka Filipo','Arman Alam']},
+  {id:'t5', label:'Table 5', short:'T5', seats:10,
+   guests:['Bernita Ng','Teddy Yang','Gini Luong','Louise Liu','Tony Bao','Nina Pan','Kristin So','Raemar Sopoco','Suzy Yang','Brandon Yang']},
+  {id:'t6', label:'Table 6', short:'T6', seats:10,
+   guests:['Terry Zeng','Stanley Yip','Darrin Li','Julie Lian','Chris Fang','Jenny Wang','Terri Yip','Alex Petrovich','Rob Lin','Jennie Cheung']},
+  {id:'t7', label:'Table 7', short:'T7', seats:10,
+   guests:['Ankita Bahl','Vincent McLoughlin','Kate Sergeeva','Nattie Ayalew','Cassandra Quaratrone','Jeremy Lan','Ravi Patel','Melissa Sutanto','Ankit Bahl']},
+  {id:'t8', label:'Table 8', short:'T8', seats:10,
+   guests:['Anna Dong','JY Fan','Bill Chen','Kai Min Ren','Elaine Yuan','David Feng','Kevin Ding','Eric Sun','Linda Zhang','Yun-Yun Tsai']},
+  {id:'t9', label:'Table 9', short:'T9', seats:10,
+   guests:['Jon Trieu','Emily Lu','Katie Chung','Jordan Lau','Justin Law','Vikkie Wan','Sharon Tee','Karen Chan Lim','Justin Chan','David Cho']},
+  {id:'t10', label:'Table 10', short:'T10', seats:10,
+   guests:['Jenny Bui','Cally Yeung','David Yeung','Enya Huang','Felix Tse','Max Xia','Rachel Poon','Dennis Young','Eva Ho','Kelvin Luu']},
+  {id:'t11', label:'Table 11', short:'T11', seats:10,
+   guests:['Betty Zheng','Woody Zhou','Xiuxin Zheng','Shengrong Huang','Sunny Huang','Frank Xiang']},
+  {id:'t12', label:'Table 12', short:'T12', seats:10,
+   guests:['Anish Sarkar','Irene Tran','Adam Wang','Tina Gong','Morgan Williams','Linda Luu','Chris Chua','Kate Kwak','Bright Zeng']},
+  {id:'t13', label:'Table 13', short:'T13', seats:10,
+   guests:['Janice Cheung','Brian Young','Jackie','Bindi Mehta','Stephanie Wong','Kevin Lin','Matthew Sem','Anna Huang','Jacob Ly','Ashley Fong']},
+  {id:'t14', label:'Table 14', short:'T14', seats:10,
+   guests:['Jasmine Lai','David Wang','Amanda Wong','Raymond Nie','Kevin Li','Anthony Cho','Steven Luu','Remira Melendraz','Jason Cheung']},
+  {id:'terrace', label:'Terrace', short:'Terrace', seats:8,
+   note:'Vendor seating on the covered patio. The chart lists eight slots by role rather than named seats, so read the positions as a count, not an assignment.',
+   guests:['Wedding Planner 1','Wedding Planner 2','Photographer 1','Photographer 2','MC','DJ','Videographer 1','Videographer 2']},
+];
+
+// The chart spells her surname 'Melendraz'; the allergy list and the shuttle
+// sign-up both spell it 'Melendrez'. One alias keeps her seat's dietary marker
+// attached without having to pick a winner between the two spellings.
+const SEAT_NAME_ALIASES = { 'remira melendraz':'remira melendrez' };
+
+function normalizeSeatName(name){
+  const n = name.toLowerCase().replace(/[^a-z]+/g,' ').trim();
+  return SEAT_NAME_ALIASES[n] || n;
+}
+
+/* Dietary needs are read out of FOOD_ALLERGIES so there's still only one list to
+   edit. Keyed by table as well as name: the allergy rows carry a table number, so
+   if one drifts out of step with the chart it shows up as a missing marker rather
+   than a marker on the wrong person. */
+function seatNeedsIndex(){
+  const idx = {};
+  FOOD_ALLERGIES.forEach(g=>{ if(g.table) idx[g.table+'|'+normalizeSeatName(g.name)] = g.need; });
+  return idx;
+}
+
+// 't4' matches the allergy list's 'T4'. 'head' and 'terrace' have no rows there.
+function seatChartKey(table){
+  return /^t\d+$/.test(table.id) ? table.id.toUpperCase() : null;
+}
+
+/* Seats are too small for full names, so they carry initials and the full name
+   lands in the readout on tap. `lead` is how much of the first name to keep, which
+   is what seatLabels() turns up when two people at a table would otherwise get the
+   same initials. A one-word name would be a single bare letter, so it always gets
+   at least two — with the second character left as written, which keeps the
+   terrace's 'MC' and 'DJ' from coming out as 'Mc' and 'Dj'. */
+function seatInitials(name, lead){
+  const keep = Math.max(1, lead || 1);
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  if(!words.length) return '';
+  const first = words[0].charAt(0).toUpperCase() + words[0].slice(1, keep);
+  if(words.length === 1) return (words[0].charAt(0).toUpperCase() + words[0].slice(1, Math.max(2, keep))).slice(0,4);
+  return (first + words.slice(1).map(w=>w.charAt(0).toUpperCase()).join('')).slice(0,4);
+}
+
+/* Initials collide often enough to matter — Daniel Yu and Dickson Yu are both
+   'DY', and they sit next to each other — so labels are worked out per table and
+   grown one letter at a time until they're distinct. Ankit and Ankita Bahl at
+   table 7 are the one pair no prefix can separate, since the shorter name is a
+   prefix of the longer; their seat numbers tell them apart instead. */
+function seatLabels(guests){
+  const labels = guests.map(n=>seatInitials(n));
+  for(let lead=2; lead<=3; lead++){
+    const counts = {};
+    labels.forEach(l=>{ counts[l] = (counts[l]||0)+1; });
+    if(!Object.keys(counts).some(l=>counts[l] > 1)) break;
+    guests.forEach((name,i)=>{
+      if(counts[labels[i]] > 1) labels[i] = seatInitials(name, lead);
+    });
+  }
+  return labels;
+}
+
+/* Seat 1 sits at the middle of the back of the table — 12 o'clock, which is
+   -90 degrees — and the rest run clockwise. Screen y grows downward, so adding
+   degrees walks clockwise with no sign flipping. Returned as percentages of the
+   square .seat-ring box; 41% leaves room for half a seat inside the edge. */
+function seatPosition(index, total){
+  const rad = (-90 + index * 360 / total) * Math.PI / 180;
+  return { left: 50 + 41*Math.cos(rad), top: 50 + 41*Math.sin(rad) };
+}
+
+function currentSeatTable(){
+  return SEATING.find(t=>t.id===seatTable) || SEATING[0];
+}
+
+function renderSeatMap(){
+  const table = currentSeatTable();
+  seatTable = table.id;
+  const needs = seatNeedsIndex();
+  const key = seatChartKey(table);
+  const needFor = (name)=> (key && name) ? (needs[key+'|'+normalizeSeatName(name)] || null) : null;
+  const labels = seatLabels(table.guests);
+  const empty = table.seats - table.guests.length;
+
+  let html = `
+  <div class="shell">
+${renderHero()}
+    <div class="content">
+${renderSubPageTop('Table Arrangement', 'Tap a seat to see who&rsquo;s sitting in it.', {route:'more', label:'More'})}
+      <div class="seat-tabs">
+        ${SEATING.map(t=>`<button class="seat-tab${t.id===table.id?' active':''}" data-table="${t.id}">${t.short}</button>`).join('')}
+      </div>
+      <div class="seat-card">
+        <div class="seat-card-head">
+          <div class="seat-card-name">${table.label}</div>
+          <div class="seat-card-count">${table.guests.length} of ${table.seats}${empty>0?` &middot; ${empty} empty`:''}</div>
+        </div>
+        ${table.note ? `<div class="seat-card-note">${table.note}</div>` : ''}
+        <div class="seat-ring">
+          <div class="seat-top">
+            <div class="seat-top-label">${table.short}<span class="seat-top-sub">seat 1 at the top<br>clockwise &#8635;</span></div>
+          </div>`;
+
+  for(let i=0; i<table.seats; i++){
+    const name = table.guests[i] || null;
+    const pos = seatPosition(i, table.seats);
+    const label = name ? labels[i] : '&ndash;';
+    const cls = ['seat'];
+    if(!name) cls.push('empty');
+    if(i===seatSelected) cls.push('selected');
+    if(needFor(name)) cls.push('flagged');
+    if(label.length > 3) cls.push('long'); // four letters need a smaller type size
+    html += `
+          <button class="${cls.join(' ')}" style="left:${pos.left.toFixed(2)}%;top:${pos.top.toFixed(2)}%" data-seat="${i}" aria-label="Seat ${i+1}, ${name || 'empty'}">
+            <span class="seat-num">${i+1}</span>
+            <span>${label}</span>
+          </button>`;
+  }
+
+  const picked = seatSelected===null ? null : (table.guests[seatSelected] || null);
+  let readout;
+  if(seatSelected===null){
+    readout = `<div class="seat-readout-hint">Tap a seat, or a name below, to see who sits there.</div>`;
+  } else {
+    const need = picked ? needFor(picked) : null;
+    readout = `<div class="seat-readout-seat">Seat ${seatSelected+1}</div>
+          <div class="seat-readout-name">${picked || 'Empty'}</div>`
+      + (need ? `<div class="seat-readout-need">&#9888; ${need}</div>` : '');
+  }
+
+  html += `
+        </div>
+        <div class="seat-readout">${readout}</div>
+        <div class="seat-list-label">Seat order, clockwise from the top</div>`;
+
+  for(let i=0; i<table.seats; i++){
+    const name = table.guests[i] || null;
+    const need = needFor(name);
+    html += `
+        <button class="seat-row${i===seatSelected?' selected':''}" data-seat="${i}">
+          <span class="seat-row-num">${i+1}</span>
+          <span>${name || '<span class="seat-row-empty">Empty</span>'}</span>
+          ${need ? `<span class="seat-row-flag" title="${need}">&#9888;</span>` : ''}
+        </button>`;
+  }
+
+  html += `
+      </div>
+    </div>
+  </div>`;
+  return html;
+}
+
+function attachSeatMapHandlers(){
+  attachSubPageHandlers();
+  document.querySelectorAll('.seat-tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      seatTable = tab.getAttribute('data-table');
+      seatSelected = null; // a seat number means nothing once the table changes
+      render();
+      window.scrollTo(0,0);
+    });
+  });
+  // The seat and its row in the list below are the same control, so both carry
+  // data-seat. Tapping the selected one again clears the readout.
+  document.querySelectorAll('[data-seat]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const i = Number(el.getAttribute('data-seat'));
+      seatSelected = (seatSelected===i) ? null : i;
+      render();
+    });
+  });
+}
+
 function renderAttachmentCard(a){
-  return `
-      <a class="contact-card doc-card" href="${a.src}" target="_blank" rel="noopener">
+  const head = `
         <div>
           <div class="contact-name">${a.title}</div>
           <div class="contact-role">${a.desc}</div>
           <div class="doc-meta">${a.meta}</div>
-        </div>
+        </div>`;
+  // Without sub-steps the whole card is a single link straight to the file.
+  if(!a.steps){
+    return `
+      <a class="contact-card doc-card" href="${a.src}" target="_blank" rel="noopener">
+${head}
         <div class="contact-actions">
           <span class="contact-btn" aria-hidden="true">&#8599;</span>
         </div>
       </a>`;
+  }
+  const steps = a.steps.map((s,i)=>{
+    const inner = `
+          <span class="doc-step-num">${i+1}</span>
+          <span class="doc-step-body">${s.label}<span class="doc-step-hint">${s.hint}</span></span>
+          <span class="doc-step-go" aria-hidden="true">${s.href ? '&#8599;' : '&#8250;'}</span>`;
+    // An external file opens in a new tab; an in-app view routes instead.
+    return s.href
+      ? `<a class="doc-step" href="${s.href}" target="_blank" rel="noopener">${inner}</a>`
+      : `<button class="doc-step" data-route="${s.route}">${inner}</button>`;
+  }).join('');
+  return `
+      <div class="contact-card doc-card-steps">
+${head}
+        <div class="doc-steps">${steps}</div>
+      </div>`;
 }
 
 /* ---- More tab: reception floor plan ---- */
@@ -2769,6 +3323,10 @@ ${renderHero()}
 }
 
 function attachMoreHandlers(){
+  // Sub-steps that point at an in-app view rather than a file.
+  document.querySelectorAll('.doc-step[data-route]').forEach(btn=>{
+    btn.addEventListener('click', ()=>go(btn.getAttribute('data-route')));
+  });
   const thumb = document.getElementById('floorPlanThumb');
   if(thumb){
     thumb.addEventListener('click', ()=>{
