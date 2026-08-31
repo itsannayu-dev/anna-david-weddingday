@@ -2942,8 +2942,17 @@ const REFERENCE_LINKS = [
   {id:'pin', title:'Pinterest Board for Photos', desc:'Photo references for the shoot list', url:'https://pin.it/5pkBL2Isq'},
 ];
 
-/* ---- More tab: attached files, opened in a new tab ---- */
+/* ---- More tab: attached files ----
+   Rendered in this order. A plain entry is one card that opens its file in a new
+   tab; an entry with `steps` becomes a card listing several ways in. */
 const ATTACHMENTS = [
+  {
+    id:'setup',
+    src:'setup-references.jpg',
+    title:'Setup References',
+    desc:'How to set up each table, sign, and display',
+    meta:'Image · 10 sections',
+  },
   {
     id:'chart',
     src:'seating-chart.pdf',
@@ -2952,18 +2961,11 @@ const ATTACHMENTS = [
     // No page count: the export carries a blank second page.
     meta:'PDF · 131 guests · 8 vendors',
     // Two ways into the same chart: the export as it came, and the seat map built
-    // from it. A card with `steps` renders as a list instead of one big link.
+    // from it.
     steps:[
       {label:'View PDF', hint:'The chart exactly as exported', href:'seating-chart.pdf'},
       {label:'View Table Arrangement', hint:'One table at a time, tap a seat for the name', route:'more/tables'},
     ],
-  },
-  {
-    id:'setup',
-    src:'setup-references.jpg',
-    title:'Setup References',
-    desc:'How to set up each table, sign, and display',
-    meta:'Image · 10 sections',
   },
 ];
 
