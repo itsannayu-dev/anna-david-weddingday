@@ -1267,6 +1267,42 @@
     letter-spacing:0.02em;
     margin-top:3px;
   }
+  /* The head table isn't a round of ten — it's a rectangle with the two of them
+     along the back of it, facing the room, so their seats sit above the slab. */
+  .seat-rect{
+    max-width:320px;
+    margin:22px auto 2px auto;
+  }
+  .seat-rect-seats{
+    display:flex;
+    justify-content:center;
+    gap:54px;
+    margin-bottom:12px;
+  }
+  /* Round-table seats are placed by angle; these are laid out by the flex row,
+     so they only keep `position` for the sake of the dietary-need badge. */
+  .seat-rect-seats .seat{
+    position:relative;
+    left:auto;
+    top:auto;
+    transform:none;
+  }
+  .seat-rect-top{
+    height:58px;
+    border-radius:10px;
+    background:var(--done-bg);
+    border:1px dashed var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .seat-rect-label{
+    font-family:'Fraunces', serif;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--ink-soft);
+  }
+
   .seat{
     position:absolute;
     width:46px;
@@ -2983,14 +3019,15 @@ function renderAllergiesModal(){
 /* ---- More tab: table arrangement ----
    Transcribed from seating-chart.pdf, in the order the names appear inside each
    of the chart's table boxes. That order IS the seating: the first name takes the
-   middle of the back of the table and the rest run clockwise from there. So when
-   the chart is re-exported, re-transcribe these lists in order — sorting one
+   seat at the bottom centre and the rest run clockwise from there. So when the
+   chart is re-exported, re-transcribe these lists in order — sorting one
    alphabetically would silently move everybody's seat.
    `seats` is how many places the table is set for, so a table that isn't full
-   shows its empty places instead of closing the gap. */
+   shows its empty places instead of closing the gap. `shape:'rect'` is the head
+   table, which isn't a round of ten and doesn't follow the clockwise rule. */
 const SEATING = [
-  {id:'head', label:'Head Table', short:'Head', seats:2,
-   note:'A two-top at the top centre of the tent.',
+  {id:'head', label:'Head Table', short:'Head', seats:2, shape:'rect',
+   note:'A rectangular table for two at the top centre of the tent. They sit along the back of it facing the room &mdash; Anna on the left, David on the right.',
    guests:['Anna Yu','David Zhou']},
   {id:'t1', label:'Table 1', short:'T1', seats:10,
    guests:['Angela Yu','Andre Yu','May Chen','Mitch Logan','Erica Zhu','Wei Wei Wang','YuDe Wu','Vicky Wang']},
@@ -3083,12 +3120,13 @@ function seatLabels(guests){
   return labels;
 }
 
-/* Seat 1 sits at the middle of the back of the table — 12 o'clock, which is
-   -90 degrees — and the rest run clockwise. Screen y grows downward, so adding
-   degrees walks clockwise with no sign flipping. Returned as percentages of the
-   square .seat-ring box; 41% leaves room for half a seat inside the edge. */
+/* Seat 1 sits at the bottom centre of the table — 6 o'clock, which is +90 degrees
+   once y grows downward — and the rest run clockwise from there, up the left side
+   and back down the right. Screen y growing downward is also why adding degrees
+   walks clockwise with no sign flipping. Returned as percentages of the square
+   .seat-ring box; 41% leaves room for half a seat inside the edge. */
 function seatPosition(index, total){
-  const rad = (-90 + index * 360 / total) * Math.PI / 180;
+  const rad = (90 + index * 360 / total) * Math.PI / 180;
   return { left: 50 + 41*Math.cos(rad), top: 50 + 41*Math.sin(rad) };
 }
 
@@ -3104,6 +3142,59 @@ function renderSeatMap(){
   const needFor = (name)=> (key && name) ? (needs[key+'|'+normalizeSeatName(name)] || null) : null;
   const labels = seatLabels(table.guests);
   const empty = table.seats - table.guests.length;
+  const rect = table.shape === 'rect';
+
+  /* One seat, drawn the same way whichever shape the table is. `pos` is null for
+     the rectangular table, whose seats sit in a plain row rather than being
+     placed by angle. */
+  const seatButton = (i, pos)=>{
+    const name = table.guests[i] || null;
+    const label = name ? labels[i] : '&ndash;';
+    const cls = ['seat'];
+    if(!name) cls.push('empty');
+    if(i===seatSelected) cls.push('selected');
+    if(needFor(name)) cls.push('flagged');
+    if(label.length > 3) cls.push('long'); // four letters need a smaller type size
+    const style = pos ? ` style="left:${pos.left.toFixed(2)}%;top:${pos.top.toFixed(2)}%"` : '';
+    return `
+            <button class="${cls.join(' ')}"${style} data-seat="${i}" aria-label="Seat ${i+1}, ${name || 'empty'}">
+              <span class="seat-num">${i+1}</span>
+              <span>${label}</span>
+            </button>`;
+  };
+
+  let seats = '';
+  let diagram;
+  if(rect){
+    // The two of them sit along the back of the slab facing the room, so their
+    // seats draw above it — Anna's first, on the left.
+    for(let i=0; i<table.seats; i++) seats += seatButton(i, null);
+    diagram = `
+        <div class="seat-rect">
+          <div class="seat-rect-seats">${seats}
+          </div>
+          <div class="seat-rect-top"><span class="seat-rect-label">${table.label}</span></div>
+        </div>`;
+  } else {
+    for(let i=0; i<table.seats; i++) seats += seatButton(i, seatPosition(i, table.seats));
+    diagram = `
+        <div class="seat-ring">
+          <div class="seat-top">
+            <div class="seat-top-label">${table.short}<span class="seat-top-sub">seat 1 at the bottom<br>clockwise &#8635;</span></div>
+          </div>${seats}
+        </div>`;
+  }
+
+  const picked = seatSelected===null ? null : (table.guests[seatSelected] || null);
+  let readout;
+  if(seatSelected===null){
+    readout = `<div class="seat-readout-hint">Tap a seat, or a name below, to see who sits there.</div>`;
+  } else {
+    const need = picked ? needFor(picked) : null;
+    readout = `<div class="seat-readout-seat">Seat ${seatSelected+1}</div>
+          <div class="seat-readout-name">${picked || 'Empty'}</div>`
+      + (need ? `<div class="seat-readout-need">&#9888; ${need}</div>` : '');
+  }
 
   let html = `
   <div class="shell">
@@ -3118,43 +3209,9 @@ ${renderSubPageTop('Table Arrangement', 'Tap a seat to see who&rsquo;s sitting i
           <div class="seat-card-name">${table.label}</div>
           <div class="seat-card-count">${table.guests.length} of ${table.seats}${empty>0?` &middot; ${empty} empty`:''}</div>
         </div>
-        ${table.note ? `<div class="seat-card-note">${table.note}</div>` : ''}
-        <div class="seat-ring">
-          <div class="seat-top">
-            <div class="seat-top-label">${table.short}<span class="seat-top-sub">seat 1 at the top<br>clockwise &#8635;</span></div>
-          </div>`;
-
-  for(let i=0; i<table.seats; i++){
-    const name = table.guests[i] || null;
-    const pos = seatPosition(i, table.seats);
-    const label = name ? labels[i] : '&ndash;';
-    const cls = ['seat'];
-    if(!name) cls.push('empty');
-    if(i===seatSelected) cls.push('selected');
-    if(needFor(name)) cls.push('flagged');
-    if(label.length > 3) cls.push('long'); // four letters need a smaller type size
-    html += `
-          <button class="${cls.join(' ')}" style="left:${pos.left.toFixed(2)}%;top:${pos.top.toFixed(2)}%" data-seat="${i}" aria-label="Seat ${i+1}, ${name || 'empty'}">
-            <span class="seat-num">${i+1}</span>
-            <span>${label}</span>
-          </button>`;
-  }
-
-  const picked = seatSelected===null ? null : (table.guests[seatSelected] || null);
-  let readout;
-  if(seatSelected===null){
-    readout = `<div class="seat-readout-hint">Tap a seat, or a name below, to see who sits there.</div>`;
-  } else {
-    const need = picked ? needFor(picked) : null;
-    readout = `<div class="seat-readout-seat">Seat ${seatSelected+1}</div>
-          <div class="seat-readout-name">${picked || 'Empty'}</div>`
-      + (need ? `<div class="seat-readout-need">&#9888; ${need}</div>` : '');
-  }
-
-  html += `
-        </div>
+        ${table.note ? `<div class="seat-card-note">${table.note}</div>` : ''}${diagram}
         <div class="seat-readout">${readout}</div>
-        <div class="seat-list-label">Seat order, clockwise from the top</div>`;
+        <div class="seat-list-label">${rect ? 'Seat order, left to right' : 'Seat order, clockwise from the bottom'}</div>`;
 
   for(let i=0; i<table.seats; i++){
     const name = table.guests[i] || null;
