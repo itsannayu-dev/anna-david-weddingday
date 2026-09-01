@@ -3040,10 +3040,10 @@ function renderAllergiesModal(){
    `seats` is how many places the table is set for, so a table that isn't full
    shows its empty places instead of closing the gap. A `null` in a list is a seat
    left empty on purpose between two guests, which is how a spot assigned by hand
-   can sit apart from the ones either side of it — table 1's order came from Anna
-   rather than the chart, so re-transcribing it would undo that. `shape:'rect'` is
-   the head table, which isn't a round of ten and doesn't follow the clockwise
-   rule. */
+   can sit apart from the ones either side of it — tables 1 and 2 were placed by
+   Anna rather than by chart order, so re-transcribing those two would undo it.
+   `shape:'rect'` is the head table, which isn't a round of ten and doesn't follow
+   the clockwise rule. */
 const SEATING = [
   {id:'head', label:'Head Table', short:'Head', seats:2, shape:'rect',
    note:'A rectangular table for two at the top centre of the tent. They sit along the back of it facing the room &mdash; Anna on the left, David on the right.',
@@ -3051,8 +3051,12 @@ const SEATING = [
   // Spots 4 and 7 are the two empty ones, set by hand rather than by chart order.
   {id:'t1', label:'Table 1', short:'T1', seats:10,
    guests:['Angela Yu','Andre Yu','May Chen',null,'Erica Zhu','Wei Wei Wang',null,'YuDe Wu','Vicky Wang','Mitch Logan']},
+  /* Six people at a table of ten, moved to the far half of the circle: the block
+     slid half a turn round the table, so it keeps the chart's order and everyone
+     the chart put them next to, and the four empty places are now the left side
+     rather than the right. */
   {id:'t2', label:'Table 2', short:'T2', seats:10,
-   guests:['Betty Zheng','Wu Zhou','Xiuxin Zheng','Shengrong Huang','Sunny Huang','Frank Xiang']},
+   guests:['Frank Xiang',null,null,null,null,'Betty Zheng','Wu Zhou','Xiuxin Zheng','Shengrong Huang','Sunny Huang']},
   {id:'t3', label:'Table 3', short:'T3', seats:10,
    guests:['Bernita Ng','Teddy Yang','Gini Luong','Louise Liu','Tony Bao','Nina Pan','Kristin So','Raemar Sopoco','Suzy Yang','Brandon Yang']},
   {id:'t4', label:'Table 4', short:'T4', seats:10,
@@ -3170,9 +3174,11 @@ function renderSeatMap(){
   const empty = table.seats - filled;
   const rect = table.shape === 'rect';
   /* Every numbered table is drawn facing the head table, so the top of the ring is
-     the head-table side and seat 1 at the bottom has its back to it. The head
-     table itself has nothing to face, and the terrace is a slot count rather than a
-     real arrangement, so neither of those carries the marker. */
+     the head-table side. Everyone faces the middle of their own table, which means
+     the seats along the bottom look across it towards the head table and the ones
+     along the top have their backs to it — worth knowing before moving anybody. The
+     head table itself has nothing to face, and the terrace is a slot count rather
+     than a real arrangement, so neither of those carries the marker. */
   const facing = /^t\d+$/.test(table.id);
 
   /* One seat, drawn the same way whichever shape the table is. `pos` is null for
