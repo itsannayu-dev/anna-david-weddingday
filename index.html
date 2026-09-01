@@ -3040,9 +3040,9 @@ function renderAllergiesModal(){
    `seats` is how many places the table is set for, so a table that isn't full
    shows its empty places instead of closing the gap. A `null` in a list is a seat
    left empty on purpose between two guests, which is how a spot assigned by hand
-   can sit apart from the ones either side of it — tables 1, 2, 4, 5, 7 and 8 were
-   placed by Anna rather than by chart order, so re-transcribing those would undo
-   it.
+   can sit apart from the ones either side of it — tables 1, 2, 4, 5, 7, 8 and 10
+   were placed by Anna rather than by chart order, so re-transcribing those would
+   undo it.
    `shape:'rect'` is the head table, which isn't a round of ten and doesn't follow
    the clockwise rule. */
 const SEATING = [
@@ -3078,8 +3078,11 @@ const SEATING = [
    guests:['Anish Sarkar','Irene Tran','Adam Wang','Tina Gong','Morgan Williams',null,'Linda Luu','Chris Chua','Kate Kwak','Bright Zeng']},
   {id:'t9', label:'Table 9', short:'T9', seats:10,
    guests:['Lenlen','Ya Fang','Mario Polera','Monica Chen','Kelly Zhen','Ricky Ma','Andrea Cao','Terry Xie','Qin Chen','Xin Lin Mo']},
+  /* The back four moved along one, so the empty place is 6 rather than 10. That
+     seats Ankit next to Ankita, the one pair whose labels can't be told apart —
+     they read 'Anki' in spots 10 and 1, so the numbers are what separate them. */
   {id:'t10', label:'Table 10', short:'T10', seats:10,
-   guests:['Ankita Bahl','Vincent McLoughlin','Kate Sergeeva','Nattie Ayalew','Cassandra Quaratrone','Jeremy Lan','Ravi Patel','Melissa Sutanto','Ankit Bahl']},
+   guests:['Ankita Bahl','Vincent McLoughlin','Kate Sergeeva','Nattie Ayalew','Cassandra Quaratrone',null,'Jeremy Lan','Ravi Patel','Melissa Sutanto','Ankit Bahl']},
   {id:'t11', label:'Table 11', short:'T11', seats:10,
    guests:['Jenny Bui','Cally Yeung','David Yeung','Enya Huang','Felix Tse','Max Xia','Rachel Poon','Dennis Young','Eva Ho','Kelvin Luu']},
   {id:'t12', label:'Table 12', short:'T12', seats:10,
