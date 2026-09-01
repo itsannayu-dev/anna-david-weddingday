@@ -3040,8 +3040,8 @@ function renderAllergiesModal(){
    `seats` is how many places the table is set for, so a table that isn't full
    shows its empty places instead of closing the gap. A `null` in a list is a seat
    left empty on purpose between two guests, which is how a spot assigned by hand
-   can sit apart from the ones either side of it — tables 1 and 2 were placed by
-   Anna rather than by chart order, so re-transcribing those two would undo it.
+   can sit apart from the ones either side of it — tables 1, 2 and 4 were placed by
+   Anna rather than by chart order, so re-transcribing those would undo it.
    `shape:'rect'` is the head table, which isn't a round of ten and doesn't follow
    the clockwise rule. */
 const SEATING = [
@@ -3059,8 +3059,10 @@ const SEATING = [
    guests:['Frank Xiang',null,null,null,null,'Betty Zheng','Wu Zhou','Xiuxin Zheng','Shengrong Huang','Sunny Huang']},
   {id:'t3', label:'Table 3', short:'T3', seats:10,
    guests:['Bernita Ng','Teddy Yang','Gini Luong','Louise Liu','Tony Bao','Nina Pan','Kristin So','Raemar Sopoco','Suzy Yang','Brandon Yang']},
+  // Kevin Ding and Yun-Yun Tsai swapped spots 7 and 10, so this one is off chart
+  // order too. His 'no cilantro' marker follows his name, not the seat.
   {id:'t4', label:'Table 4', short:'T4', seats:10,
-   guests:['Anna Dong','JY Fan','Bill Chen','Kai Min Ren','Elaine Yuan','David Feng','Kevin Ding','Eric Sun','Linda Zhang','Yun-Yun Tsai']},
+   guests:['Anna Dong','JY Fan','Bill Chen','Kai Min Ren','Elaine Yuan','David Feng','Yun-Yun Tsai','Eric Sun','Linda Zhang','Kevin Ding']},
   {id:'t5', label:'Table 5', short:'T5', seats:10,
    guests:['Emily Yuen','Tiger Yu','Daniel Yu','Dickson Yu','Vanessa Wong','Summer Chen','Sunny Chen','Meji Chen']},
   {id:'t6', label:'Table 6', short:'T6', seats:10,
