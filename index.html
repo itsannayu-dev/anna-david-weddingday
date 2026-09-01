@@ -2984,21 +2984,22 @@ const ATTACHMENTS = [
 /* ---- More tab: food allergies & dietary needs ----
    Edit this list directly. `table` may be left blank if unknown.
    Kept in table order; blank tables sort to the bottom. */
-// Table numbers follow the seating chart PDF, and past exports have renumbered
-// tables without changing anyone's seat — so re-check every row against a new
-// chart rather than assuming the numbers still hold. Verified against the
-// current one: 13 warning markers, matching the 13 rows below.
+// Table numbers follow the seating chart PDF, and exports have renumbered tables
+// without moving anyone — the Sep 5 export shuffled eleven of the fourteen, so
+// these rows were remapped wholesale — so re-check every row against a new chart
+// rather than assuming the numbers still hold. Verified against the current one:
+// 13 warning markers, matching the 13 rows below.
 const FOOD_ALLERGIES = [
-  {table:'T4',  name:'Kelvin Lau',       need:'Nut allergy'},
-  {table:'T5',  name:'Kristin So',       need:'Nut allergy'},
+  {table:'T3',  name:'Kristin So',       need:'Nut allergy'},
+  {table:'T4',  name:'Elaine Yuan',      need:'Vegan preferred'},
+  {table:'T4',  name:'Kevin Ding',       need:'No cilantro'},
+  {table:'T4',  name:'Eric Sun',         need:'No raw apple, raw peach, raw cherry'},
+  {table:'T4',  name:'Linda Zhang',      need:'No raw apple, raw peach, raw cherry'},
   {table:'T6',  name:'Rob Lin',          need:'Birch allergy (apple, peach, plum, pear, apricot, almonds)'},
-  {table:'T8',  name:'Elaine Yuan',      need:'Vegan preferred'},
-  {table:'T8',  name:'Kevin Ding',       need:'No cilantro'},
-  {table:'T8',  name:'Eric Sun',         need:'No raw apple, raw peach, raw cherry'},
-  {table:'T8',  name:'Linda Zhang',      need:'No raw apple, raw peach, raw cherry'},
-  {table:'T12', name:'Tina Gong',        need:'No raw banana'},
-  {table:'T13', name:'Janice Cheung',    need:'No shellfish'},
-  {table:'T13', name:'Bindi Mehta',      need:'Vegetarian'},
+  {table:'T8',  name:'Tina Gong',        need:'No raw banana'},
+  {table:'T12', name:'Janice Cheung',    need:'No shellfish'},
+  {table:'T12', name:'Bindi Mehta',      need:'Vegetarian'},
+  {table:'T13', name:'Kelvin Lau',       need:'Nut allergy'},
   {table:'T14', name:'Anthony Cho',      need:'Pescatarian'},
   {table:'T14', name:'Steven Luu',       need:'No peanuts'},
   {table:'T14', name:'Remira Melendrez', need:'No walnuts'},
@@ -3046,29 +3047,29 @@ const SEATING = [
   {id:'t1', label:'Table 1', short:'T1', seats:10,
    guests:['Angela Yu','Andre Yu','May Chen','Mitch Logan','Erica Zhu','Wei Wei Wang','YuDe Wu','Vicky Wang']},
   {id:'t2', label:'Table 2', short:'T2', seats:10,
-   guests:['Emily Yuen','Tiger Yu','Daniel Yu','Dickson Yu','Vanessa Wong','Summer Chen','Sunny Chen','Meji Chen']},
+   guests:['Betty Zheng','Wu Zhou','Xiuxin Zheng','Shengrong Huang','Sunny Huang','Frank Xiang']},
   {id:'t3', label:'Table 3', short:'T3', seats:10,
-   guests:['Lenlen','Ya Fang','Mario Polera','Monica Chen','Kelly Zhen','Ricky Ma','Andrea Cao','Terry Xie','Qin Chen','Xin Lin Mo']},
-  {id:'t4', label:'Table 4', short:'T4', seats:10,
-   guests:['Viktor Zhou','Vincent Chan','Emily Chung','Andrew H','Elman Chao','Kelvin Lau','Christine Tse','Skye Hosue','Luka Filipo','Arman Alam']},
-  {id:'t5', label:'Table 5', short:'T5', seats:10,
    guests:['Bernita Ng','Teddy Yang','Gini Luong','Louise Liu','Tony Bao','Nina Pan','Kristin So','Raemar Sopoco','Suzy Yang','Brandon Yang']},
+  {id:'t4', label:'Table 4', short:'T4', seats:10,
+   guests:['Anna Dong','JY Fan','Bill Chen','Kai Min Ren','Elaine Yuan','David Feng','Kevin Ding','Eric Sun','Linda Zhang','Yun-Yun Tsai']},
+  {id:'t5', label:'Table 5', short:'T5', seats:10,
+   guests:['Emily Yuen','Tiger Yu','Daniel Yu','Dickson Yu','Vanessa Wong','Summer Chen','Sunny Chen','Meji Chen']},
   {id:'t6', label:'Table 6', short:'T6', seats:10,
    guests:['Terry Zeng','Stanley Yip','Darrin Li','Julie Lian','Chris Fang','Jenny Wang','Terri Yip','Alex Petrovich','Rob Lin','Jennie Cheung']},
   {id:'t7', label:'Table 7', short:'T7', seats:10,
-   guests:['Ankita Bahl','Vincent McLoughlin','Kate Sergeeva','Nattie Ayalew','Cassandra Quaratrone','Jeremy Lan','Ravi Patel','Melissa Sutanto','Ankit Bahl']},
-  {id:'t8', label:'Table 8', short:'T8', seats:10,
-   guests:['Anna Dong','JY Fan','Bill Chen','Kai Min Ren','Elaine Yuan','David Feng','Kevin Ding','Eric Sun','Linda Zhang','Yun-Yun Tsai']},
-  {id:'t9', label:'Table 9', short:'T9', seats:10,
    guests:['Jon Trieu','Emily Lu','Katie Chung','Jordan Lau','Justin Law','Vikkie Wan','Sharon Tee','Karen Chan Lim','Justin Chan','David Cho']},
-  {id:'t10', label:'Table 10', short:'T10', seats:10,
-   guests:['Jenny Bui','Cally Yeung','David Yeung','Enya Huang','Felix Tse','Max Xia','Rachel Poon','Dennis Young','Eva Ho','Kelvin Luu']},
-  {id:'t11', label:'Table 11', short:'T11', seats:10,
-   guests:['Betty Zheng','Woody Zhou','Xiuxin Zheng','Shengrong Huang','Sunny Huang','Frank Xiang']},
-  {id:'t12', label:'Table 12', short:'T12', seats:10,
+  {id:'t8', label:'Table 8', short:'T8', seats:10,
    guests:['Anish Sarkar','Irene Tran','Adam Wang','Tina Gong','Morgan Williams','Linda Luu','Chris Chua','Kate Kwak','Bright Zeng']},
+  {id:'t9', label:'Table 9', short:'T9', seats:10,
+   guests:['Lenlen','Ya Fang','Mario Polera','Monica Chen','Kelly Zhen','Ricky Ma','Andrea Cao','Terry Xie','Qin Chen','Xin Lin Mo']},
+  {id:'t10', label:'Table 10', short:'T10', seats:10,
+   guests:['Ankita Bahl','Vincent McLoughlin','Kate Sergeeva','Nattie Ayalew','Cassandra Quaratrone','Jeremy Lan','Ravi Patel','Melissa Sutanto','Ankit Bahl']},
+  {id:'t11', label:'Table 11', short:'T11', seats:10,
+   guests:['Jenny Bui','Cally Yeung','David Yeung','Enya Huang','Felix Tse','Max Xia','Rachel Poon','Dennis Young','Eva Ho','Kelvin Luu']},
+  {id:'t12', label:'Table 12', short:'T12', seats:10,
+   guests:['Janice Cheung','Brian Young','Jackie Liang','Bindi Mehta','Stephanie Wong','Kevin Lin','Matthew Sem','Anna Huang','Jacob Ly','Ashley Fong']},
   {id:'t13', label:'Table 13', short:'T13', seats:10,
-   guests:['Janice Cheung','Brian Young','Jackie','Bindi Mehta','Stephanie Wong','Kevin Lin','Matthew Sem','Anna Huang','Jacob Ly','Ashley Fong']},
+   guests:['Viktor Zhou','Vincent Chan','Emily Chung','Andrew Hechanova','Elman Chao','Kelvin Lau','Christine Tse','Skye Hosue','Luka Filipo','Arman Alam']},
   {id:'t14', label:'Table 14', short:'T14', seats:10,
    guests:['Jasmine Lai','David Wang','Amanda Wong','Raymond Nie','Kevin Li','Anthony Cho','Steven Luu','Remira Melendraz','Jason Cheung']},
   {id:'terrace', label:'Terrace', short:'Terrace', seats:8,
@@ -3118,12 +3119,14 @@ function seatInitials(name, lead){
 
 /* Initials collide often enough to matter — Daniel Yu and Dickson Yu are both
    'DY', and they sit next to each other — so labels are worked out per table and
-   grown one letter at a time until they're distinct. Ankit and Ankita Bahl at
-   table 7 are the one pair no prefix can separate, since the shorter name is a
+   grown one letter at a time until they're distinct. Four letters is the ceiling,
+   which is where the surname initial gets pushed off the end: Jackie Liang and
+   Jacob Ly at table 12 come out as 'Jack' and 'Jaco'. Ankit and Ankita Bahl at
+   table 10 are the one pair no prefix can separate, since the shorter name is a
    prefix of the longer; their seat numbers tell them apart instead. */
 function seatLabels(guests){
   const labels = guests.map(n=>seatInitials(n));
-  for(let lead=2; lead<=3; lead++){
+  for(let lead=2; lead<=4; lead++){
     const counts = {};
     labels.forEach(l=>{ counts[l] = (counts[l]||0)+1; });
     if(!Object.keys(counts).some(l=>counts[l] > 1)) break;
