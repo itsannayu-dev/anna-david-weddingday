@@ -3038,14 +3038,19 @@ function renderAllergiesModal(){
    chart is re-exported, re-transcribe these lists in order — sorting one
    alphabetically would silently move everybody's seat.
    `seats` is how many places the table is set for, so a table that isn't full
-   shows its empty places instead of closing the gap. `shape:'rect'` is the head
-   table, which isn't a round of ten and doesn't follow the clockwise rule. */
+   shows its empty places instead of closing the gap. A `null` in a list is a seat
+   left empty on purpose between two guests, which is how a spot assigned by hand
+   can sit apart from the ones either side of it — table 1's order came from Anna
+   rather than the chart, so re-transcribing it would undo that. `shape:'rect'` is
+   the head table, which isn't a round of ten and doesn't follow the clockwise
+   rule. */
 const SEATING = [
   {id:'head', label:'Head Table', short:'Head', seats:2, shape:'rect',
    note:'A rectangular table for two at the top centre of the tent. They sit along the back of it facing the room &mdash; Anna on the left, David on the right.',
    guests:['Anna Yu','David Zhou']},
+  // Spots 4 and 7 are the two empty ones, set by hand rather than by chart order.
   {id:'t1', label:'Table 1', short:'T1', seats:10,
-   guests:['Angela Yu','Andre Yu','May Chen','Mitch Logan','Erica Zhu','Wei Wei Wang','YuDe Wu','Vicky Wang']},
+   guests:['Angela Yu','Andre Yu','May Chen',null,'Erica Zhu','Wei Wei Wang',null,'YuDe Wu','Vicky Wang','Mitch Logan']},
   {id:'t2', label:'Table 2', short:'T2', seats:10,
    guests:['Betty Zheng','Wu Zhou','Xiuxin Zheng','Shengrong Huang','Sunny Huang','Frank Xiang']},
   {id:'t3', label:'Table 3', short:'T3', seats:10,
@@ -3125,13 +3130,14 @@ function seatInitials(name, lead){
    table 10 are the one pair no prefix can separate, since the shorter name is a
    prefix of the longer; their seat numbers tell them apart instead. */
 function seatLabels(guests){
-  const labels = guests.map(n=>seatInitials(n));
+  // A null in the list is an empty seat, which has no label to grow or collide.
+  const labels = guests.map(n=>n ? seatInitials(n) : '');
   for(let lead=2; lead<=4; lead++){
     const counts = {};
-    labels.forEach(l=>{ counts[l] = (counts[l]||0)+1; });
+    labels.forEach(l=>{ if(l) counts[l] = (counts[l]||0)+1; });
     if(!Object.keys(counts).some(l=>counts[l] > 1)) break;
     guests.forEach((name,i)=>{
-      if(counts[labels[i]] > 1) labels[i] = seatInitials(name, lead);
+      if(name && counts[labels[i]] > 1) labels[i] = seatInitials(name, lead);
     });
   }
   return labels;
@@ -3158,7 +3164,10 @@ function renderSeatMap(){
   const key = seatChartKey(table);
   const needFor = (name)=> (key && name) ? (needs[key+'|'+normalizeSeatName(name)] || null) : null;
   const labels = seatLabels(table.guests);
-  const empty = table.seats - table.guests.length;
+  // Count the people, not the length of the list: a table can hold a null where a
+  // seat is deliberately left empty between two guests.
+  const filled = table.guests.filter(Boolean).length;
+  const empty = table.seats - filled;
   const rect = table.shape === 'rect';
   /* Every numbered table is drawn facing the head table, so the top of the ring is
      the head-table side and seat 1 at the bottom has its back to it. The head
@@ -3230,7 +3239,7 @@ ${renderSubPageTop('Table Arrangement', 'Every table is drawn facing the head ta
       <div class="seat-card">
         <div class="seat-card-head">
           <div class="seat-card-name">${table.label}</div>
-          <div class="seat-card-count">${table.guests.length} of ${table.seats}${empty>0?` &middot; ${empty} empty`:''}</div>
+          <div class="seat-card-count">${filled} of ${table.seats}${empty>0?` &middot; ${empty} empty`:''}</div>
         </div>
         ${table.note ? `<div class="seat-card-note">${table.note}</div>` : ''}${diagram}
         <div class="seat-readout">${readout}</div>
