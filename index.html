@@ -3224,9 +3224,14 @@ function renderSeatMap(){
           <div class="seat-rect-top"><span class="seat-rect-label">${table.label}</span></div>
         </div>`;
   } else {
+    // Collect occupied seat indices, then space them evenly around the circle
+    const occupiedIndices = [];
     for(let i=0; i<table.seats; i++){
-      if(table.guests[i]) seats += seatButton(i, seatPosition(i, table.seats));
+      if(table.guests[i]) occupiedIndices.push(i);
     }
+    occupiedIndices.forEach((originalIndex, displayIndex) => {
+      seats += seatButton(originalIndex, seatPosition(displayIndex, occupiedIndices.length));
+    });
     diagram = `${facing ? `
         <div class="seat-facing">&#8593; Head table this way</div>` : ''}
         <div class="seat-ring">
