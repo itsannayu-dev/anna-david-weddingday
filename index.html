@@ -1001,28 +1001,22 @@
   .reels-section-count{
     font-size:14px;
     color:var(--ink-soft);
-    margin-bottom:16px;
+    margin-bottom:12px;
   }
-  .reel-card{
+  .reel-links{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .reel-link{
+    color:var(--sage-deep);
     text-decoration:none;
-    display:flex;
-    align-items:center;
-    gap:16px;
+    font-size:15px;
+    padding:8px 0;
+    display:inline-block;
   }
-  .reel-card .reel-thumb{
-    width:80px;
-    height:142px;
-    flex-shrink:0;
-    background:linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
-    border-radius:12px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-  .reel-icon{
-    font-size:32px;
-    color:rgba(255,255,255,0.9);
-    text-shadow:0 2px 4px rgba(0,0,0,0.3);
+  .reel-link:hover{
+    text-decoration:underline;
   }
 
   /* ---------- pdf attachment card ---------- */
@@ -3136,25 +3130,17 @@ ${renderSubPageTop('Instagram Reels', 'Highlights from the wedding day', {route:
     html += `
       <div class="reels-section">
         <div class="reels-section-title">${section.category}</div>
-        <div class="reels-section-count">${count} ${count === 1 ? 'reel' : 'reels'}</div>`;
+        <div class="reels-section-count">${count} ${count === 1 ? 'reel' : 'reels'}</div>
+        <div class="reel-links">`;
 
     section.reels.forEach((url, index) => {
+      const label = section.reels.length > 1 ? `${section.category} ${index + 1}` : section.category;
       html += `
-        <a class="contact-card reel-card" href="${url}" target="_blank" rel="noopener">
-          <div class="reel-thumb">
-            <span class="reel-icon">&#9654;</span>
-          </div>
-          <div>
-            <div class="contact-name">${section.category} ${section.reels.length > 1 ? (index + 1) : ''}</div>
-            <div class="contact-role">View on Instagram</div>
-          </div>
-          <div class="contact-actions">
-            <span class="contact-btn" aria-hidden="true">&#8599;</span>
-          </div>
-        </a>`;
+          <a class="reel-link" href="${url}" target="_blank" rel="noopener">${label} &#8599;</a>`;
     });
 
     html += `
+        </div>
       </div>`;
   });
 
