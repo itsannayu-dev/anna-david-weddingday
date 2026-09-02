@@ -998,9 +998,9 @@
     margin-bottom:0;
     padding-bottom:0;
   }
-  /* The first section sits right under the page intro — give it room. */
+  /* The first section sits right under the title-only page intro — give it room. */
   .picker-intro + .reels-section{
-    margin-top:22px;
+    margin-top:34px;
   }
   .reels-section-title{
     font-size:19px;
@@ -2949,6 +2949,7 @@ ${renderHero()}
 
 // Shared header for sub-pages. `back` names the parent route the arrow returns
 // to; it defaults to Transportation, which owns two of the three sub-pages.
+// `sub` is optional — pass nothing for a title-only intro.
 function renderSubPageTop(title, sub, back){
   const parent = back || {route:'cars', label:'Transportation'};
   return `
@@ -2957,7 +2958,7 @@ function renderSubPageTop(title, sub, back){
       </div>
       <div class="picker-intro">
         <h2>${title}</h2>
-        <p>${sub}</p>
+        ${sub ? `<p>${sub}</p>` : ''}
       </div>`;
 }
 
@@ -3170,7 +3171,7 @@ function renderReels(){
   let html = `
   <div class="shell">
     <div class="content">
-${renderSubPageTop('Instagram Reels', 'Highlights from the wedding day', {route:'more', label:'More'})}`;
+${renderSubPageTop('Instagram Reels', null, {route:'more', label:'More'})}`;
 
   INSTAGRAM_REELS.forEach(section => {
     const count = section.reels.length;
