@@ -1922,7 +1922,7 @@ const TASKS = [
   {id:'t22f', time:'1:30 PM', sort:tk(1,30,true)+1, title:'Outdoor photos', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN], note:null},
   {id:'t22b', time:'1:30 PM', sort:tk(1,30,true)+2, title:'Set up Candles & Name Cards', people:['planner'], note:CANDLES_CARDS_NOTE},
   {id:'t22d', time:'2:00 PM', sort:tk(2,0,true)+1, title:'Practice entrance routine', people:[...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN, 'dj'], note:null},
-  {id:'t23', time:'2:20 PM', sort:tk(2,20,true), title:'Shuttle bus leaves from Fairview Mall', people:['guest'], note:null},
+  {id:'t23', time:'2:20 PM', sort:tk(2,20,true), title:'Shuttle bus leaves from Finch East Commuter Lot', people:['guest'], note:null},
   {id:'t23b', time:'4:00 PM', sort:tk(4,0,true), title:'Pick up Mimi from Dog Sitter', people:['parents_anna','mimi'], note:DOG_SITTER_NOTE},
   {id:'m2b', time:'4:00 PM', sort:tk(4,0,true)+1, title:'Supervise Mimi until her turn', people:['planner','mimi'], note:'She\'s ring bearer at 5:00 PM.'},
   {id:'t24', time:'3:00 PM', sort:tk(3,0,true), title:'Ceremony rehearsal', people:['anna','david','dj','mc','planner', ...ALL_BRIDESMAIDS, ...ALL_GROOMSMEN, ...ALL_PARENTS], note:REHEARSAL_NOTE},
@@ -2807,8 +2807,9 @@ const CAR_SECTIONS = [
 /* ---- Transportation tab: coach bus ----
    Roster from the sign-up sheet, kept in alphabetical order — the numbers on
    the page are just row counters, not seat or sign-up numbers. `returnOnly`
-   riders skip the Fairview Mall pickup and only board the bus home from the
-   venue. Both departure times are read from here everywhere they appear. */
+   riders skip the Finch East Commuter Lot pickup and only board the bus home
+   from the venue. Both departure times are read from here everywhere they
+   appear. */
 const SHUTTLE = {
   capacity: 56,
   costPerPerson: '$37.99',
@@ -2816,13 +2817,13 @@ const SHUTTLE = {
     {
       label: 'To the venue',
       time: '2:20 PM',
-      where: 'Fairview Mall &rarr; Lincoln Estate',
+      where: 'Finch East Commuter Lot &rarr; Lincoln Estate',
       note: 'Be at the pickup spot a few minutes early — the bus leaves at 2:20 sharp.',
     },
     {
       label: 'From the Venue',
       time: '12:15 AM',
-      where: 'Lincoln Estate &rarr; Fairview Mall',
+      where: 'Lincoln Estate &rarr; Finch East Commuter Lot',
       note: 'The only ride back. Miss it and you\'re finding your own way home.',
     },
   ],
@@ -2910,7 +2911,7 @@ ${renderHero()}
       <div class="contact-card doc-card" id="shuttleLink">
         <div>
           <div class="contact-name">Shuttle Bus</div>
-          <div class="contact-role">Leaves Fairview Mall at ${SHUTTLE.departures[0].time}, leaves the venue at ${SHUTTLE.departures[1].time}</div>
+          <div class="contact-role">Leaves Finch East Commuter Lot at ${SHUTTLE.departures[0].time}, leaves the venue at ${SHUTTLE.departures[1].time}</div>
           <div class="doc-meta">${SHUTTLE.riders.length} riders · ${SHUTTLE.capacity}-seat coach</div>
         </div>
         <div class="contact-actions">
@@ -2982,7 +2983,7 @@ ${renderSubPageTop('Shuttle Bus', `${SHUTTLE.riders.length} riders on a ${SHUTTL
   });
   html += `
       </div>
-      <div class="car-section-label">Riders &middot; ${boarding} boarding at Fairview, ${returnOnly} return only</div>
+      <div class="car-section-label">Riders &middot; ${boarding} boarding at Finch East, ${returnOnly} return only</div>
       <div class="rider-list">
   `;
   SHUTTLE.riders.forEach((r,i)=>{
