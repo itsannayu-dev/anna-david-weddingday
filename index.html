@@ -981,6 +981,65 @@
   .allergy-name{ white-space:nowrap; }
   .allergy-unknown{ color:var(--ink-soft); opacity:0.6; font-weight:400; }
 
+  /* ---------- instagram reels ---------- */
+  .reels-section{
+    margin-bottom:32px;
+    padding-bottom:32px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .reels-section:last-child{
+    border-bottom:none;
+    margin-bottom:0;
+    padding-bottom:0;
+  }
+  .reels-section-title{
+    font-size:19px;
+    font-weight:600;
+    color:var(--ink);
+    margin-bottom:4px;
+  }
+  .reels-section-count{
+    font-size:14px;
+    color:var(--ink-soft);
+    margin-bottom:16px;
+  }
+  .reels-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));
+    gap:12px;
+  }
+  .reel-link{
+    display:flex;
+    flex-direction:column;
+    text-decoration:none;
+    color:var(--ink);
+    transition:transform 0.2s ease;
+  }
+  .reel-link:active{
+    transform:scale(0.97);
+  }
+  .reel-thumb{
+    aspect-ratio:9/16;
+    background:linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:8px;
+    position:relative;
+    overflow:hidden;
+  }
+  .reel-icon{
+    font-size:48px;
+    color:rgba(255,255,255,0.9);
+    text-shadow:0 2px 4px rgba(0,0,0,0.3);
+  }
+  .reel-label{
+    font-size:13px;
+    color:var(--ink-soft);
+    text-align:center;
+  }
+
   /* ---------- pdf attachment card ---------- */
   /* Same shape as .contact-card; the whole card is the link. */
   .doc-card{ text-decoration:none; cursor:pointer; }
@@ -2049,7 +2108,7 @@ function saveCompleted(){
 
 // 'cars' is the Transportation landing page; 'drivers' and 'shuttle' are its
 // sub-pages. 'tables' is the seat map, a sub-page of 'more'.
-let stage = 'picker'; // 'picker' | 'personal' | 'compare' | 'contacts' | 'cars' | 'drivers' | 'shuttle' | 'more' | 'tables'
+let stage = 'picker'; // 'picker' | 'personal' | 'compare' | 'contacts' | 'cars' | 'drivers' | 'shuttle' | 'more' | 'tables' | 'reels'
 let currentPerson = null;
 let showArchive = true;
 let showDongNote = false;
@@ -2218,6 +2277,8 @@ function applyRoute(){
     stage = 'more';
   } else if(h==='more/tables'){
     stage = 'tables';
+  } else if(h==='more/reels'){
+    stage = 'reels';
   } else if(h && personById(h) && !personById(h).contactOnly){
     stage = 'personal';
     if(currentPerson !== h){ showDongNote = false; showPackingList = false; }
@@ -2654,6 +2715,9 @@ function render(){
   } else if(stage==='tables'){
     root.innerHTML = renderSeatMap();
     attachSeatMapHandlers();
+  } else if(stage==='reels'){
+    root.innerHTML = renderReels();
+    attachSubPageHandlers();
   } else {
     root.innerHTML = renderPersonal();
     attachPersonalHandlers();
@@ -2663,7 +2727,7 @@ function render(){
 
 function updateBottomNav(){
   const onCars = stage==='cars' || stage==='drivers' || stage==='shuttle';
-  const onMore = stage==='more' || stage==='tables';
+  const onMore = stage==='more' || stage==='tables' || stage==='reels';
   const onSchedule = stage!=='contacts' && !onCars && !onMore;
   const onContacts = stage==='contacts';
   const scheduleBtn = document.getElementById('navSchedule');
@@ -3006,6 +3070,48 @@ const FOOD_ALLERGIES = [
   {table:'T14', name:'Remira Melendrez', need:'No walnuts'},
 ];
 
+/* ---- More tab: Instagram reels ---- */
+const INSTAGRAM_REELS = [
+  {
+    category: 'Bridesmaid Get Ready',
+    reels: [
+      'https://www.instagram.com/p/DbbVV-xN461/',
+      'https://www.instagram.com/p/DWwZ7lEoORK/',
+      'https://www.instagram.com/p/DZwp64BtApW/',
+      'https://www.instagram.com/p/DZ3rS-KS6QW/',
+      'https://www.instagram.com/p/DYU9BPIMmwP/',
+      'https://www.instagram.com/p/DVWIXzmjpZO/',
+    ],
+  },
+  {
+    category: 'White Parasols',
+    reels: [
+      'https://www.instagram.com/p/DZW5mMuMB6G/',
+      'https://www.instagram.com/p/DaDa-EOM1EV/',
+      'https://www.instagram.com/p/Db7S6VuyfaL/',
+    ],
+  },
+  {
+    category: 'Wedding Party',
+    reels: [
+      'https://www.instagram.com/p/DcJ-IsPyb2P/',
+    ],
+  },
+  {
+    category: 'Couple',
+    reels: [
+      'https://www.instagram.com/p/DZCGSTxhvXK/',
+    ],
+  },
+  {
+    category: 'Dance Floor',
+    reels: [
+      'https://www.instagram.com/p/DbOJDDJK3FO/',
+      'https://www.instagram.com/p/DYxZFnFSzpM/',
+    ],
+  },
+];
+
 function renderAllergiesModal(){
   return `
   <div class="modal-overlay" id="allergyOverlay">
@@ -3030,6 +3136,41 @@ function renderAllergiesModal(){
       </table>
     </div>
   </div>`;
+}
+
+function renderReels(){
+  let html = `
+  <div class="shell">
+    <div class="content">
+${renderSubPageTop('Instagram Reels', 'Highlights from the wedding day', {route:'more', label:'More'})}`;
+
+  INSTAGRAM_REELS.forEach(section => {
+    const count = section.reels.length;
+    html += `
+      <div class="reels-section">
+        <div class="reels-section-title">${section.category}</div>
+        <div class="reels-section-count">${count} ${count === 1 ? 'reel' : 'reels'}</div>
+        <div class="reels-grid">`;
+
+    section.reels.forEach(url => {
+      html += `
+          <a class="reel-link" href="${url}" target="_blank" rel="noopener" aria-label="View reel on Instagram">
+            <div class="reel-thumb">
+              <span class="reel-icon">&#9654;</span>
+            </div>
+            <span class="reel-label">View on Instagram</span>
+          </a>`;
+    });
+
+    html += `
+        </div>
+      </div>`;
+  });
+
+  html += `
+    </div>
+  </div>`;
+  return html;
 }
 
 /* ---- More tab: table arrangement ----
@@ -3450,6 +3591,21 @@ ${renderHero()}
     }
   });
   html += renderFloorPlanCard();
+
+  // Instagram Reels card
+  const totalReels = INSTAGRAM_REELS.reduce((sum, section) => sum + section.reels.length, 0);
+  html += `
+      <button class="contact-card doc-card" id="reelsLink">
+        <div>
+          <div class="contact-name">Instagram Reels</div>
+          <div class="contact-role">Highlights from the wedding day</div>
+          <div class="doc-meta">${totalReels} reels · ${INSTAGRAM_REELS.length} categories</div>
+        </div>
+        <div class="contact-actions">
+          <span class="contact-btn" aria-hidden="true">&#8250;</span>
+        </div>
+      </button>`;
+
   html += `
     </div>
   </div>`;
@@ -3521,6 +3677,10 @@ function attachMoreHandlers(){
       showAllergies = false;
       render();
     });
+  }
+  const reelsLink = document.getElementById('reelsLink');
+  if(reelsLink){
+    reelsLink.addEventListener('click', ()=>go('more/reels'));
   }
 
   // The viewport locks pinch-zoom, so tapping the plan toggles a 2x scroll view.
