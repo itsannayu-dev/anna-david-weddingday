@@ -940,6 +940,12 @@
     opacity:0.35;
     pointer-events:none;
   }
+  /* Reference cards that open an in-app page use a <button> instead of an <a>. */
+  button.contact-btn{
+    padding:0;
+    font-family:inherit;
+    cursor:pointer;
+  }
   .contact-missing{
     font-size:14px;
     color:var(--ink-soft);
@@ -3035,7 +3041,8 @@ function attachSubPageHandlers(){
 
 /* ---- More tab: reference links ---- */
 const REFERENCE_LINKS = [
-  {id:'ig', title:'Instagram Reels', desc:'Content & reel ideas for the day', url:null},
+  // `route` opens an in-app page instead of an external link.
+  {id:'ig', title:'Instagram Reels', desc:'Content & reel ideas for the day', route:'more/reels'},
   {id:'pin', title:'Pinterest Board for Photos', desc:'Photo references for the shoot list', url:'https://pin.it/5pkBL2Isq'},
 ];
 
@@ -3578,15 +3585,23 @@ ${renderHero()}
       </div>
   `;
   REFERENCE_LINKS.forEach(l=>{
+    let openBtn;
+    if(l.route){
+      openBtn = `<button class="contact-btn" data-route="${l.route}" title="Open">&#8599;</button>`;
+    } else if(l.url){
+      openBtn = `<a class="contact-btn" href="${l.url}" target="_blank" rel="noopener" title="Open">&#8599;</a>`;
+    } else {
+      openBtn = `<a class="contact-btn disabled" title="Open">&#8599;</a>`;
+    }
     html += `
       <div class="contact-card">
         <div>
           <div class="contact-name">${l.title}</div>
           <div class="contact-role">${l.desc}</div>
-          ${l.url ? '' : `<div class="contact-missing">No link yet</div>`}
+          ${l.url || l.route ? '' : `<div class="contact-missing">No link yet</div>`}
         </div>
         <div class="contact-actions">
-          <a class="contact-btn ${l.url ? '' : 'disabled'}" ${l.url ? `href="${l.url}" target="_blank" rel="noopener"` : ''} title="Open">&#8599;</a>
+          ${openBtn}
         </div>
       </div>`;
   });
@@ -3608,8 +3623,8 @@ ${renderHero()}
 }
 
 function attachMoreHandlers(){
-  // Sub-steps that point at an in-app view rather than a file.
-  document.querySelectorAll('.doc-step[data-route]').forEach(btn=>{
+  // Sub-steps and reference cards that point at an in-app view rather than a file.
+  document.querySelectorAll('.doc-step[data-route], .contact-btn[data-route]').forEach(btn=>{
     btn.addEventListener('click', ()=>go(btn.getAttribute('data-route')));
   });
   document.querySelectorAll('.doc-step[data-action]').forEach(btn=>{
