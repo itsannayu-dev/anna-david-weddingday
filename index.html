@@ -3290,7 +3290,9 @@ function attachSeatMapHandlers(){
       seatTable = tab.getAttribute('data-table');
       seatSelected = null; // a seat number means nothing once the table changes
       render();
-      window.scrollTo(0,0);
+      // Scroll to keep the tabs in view instead of jumping to the top
+      const tabs = document.querySelector('.seat-tabs');
+      if(tabs) tabs.scrollIntoView({behavior: 'smooth', block: 'start'});
     });
   });
   // The seat and its row in the list below are the same control, so both carry
