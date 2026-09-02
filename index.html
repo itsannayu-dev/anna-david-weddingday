@@ -3287,12 +3287,20 @@ function attachSeatMapHandlers(){
   attachSubPageHandlers();
   document.querySelectorAll('.seat-tab').forEach(tab=>{
     tab.addEventListener('click', ()=>{
+      // Save the horizontal scroll position before re-rendering
+      const oldTabs = document.querySelector('.seat-tabs');
+      const scrollPos = oldTabs ? oldTabs.scrollLeft : 0;
+
       seatTable = tab.getAttribute('data-table');
       seatSelected = null; // a seat number means nothing once the table changes
       render();
-      // Scroll to keep the tabs in view instead of jumping to the top
+
+      // Restore horizontal scroll and scroll tabs into view
       const tabs = document.querySelector('.seat-tabs');
-      if(tabs) tabs.scrollIntoView({behavior: 'smooth', block: 'start'});
+      if(tabs){
+        tabs.scrollLeft = scrollPos;
+        tabs.scrollIntoView({behavior: 'smooth', block: 'start'});
+      }
     });
   });
   // The seat and its row in the list below are the same control, so both carry
