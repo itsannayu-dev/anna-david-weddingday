@@ -3098,17 +3098,19 @@ const FOOD_ALLERGIES = [
   {table:'T14', name:'Remira Melendrez', need:'No walnuts'},
 ];
 
-/* ---- More tab: Instagram reels ---- */
+/* ---- More tab: Instagram reels ----
+   A reel is either a plain URL, labelled "<Category> <n>" on the page, or an
+   object carrying its own `label` when the shot needs describing. */
 const INSTAGRAM_REELS = [
   {
     category: 'Bridesmaid Get Ready',
     reels: [
-      'https://www.instagram.com/p/DbbVV-xN461/',
-      'https://www.instagram.com/p/DWwZ7lEoORK/',
-      'https://www.instagram.com/p/DZwp64BtApW/',
-      'https://www.instagram.com/p/DZ3rS-KS6QW/',
-      'https://www.instagram.com/p/DYU9BPIMmwP/',
-      'https://www.instagram.com/p/DVWIXzmjpZO/',
+      {url:'https://www.instagram.com/p/DbbVV-xN461/', label:'Anna hurry up (PJ &rarr; Dressed)'},
+      {url:'https://www.instagram.com/p/DWwZ7lEoORK/', label:'Minons Tonight'},
+      {url:'https://www.instagram.com/p/DZwp64BtApW/', label:'You know what I mean transition (PJ &rarr; Dressed)'},
+      {url:'https://www.instagram.com/p/DZ3rS-KS6QW/', label:'Phone Swipe (PJ &rarr; Dressed)'},
+      {url:'https://www.instagram.com/p/DYU9BPIMmwP/', label:'Heart waterfall (Dressed)'},
+      {url:'https://www.instagram.com/p/DVWIXzmjpZO/', label:'Clap Dance (PJ)'},
     ],
   },
   {
@@ -3180,8 +3182,10 @@ ${renderSubPageTop('Instagram Reels', 'Highlights from the wedding day', {route:
         <div class="reels-section-count">${count} ${count === 1 ? 'reel' : 'reels'}</div>
         <div class="reel-links">`;
 
-    section.reels.forEach((url, index) => {
-      const label = section.reels.length > 1 ? `${section.category} ${index + 1}` : section.category;
+    section.reels.forEach((reel, index) => {
+      const url = typeof reel === 'string' ? reel : reel.url;
+      const fallback = count > 1 ? `${section.category} ${index + 1}` : section.category;
+      const label = (typeof reel === 'string' ? null : reel.label) || fallback;
       html += `
           <a class="reel-link" href="${url}" target="_blank" rel="noopener">${label} &#8599;</a>`;
     });
