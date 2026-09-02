@@ -1003,41 +1003,26 @@
     color:var(--ink-soft);
     margin-bottom:16px;
   }
-  .reels-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));
-    gap:12px;
-  }
-  .reel-link{
-    display:flex;
-    flex-direction:column;
+  .reel-card{
     text-decoration:none;
-    color:var(--ink);
-    transition:transform 0.2s ease;
+    display:flex;
+    align-items:center;
+    gap:16px;
   }
-  .reel-link:active{
-    transform:scale(0.97);
-  }
-  .reel-thumb{
-    aspect-ratio:9/16;
+  .reel-card .reel-thumb{
+    width:80px;
+    height:142px;
+    flex-shrink:0;
     background:linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
     border-radius:12px;
     display:flex;
     align-items:center;
     justify-content:center;
-    margin-bottom:8px;
-    position:relative;
-    overflow:hidden;
   }
   .reel-icon{
-    font-size:48px;
+    font-size:32px;
     color:rgba(255,255,255,0.9);
     text-shadow:0 2px 4px rgba(0,0,0,0.3);
-  }
-  .reel-label{
-    font-size:13px;
-    color:var(--ink-soft);
-    text-align:center;
   }
 
   /* ---------- pdf attachment card ---------- */
@@ -3151,21 +3136,25 @@ ${renderSubPageTop('Instagram Reels', 'Highlights from the wedding day', {route:
     html += `
       <div class="reels-section">
         <div class="reels-section-title">${section.category}</div>
-        <div class="reels-section-count">${count} ${count === 1 ? 'reel' : 'reels'}</div>
-        <div class="reels-grid">`;
+        <div class="reels-section-count">${count} ${count === 1 ? 'reel' : 'reels'}</div>`;
 
-    section.reels.forEach(url => {
+    section.reels.forEach((url, index) => {
       html += `
-          <a class="reel-link" href="${url}" target="_blank" rel="noopener" aria-label="View reel on Instagram">
-            <div class="reel-thumb">
-              <span class="reel-icon">&#9654;</span>
-            </div>
-            <span class="reel-label">View on Instagram</span>
-          </a>`;
+        <a class="contact-card reel-card" href="${url}" target="_blank" rel="noopener">
+          <div class="reel-thumb">
+            <span class="reel-icon">&#9654;</span>
+          </div>
+          <div>
+            <div class="contact-name">${section.category} ${section.reels.length > 1 ? (index + 1) : ''}</div>
+            <div class="contact-role">View on Instagram</div>
+          </div>
+          <div class="contact-actions">
+            <span class="contact-btn" aria-hidden="true">&#8599;</span>
+          </div>
+        </a>`;
     });
 
     html += `
-        </div>
       </div>`;
   });
 
@@ -3580,20 +3569,6 @@ ${renderHero()}
   });
   html += renderFloorPlanCard();
 
-  // Instagram Reels card
-  const totalReels = INSTAGRAM_REELS.reduce((sum, section) => sum + section.reels.length, 0);
-  html += `
-      <button class="contact-card doc-card" id="reelsLink">
-        <div>
-          <div class="contact-name">Instagram Reels</div>
-          <div class="contact-role">Highlights from the wedding day</div>
-          <div class="doc-meta">${totalReels} reels · ${INSTAGRAM_REELS.length} categories</div>
-        </div>
-        <div class="contact-actions">
-          <span class="contact-btn" aria-hidden="true">&#8250;</span>
-        </div>
-      </button>`;
-
   html += `
     </div>
   </div>`;
@@ -3659,11 +3634,6 @@ function attachMoreHandlers(){
       render();
     });
   }
-  const reelsLink = document.getElementById('reelsLink');
-  if(reelsLink){
-    reelsLink.addEventListener('click', ()=>go('more/reels'));
-  }
-
   // The viewport locks pinch-zoom, so tapping the plan toggles a 2x scroll view.
   const stage = document.getElementById('floorPlanStage');
   if(stage){
