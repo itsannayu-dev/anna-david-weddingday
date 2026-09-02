@@ -2972,11 +2972,12 @@ const ATTACHMENTS = [
     desc:'Who sits where — 14 tables plus the head table',
     // No page count: the export carries a blank second page.
     meta:'PDF · 131 guests · 8 vendors',
-    // Two ways into the same chart: the export as it came, and the seat map built
-    // from it.
+    // Three ways to use the chart: the PDF export, the interactive seat map, and
+    // the dietary needs list.
     steps:[
       {label:'View PDF', hint:'The chart exactly as exported', href:'seating-chart.pdf'},
       {label:'View Table Arrangement', hint:'One table at a time, tap a seat for the name', route:'more/tables'},
+      {label:'View Food Allergies', hint:'Dietary needs and allergies by table', action:'allergies'},
     ],
   },
 ];
@@ -3347,10 +3348,14 @@ ${head}
           <span class="doc-step-num">${i+1}</span>
           <span class="doc-step-body">${s.label}<span class="doc-step-hint">${s.hint}</span></span>
           <span class="doc-step-go" aria-hidden="true">${s.href ? '&#8599;' : '&#8250;'}</span>`;
-    // An external file opens in a new tab; an in-app view routes instead.
-    return s.href
-      ? `<a class="doc-step" href="${s.href}" target="_blank" rel="noopener">${inner}</a>`
-      : `<button class="doc-step" data-route="${s.route}">${inner}</button>`;
+    // An external file opens in a new tab; an in-app view routes or triggers an action.
+    if(s.href){
+      return `<a class="doc-step" href="${s.href}" target="_blank" rel="noopener">${inner}</a>`;
+    } else if(s.route){
+      return `<button class="doc-step" data-route="${s.route}">${inner}</button>`;
+    } else if(s.action){
+      return `<button class="doc-step" data-action="${s.action}">${inner}</button>`;
+    }
   }).join('');
   return `
       <div class="contact-card doc-card-steps">
@@ -3461,6 +3466,15 @@ function attachMoreHandlers(){
   // Sub-steps that point at an in-app view rather than a file.
   document.querySelectorAll('.doc-step[data-route]').forEach(btn=>{
     btn.addEventListener('click', ()=>go(btn.getAttribute('data-route')));
+  });
+  document.querySelectorAll('.doc-step[data-action]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const action = btn.getAttribute('data-action');
+      if(action === 'allergies'){
+        showAllergies = true;
+        render();
+      }
+    });
   });
   const thumb = document.getElementById('floorPlanThumb');
   if(thumb){
