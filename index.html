@@ -2750,7 +2750,7 @@ ${renderHero()}
     const leadTelHref = lead.phone ? `tel:${lead.phone.replace(/[^0-9+]/g,'')}` : null;
     html += `
           <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
-            <div class="contact-note">${lead.name} (1st Photographer) · ${lead.phone}</div>
+            <div class="contact-note">Estelle (1st Photographer) · ${lead.phone}</div>
             <a class="contact-btn ${leadTelHref ? '' : 'disabled'}" ${leadTelHref ? `href="${leadTelHref}"` : ''} title="Call" style="margin-left:8px;">&#128222;</a>
           </div>`;
 
