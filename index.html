@@ -1002,11 +1002,6 @@
     font-size:19px;
     font-weight:600;
     color:var(--ink);
-    margin-bottom:4px;
-  }
-  .reels-section-count{
-    font-size:14px;
-    color:var(--ink-soft);
     margin-bottom:12px;
   }
   .reel-links{
@@ -3178,7 +3173,6 @@ ${renderSubPageTop('Instagram Reels', 'Highlights from the wedding day', {route:
     html += `
       <div class="reels-section">
         <div class="reels-section-title">${section.category}</div>
-        <div class="reels-section-count">${count} ${count === 1 ? 'reel' : 'reels'}</div>
         <div class="reel-links">`;
 
     section.reels.forEach((reel, index) => {
@@ -3186,7 +3180,7 @@ ${renderSubPageTop('Instagram Reels', 'Highlights from the wedding day', {route:
       const fallback = count > 1 ? `${section.category} ${index + 1}` : section.category;
       const label = (typeof reel === 'string' ? null : reel.label) || fallback;
       html += `
-          <a class="reel-link" href="${url}" target="_blank" rel="noopener">${label} &#8599;</a>`;
+          <a class="reel-link" href="${url}" target="_blank" rel="noopener">${label} &#8594;</a>`;
     });
 
     html += `
