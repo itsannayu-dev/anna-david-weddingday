@@ -3575,20 +3575,6 @@ ${renderHero()}
   });
   ATTACHMENTS.forEach(a=>{
     html += renderAttachmentCard(a);
-    // Show food allergies right after the seating chart
-    if(a.id === 'chart'){
-      html += `
-      <div class="contact-card doc-card" id="allergyLink">
-        <div>
-          <div class="contact-name">Food Allergy List</div>
-          <div class="contact-role">Allergies and dietary needs, with table numbers</div>
-          <div class="doc-meta">${FOOD_ALLERGIES.length} guests</div>
-        </div>
-        <div class="contact-actions">
-          <span class="contact-btn" aria-hidden="true">&#8250;</span>
-        </div>
-      </div>`;
-    }
   });
   html += renderFloorPlanCard();
 
@@ -3652,13 +3638,6 @@ function attachMoreHandlers(){
   if(close){
     close.addEventListener('click', ()=>{
       showFloorPlan = false;
-      render();
-    });
-  }
-  const allergyLink = document.getElementById('allergyLink');
-  if(allergyLink){
-    allergyLink.addEventListener('click', ()=>{
-      showAllergies = true;
       render();
     });
   }
