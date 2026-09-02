@@ -3232,8 +3232,15 @@ function renderSeatMap(){
     occupiedIndices.forEach((originalIndex, displayIndex) => {
       seats += seatButton(originalIndex, seatPosition(displayIndex, occupiedIndices.length));
     });
+    // Determine head table direction based on table position in the room
+    let facingText = '&#8593; Head table this way';
+    if(['t1','t5','t9','t13'].includes(table.id)){
+      facingText = '&#8599; Head table this way'; // NE
+    } else if(['t2','t8','t12','t14'].includes(table.id)){
+      facingText = '&#8598; Head table this way'; // NW
+    }
     diagram = `${facing ? `
-        <div class="seat-facing">&#8593; Head table this way</div>` : ''}
+        <div class="seat-facing">${facingText}</div>` : ''}
         <div class="seat-ring">
           <div class="seat-top">
             <div class="seat-top-label">${table.short}<span class="seat-top-sub">seat 1 at the bottom<br>clockwise &#8635;</span></div>
