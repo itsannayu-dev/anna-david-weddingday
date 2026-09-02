@@ -2720,7 +2720,10 @@ function updateBottomNav(){
 }
 
 function renderContacts(){
-  const vendors = PEOPLE.filter(p=>p.group==='Vendors' || p.id==='planner');
+  const photoVideoIds = ['photovideo', 'photo2', 'video1', 'video2'];
+  const photoVideoTeam = PEOPLE.filter(p => photoVideoIds.includes(p.id));
+  const otherVendors = PEOPLE.filter(p => (p.group==='Vendors' || p.id==='planner') && !photoVideoIds.includes(p.id));
+
   let html = `
   <div class="shell">
 ${renderHero()}
@@ -2730,7 +2733,45 @@ ${renderHero()}
         <p>Vendors and team, all in one place.</p>
       </div>
   `;
-  vendors.forEach(p=>{
+
+  // Render photo & video team as a single card
+  if(photoVideoTeam.length > 0){
+    const lead = photoVideoTeam.find(p => p.id === 'photovideo');
+    const team = photoVideoTeam.filter(p => p.id !== 'photovideo');
+    const telHref = lead.phone ? `tel:${lead.phone.replace(/[^0-9+]/g,'')}` : null;
+    const mailHref = lead.email ? `mailto:${lead.email}` : null;
+
+    html += `
+      <div class="contact-card">
+        <div>
+          <div class="contact-name">${lead.name}</div>
+          <div class="contact-role">${lead.role}</div>
+          ${lead.contactNote ? `<div class="contact-note">${lead.contactNote}</div>` : ''}`;
+
+    // List the rest of the team
+    team.forEach(p => {
+      const phone = p.phone ? ` · ${p.phone}` : '';
+      html += `
+          <div class="contact-note">${p.name} (${p.role})${phone}</div>`;
+    });
+
+    const detailLine = [lead.phone, lead.email].filter(Boolean).join(' · ');
+    if(detailLine){
+      html += `
+          <div class="contact-note">${detailLine}</div>`;
+    }
+
+    html += `
+        </div>
+        <div class="contact-actions">
+          <a class="contact-btn ${telHref ? '' : 'disabled'}" ${telHref ? `href="${telHref}"` : ''} title="Call">&#128222;</a>
+          <a class="contact-btn ${mailHref ? '' : 'disabled'}" ${mailHref ? `href="${mailHref}"` : ''} title="Email">&#9993;</a>
+        </div>
+      </div>`;
+  }
+
+  // Render other vendors normally
+  otherVendors.forEach(p=>{
     const telHref = p.phone ? `tel:${p.phone.replace(/[^0-9+]/g,'')}` : null;
     const mailHref = p.email ? `mailto:${p.email}` : null;
     const displayName = (p.id==='planner' || p.id==='cakeshop') && p.contactName ? p.contactName : p.name;
