@@ -3427,8 +3427,11 @@ ${renderHero()}
         </div>
       </div>`;
   });
-  ATTACHMENTS.forEach(a=>{ html += renderAttachmentCard(a); });
-  html += `
+  ATTACHMENTS.forEach(a=>{
+    html += renderAttachmentCard(a);
+    // Show food allergies right after the seating chart
+    if(a.id === 'chart'){
+      html += `
       <div class="contact-card doc-card" id="allergyLink">
         <div>
           <div class="contact-name">Food Allergy List</div>
@@ -3439,6 +3442,8 @@ ${renderHero()}
           <span class="contact-btn" aria-hidden="true">&#8250;</span>
         </div>
       </div>`;
+    }
+  });
   html += renderFloorPlanCard();
   html += `
     </div>
