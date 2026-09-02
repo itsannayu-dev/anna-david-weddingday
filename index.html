@@ -2738,34 +2738,33 @@ ${renderHero()}
   if(photoVideoTeam.length > 0){
     const lead = photoVideoTeam.find(p => p.id === 'photovideo');
     const team = photoVideoTeam.filter(p => p.id !== 'photovideo');
-    const telHref = lead.phone ? `tel:${lead.phone.replace(/[^0-9+]/g,'')}` : null;
-    const mailHref = lead.email ? `mailto:${lead.email}` : null;
 
     html += `
       <div class="contact-card">
-        <div>
+        <div style="width:100%;">
           <div class="contact-name">${lead.name}</div>
           <div class="contact-role">${lead.role}</div>
           ${lead.contactNote ? `<div class="contact-note">${lead.contactNote}</div>` : ''}`;
 
-    // List the rest of the team
+    // Lead contact with phone button
+    const leadTelHref = lead.phone ? `tel:${lead.phone.replace(/[^0-9+]/g,'')}` : null;
+    html += `
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+            <div class="contact-note">${lead.name} (1st Photographer) · ${lead.phone}</div>
+            <a class="contact-btn ${leadTelHref ? '' : 'disabled'}" ${leadTelHref ? `href="${leadTelHref}"` : ''} title="Call" style="margin-left:8px;">&#128222;</a>
+          </div>`;
+
+    // List the rest of the team with individual phone buttons
     team.forEach(p => {
-      const phone = p.phone ? ` · ${p.phone}` : '';
+      const telHref = p.phone ? `tel:${p.phone.replace(/[^0-9+]/g,'')}` : null;
       html += `
-          <div class="contact-note">${p.name} (${p.role})${phone}</div>`;
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+            <div class="contact-note">${p.name} (${p.role}) · ${p.phone}</div>
+            <a class="contact-btn ${telHref ? '' : 'disabled'}" ${telHref ? `href="${telHref}"` : ''} title="Call" style="margin-left:8px;">&#128222;</a>
+          </div>`;
     });
 
-    const detailLine = [lead.phone, lead.email].filter(Boolean).join(' · ');
-    if(detailLine){
-      html += `
-          <div class="contact-note">${detailLine}</div>`;
-    }
-
     html += `
-        </div>
-        <div class="contact-actions">
-          <a class="contact-btn ${telHref ? '' : 'disabled'}" ${telHref ? `href="${telHref}"` : ''} title="Call">&#128222;</a>
-          <a class="contact-btn ${mailHref ? '' : 'disabled'}" ${mailHref ? `href="${mailHref}"` : ''} title="Email">&#9993;</a>
         </div>
       </div>`;
   }
