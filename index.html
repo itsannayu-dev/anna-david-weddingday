@@ -3214,7 +3214,9 @@ function renderSeatMap(){
   if(rect){
     // The two of them sit along the back of the slab facing the room, so their
     // seats draw above it — Anna's first, on the left.
-    for(let i=0; i<table.seats; i++) seats += seatButton(i, null);
+    for(let i=0; i<table.seats; i++){
+      if(table.guests[i]) seats += seatButton(i, null);
+    }
     diagram = `
         <div class="seat-rect">
           <div class="seat-rect-seats">${seats}
@@ -3222,7 +3224,9 @@ function renderSeatMap(){
           <div class="seat-rect-top"><span class="seat-rect-label">${table.label}</span></div>
         </div>`;
   } else {
-    for(let i=0; i<table.seats; i++) seats += seatButton(i, seatPosition(i, table.seats));
+    for(let i=0; i<table.seats; i++){
+      if(table.guests[i]) seats += seatButton(i, seatPosition(i, table.seats));
+    }
     diagram = `${facing ? `
         <div class="seat-facing">&#8593; Head table this way</div>` : ''}
         <div class="seat-ring">
@@ -3262,11 +3266,12 @@ ${renderSubPageTop('Table Arrangement', 'Every table is drawn facing the head ta
 
   for(let i=0; i<table.seats; i++){
     const name = table.guests[i] || null;
+    if(!name) continue;
     const need = needFor(name);
     html += `
         <button class="seat-row${i===seatSelected?' selected':''}" data-seat="${i}">
           <span class="seat-row-num">${i+1}</span>
-          <span>${name || '<span class="seat-row-empty">Empty</span>'}</span>
+          <span>${name}</span>
           ${need ? `<span class="seat-row-flag" title="${need}">&#9888;</span>` : ''}
         </button>`;
   }
