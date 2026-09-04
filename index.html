@@ -1873,20 +1873,21 @@ const TASKS = [
   {id:'t3h', time:'10:00 AM', sort:tk(10,0,false)+1.5, title:'Capture photos via film camera', people:['bm_gini'], note:null},
   {id:'t3e', time:'10:00 AM', sort:tk(10,0,false)+2, title:'Do own makeup + hair', people:['bm_louise'], note:null},
   {id:'t3f', time:'10:00 AM', sort:tk(10,0,false)+3, title:'Steam clothes', people:['david'], note:null},
-  {id:'t5', time:'11:00 AM', sort:tk(11,0,false), title:'Planner arrives on site', people:['planner'], note:null},
+  {id:'t5', time:'12:00 PM', sort:tk(12,0,true), title:'Planner arrives on site', people:['planner'], note:null},
   {id:'t6', time:'10:30 AM', sort:tk(10,30,false)+1, title:'DJ load-in (10am–1am)', people:['dj'], note:null},
   {id:'t7', time:'10:30 AM', sort:tk(10,30,false)+2, title:'Hair — Bernita', people:['bm_bernita','mua'], note:null},
   {id:'t7b', time:'10:30 AM', sort:tk(10,30,false)+3, title:'Do own makeup', people:['bm_angela'], note:null},
   {id:'t7c', time:'10:30 AM', sort:tk(10,30,false)+4, title:"Steam Anna's Veil + anything else that hasn't been steamed", people:['bm_kristin'], note:null},
   {id:'t8', time:'10:00 AM', sort:tk(10,0,false)+4, title:'Pick up the cake', people:['bm_annad','gm_kai','gm_stanley'], note:'460 Dundas Street East, Waterdown, ON<br>Lobby Trend 2 – Back Gate (L8B 2A5)<br>Kelly 365-324-1792'},
   {id:'t3g', time:'10:30 AM', sort:tk(10,30,false), title:'Arrive at venue & steam their dress', people:['bm_annad'], note:null},
-  {id:'t9', time:'11:30 AM', sort:tk(11,30,false), title:'Set up the Charm Bar', people:['planner'], note:CHARM_BAR_NOTE},
+  {id:'t9', time:'12:30 PM', sort:tk(12,30,true), title:'Set up the Charm Bar', people:['planner'], note:CHARM_BAR_NOTE},
   {id:'t9c', time:'11:00 AM', sort:tk(11,0,false)+2, title:'Do makeup + hair', people:['bm_gini'], note:null},
   {id:'t20b', time:'11:00 AM', sort:tk(11,0,false)+1, title:'Do own makeup & hair', people:['bm_annad'], note:null},
   {id:'t13', time:'11:30 AM', sort:tk(11,30,false)+2, title:'Hair — May', people:['parents_anna','mua'], note:'This slot is for May only — Andre doesn\'t need to be here for it.'},
   {id:'t11', time:'11:00 AM', sort:tk(11,0,false)+4, title:'Arrive at venue', people:ALL_GROOMSMEN, note:null},
   {id:'m1', time:'9:55 AM', sort:tk(9,55,false), title:'Drop Mimi off at the Dog Sitter', people:['bm_angela','mimi'], note:'Angela drops her off on the way in — the venue is her next stop at 10:00 AM.<br>'+DOG_SITTER_NOTE},
-  {id:'t12', time:'12:00 PM', sort:tk(12,0,true), title:'Set up the Welcome Area', people:['planner'], note:WELCOME_AREA_NOTE},
+  // +0.5 keeps this behind 'Planner arrives on site', which shares the 12:00 slot.
+  {id:'t12', time:'12:00 PM', sort:tk(12,0,true)+0.5, title:'Set up the Welcome Area', people:['planner'], note:WELCOME_AREA_NOTE},
   {id:'t10', time:'11:00 AM', sort:tk(11,0,false)+3, title:'Hair Service — Angela', people:['bm_angela','mua'], note:null},
   {id:'t20', time:'11:30 AM', sort:tk(11,30,false)+3, title:'Get ready', people:ALL_GROOMSMEN, note:"Don't forget to put on your boutonniere."},
   {id:'t20c', time:'11:30 AM', sort:tk(11,30,false)+4, title:'Film Content Videos', people:ALL_BRIDESMAIDS, note:null},
@@ -3063,7 +3064,7 @@ const ATTACHMENTS = [
     title:'Seating Chart',
     desc:'Who sits where — 14 tables plus the head table',
     // No page count: the export carries a blank second page.
-    meta:'PDF · 130 guests · 8 vendors',
+    meta:'PDF · 131 guests · 8 vendors',
     // Three ways to use the chart: the PDF export, the interactive seat map, and
     // the dietary needs list.
     steps:[
@@ -3233,11 +3234,12 @@ const SEATING = [
    guests:['Anna Dong','JY Fan','Bill Chen','Kai Min Ren','Elaine Yuan','David Feng','Yun-Yun Tsai','Eric Sun','Linda Zhang','Kevin Ding']},
   /* Placed by hand, so this one is off chart order: Summer Chen sits in spot 5
      and Vanessa Wong takes the place she came from at 8, which splits Summer from
-     the other two Chens. Yi Yun Li and Hong Jun Tan joined on the Sep 5 chart and
-     fill 6 and 7 — the chart lists that pair last, but its boxes only carry names,
-     so box order doesn't override any of this. */
+     the other two Chens. Yi Yun Li and Hong Jun Tan moved to table 9 on the latest
+     chart, so Andrea Cao and Terry Xie came the other way into the 6 and 7 they
+     vacated — the chart lists that pair last, but its boxes only carry names, so
+     box order doesn't override any of this. */
   {id:'t5', label:'Table 5', short:'T5', seats:10,
-   guests:['Emily Yuen','Tiger Yu','Daniel Yu','Dickson Yu','Summer Chen','Yi Yun Li','Hong Jun Tan','Vanessa Wong','Sunny Chen','Meji Chen']},
+   guests:['Emily Yuen','Tiger Yu','Daniel Yu','Dickson Yu','Summer Chen','Andrea Cao','Terry Xie','Vanessa Wong','Sunny Chen','Meji Chen']},
   {id:'t6', label:'Table 6', short:'T6', seats:10,
    guests:['Terry Zeng','Stanley Yip','Darrin Li','Julie Lian','Chris Fang','Jenny Wang','Terri Yip','Alex Petrovich','Rob Lin','Jennie Cheung']},
   // Emily Lu and David Cho swapped spots 2 and 10.
@@ -3248,9 +3250,12 @@ const SEATING = [
   // the middle of the run.
   {id:'t8', label:'Table 8', short:'T8', seats:10,
    guests:['Anish Sarkar','Irene Tran','Adam Wang','Tina Gong',null,null,'Linda Luu','Chris Chua','Kate Kwak','Bright Zeng']},
-  // Qin Chen and Xin Lin Mo came off the Sep 5 chart, leaving 9 and 10 empty.
+  /* Reworked on the latest chart: 'Lenlen' and 'Ya Fang' are now named as Klisa
+     Feng, Fanny Li and Mei Hao Feng, Yi Yun Li and Hong Jun Tan came over from
+     table 5, and Andrea Cao and Terry Xie went the other way. Chart order, so
+     spot 10 is the empty one. */
   {id:'t9', label:'Table 9', short:'T9', seats:10,
-   guests:['Lenlen','Ya Fang','Mario Polera','Monica Chen','Kelly Zhen','Ricky Ma','Andrea Cao','Terry Xie']},
+   guests:['Klisa Feng','Fanny Li','Yi Yun Li','Hong Jun Tan','Mei Hao Feng','Mario Polera','Monica Chen','Kelly Zhen','Ricky Ma']},
   /* The back four moved along one, so the empty place is 6 rather than 10. That
      seats Ankit next to Ankita, the one pair whose labels can't be told apart —
      they read 'Anki' in spots 10 and 1, so the numbers are what separate them. */
