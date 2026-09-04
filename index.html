@@ -2892,7 +2892,7 @@ const SHUTTLE = {
     {name:'Linda Zhang'},
     {name:'Matt Sem'},
     {name:'Max Xia'},
-    {name:'Morgan Williams'},
+    // Morgan Williams was signed up here until he dropped off the Sep 5 chart.
     {name:'Nina Pan'},
     {name:'Rachel Poon'},
     {name:'Raemar Sopoco'},
@@ -3063,7 +3063,7 @@ const ATTACHMENTS = [
     title:'Seating Chart',
     desc:'Who sits where — 14 tables plus the head table',
     // No page count: the export carries a blank second page.
-    meta:'PDF · 131 guests · 8 vendors',
+    meta:'PDF · 130 guests · 8 vendors',
     // Three ways to use the chart: the PDF export, the interactive seat map, and
     // the dietary needs list.
     steps:[
@@ -3243,9 +3243,11 @@ const SEATING = [
   // Emily Lu and David Cho swapped spots 2 and 10.
   {id:'t7', label:'Table 7', short:'T7', seats:10,
    guests:['Jon Trieu','David Cho','Katie Chung','Jordan Lau','Justin Law','Vikkie Wan','Sharon Tee','Karen Chan Lim','Justin Chan','Emily Lu']},
-  // The back four moved along one, so the empty place is 6 rather than 10.
+  // The back four moved along one, which had left 6 empty. Morgan Williams can't
+  // make it, so his spot at 5 opens up too and the pair of empty places sits in
+  // the middle of the run.
   {id:'t8', label:'Table 8', short:'T8', seats:10,
-   guests:['Anish Sarkar','Irene Tran','Adam Wang','Tina Gong','Morgan Williams',null,'Linda Luu','Chris Chua','Kate Kwak','Bright Zeng']},
+   guests:['Anish Sarkar','Irene Tran','Adam Wang','Tina Gong',null,null,'Linda Luu','Chris Chua','Kate Kwak','Bright Zeng']},
   // Qin Chen and Xin Lin Mo came off the Sep 5 chart, leaving 9 and 10 empty.
   {id:'t9', label:'Table 9', short:'T9', seats:10,
    guests:['Lenlen','Ya Fang','Mario Polera','Monica Chen','Kelly Zhen','Ricky Ma','Andrea Cao','Terry Xie']},
